@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="org.panta.misskey_for_android_v2">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+            android:allowBackup="true"
+            android:icon="@drawable/misskey_icon"
+            android:label="@string/app_name"
+            android:roundIcon="@drawable/misskey_icon"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme"
+            tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".view_presenter.note_description.NoteDescriptionActivity">
+        </activity>
+        <activity android:name=".view_presenter.note_editor.EditNoteActivity">
+        </activity>
+        <activity
+                android:name=".view_presenter.MainActivity"
+                android:configChanges="orientation"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

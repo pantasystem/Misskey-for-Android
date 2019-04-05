@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Misskey for Android v2</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="sample_text_xxx_renoted">XXXさんがRenoteしました</string>
+    <string name="humanicon">HumanIcon</string>
+    <string name="testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest">
+        TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest
+    </string>
+    <string name="name">name</string>
+    <string name="id">id</string>
+    <string name="number_0">0</string>
+    <string name="what_are_you_doing">なにしてるの？</string>
+</resources>

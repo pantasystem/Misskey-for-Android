@@ -1,0 +1,221 @@
+package org.panta.misskey_for_android_v2.adapter
+
+import android.graphics.Color
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.item_note.view.*
+import org.panta.misskey_for_android_v2.entity.Note
+import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
+import org.panta.misskey_for_android_v2.entity.ReactionCount
+
+class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+
+    private var clickListener: NoteClickListener? = null
+    private var targetPrimaryId: String? = null
+    private var note: Note? = null
+
+    private val timelineItem = itemView.base_layout
+    val whoReactionUserLink: Button = itemView.who_reaction_user_link
+    private val userIcon: ImageView = itemView.user_icon
+    private val userName: TextView = itemView.user_name
+    private val userId: TextView = itemView.user_id
+    private val noteText: TextView = itemView.note_text
+
+    private val imageView1: ImageView = itemView.image_1
+    private val imageView2: ImageView = itemView.image_2
+    private val imageView3: ImageView = itemView.image_3
+    private val imageView4: ImageView = itemView.image_4
+
+    private val subUserIcon = itemView.sub_user_icon
+    private val subUserName = itemView.sub_user_name
+    private val subUserId = itemView.sub_user_id
+    private val subNoteText: TextView = itemView.sub_text
+
+    private val replyButton: ImageButton = itemView.reply_button
+    private val replyCount: TextView = itemView.reply_count
+    private val reNoteButton: ImageButton = itemView.re_note_button
+    private val reNoteCount: TextView = itemView.re_note_count
+    private val reactionButton: ImageButton = itemView.reaction_button
+    private val descriptionButton: ImageButton = itemView.description_button
+
+    init{
+        whoReactionUserLink.visibility = View.GONE
+        imageView1.visibility = View.GONE
+        imageView2.visibility = View.GONE
+        imageView3.visibility = View.GONE
+        imageView4.visibility = View.GONE
+
+        subUserIcon.visibility = View.GONE
+        subUserName.visibility = View.GONE
+        subUserId.visibility = View.GONE
+        subNoteText.visibility =View.GONE
+
+        initButtonsClickListener()
+    }
+
+    private fun initButtonsClickListener(){
+        timelineItem.setOnClickListener {
+            clickListener?.onNoteClicked(targetPrimaryId, note)
+        }
+
+        replyButton.setOnClickListener {
+            clickListener?.onReplyButtonClicked(targetPrimaryId, note)
+
+        }
+        reNoteButton.setOnClickListener {
+            clickListener?.onReNoteButtonClicked(targetPrimaryId, note)
+
+        }
+        reactionButton.setOnClickListener{
+            clickListener?.onReactionButtonClicked(targetPrimaryId, note)
+        }
+        descriptionButton.setOnClickListener{
+            clickListener?.onDescriptionButtonClicked(targetPrimaryId, note)
+        }
+    }
+
+
+    fun setWhoReactionUserLink(userName: String, status: String, userPrimaryId: String){
+        whoReactionUserLink.visibility = View.VISIBLE
+        val text = "${userName}さんが${status}しました"
+        whoReactionUserLink.text = text
+    }
+
+    fun setUserIcon(imageUrl: String){
+        Picasso
+            .get()
+            .load(imageUrl)
+            .into(userIcon)
+    }
+    fun setUserName(userNameText: String){
+        userName.text = userNameText
+    }
+    fun setUserId(userId: String){
+        this.userId.text = userId
+    }
+
+    fun setNoteText(text: String){
+        noteText.text= text
+    }
+
+    fun setImage(urlList: List<String>){
+        imageView1.visibility = View.GONE
+        imageView2.visibility = View.GONE
+        imageView3.visibility = View.GONE
+        imageView4.visibility = View.GONE
+        when(urlList.size){
+            0 -> {
+
+            }
+            1->{
+                imageView1.visibility = View.VISIBLE
+                picasso(urlList[0], imageView1)
+            }
+            2->{
+                picasso(urlList[0], imageView1)
+                picasso(urlList[1], imageView2)
+                imageView1.visibility = View.VISIBLE
+                imageView2.visibility = View.VISIBLE
+            }
+            3->{
+                picasso(urlList[0], imageView1)
+                picasso(urlList[1], imageView2)
+                picasso(urlList[2], imageView3)
+                imageView1.visibility = View.VISIBLE
+                imageView2.visibility = View.VISIBLE
+                imageView3.visibility = View.VISIBLE
+            }
+            4->{
+                picasso(urlList[0], imageView1)
+                picasso(urlList[1], imageView2)
+                picasso(urlList[2], imageView3)
+                picasso(urlList[3], imageView4)
+                imageView1.visibility = View.VISIBLE
+                imageView2.visibility = View.VISIBLE
+                imageView3.visibility = View.VISIBLE
+                imageView4.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun picasso(imageUrl: String, imageView: ImageView){
+        imageView.visibility = View.VISIBLE
+        Picasso
+            .get()
+            .load(imageUrl)
+            .into(imageView)
+    }
+
+    fun setSubUserIcon(imageUrl: String){
+        subUserIcon.visibility = View.VISIBLE
+        Picasso
+            .get()
+            .load(imageUrl)
+            .into(subUserIcon)
+
+    }
+
+    fun setSubUserName(userName: String){
+        subUserName.text= userName
+        subUserName.visibility = View.VISIBLE
+    }
+
+    fun setSubUserId(userId: String){
+        subUserId.text = userId
+        subUserId.visibility = View.VISIBLE
+    }
+
+    fun setSubNoteText(text: String){
+        subNoteText.text = text
+        subNoteText.visibility = View.VISIBLE
+    }
+
+
+
+    fun setReplyCount(count: Int, isDigitTruncation:Boolean = true){
+        if(count > 0){
+            replyCount.text = count.toString()
+            replyCount.visibility = View.VISIBLE
+        }else{
+            replyCount.visibility = View.INVISIBLE
+        }
+    }
+
+    fun setReNoteCount(count: Int){
+        if(count > 0){
+            reNoteCount.text = count.toString()
+            reNoteCount.visibility = View.VISIBLE
+        }else{
+            reNoteCount.visibility = View.INVISIBLE
+        }
+    }
+
+    fun setReactionCount(count : ReactionCount){
+
+    }
+
+    fun backgroundColor(code: Int){
+        if(code == 1){
+            timelineItem.setBackgroundColor(Color.parseColor("#d3d3d3"))
+        }else{
+            timelineItem.setBackgroundColor(Color.parseColor("#fff3f3f3"))
+        }
+    }
+
+    fun addOnItemClickListener(targetPrimaryId: String, note: Note, listener: NoteClickListener?){
+        clickListener = listener
+        this.targetPrimaryId = targetPrimaryId
+        this.note = note
+
+    }
+
+
+
+
+
+}
