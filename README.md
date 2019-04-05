@@ -8,7 +8,7 @@ Timeline（Home Timeline)しか動かない
 TimelineとReply Renote　Reactionと投稿はできる
 使えたもんじゃない
 
-# Requirement
+## Requirement
 直接自分のAPI KEYをソースコードに記述して利用する方法しか確立していない
 のでソースコードを加える必要がある
 package org.panta.misskey_for_android_v2.constant;
@@ -26,6 +26,7 @@ public abstract class ApplicationConstant {
 
 採用したアーキテクチャはMVP風の何かであるがMVPではない
 ライセンス表記、著作権的に問題のあるファイルがあればすぐに報告してくださいよろしくお願いします。
+
 
 ## install
 https://android.gcreate.jp/212 ※私のサイトではない
