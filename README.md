@@ -1,14 +1,14 @@
 # Misskey for Android v2
 MisskeyのためのAndroidクライアント（作りかけ）
-##Description
+## Description
 これはMisskeyのためのAndroidクライアントです。これは公式のような名前をしていますが非公式クライアントです。
-##Demo
+## Demo
 Timeline（Home Timeline)しか動かない
 ## Usage
 TimelineとReply Renote　Reactionと投稿はできる
 使えたもんじゃない
 
-#Requirement
+# Requirement
 直接自分のAPI KEYをソースコードに記述して利用する方法しか確立していない
 のでソースコードを加える必要がある
 package org.panta.misskey_for_android_v2.constant;
@@ -27,9 +27,9 @@ public abstract class ApplicationConstant {
 採用したアーキテクチャはMVP風の何かであるがMVPではない
 ライセンス表記、著作権的に問題のあるファイルがあればすぐに報告してくださいよろしくお願いします。
 
-##install
+## install
 https://android.gcreate.jp/212 ※私のサイトではない
 
-##Licence
+## Licence
 This application is open source software licensed under the GNU AGPLv3.
 
