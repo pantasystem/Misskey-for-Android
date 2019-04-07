@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageButton
 import android.widget.TextView
+import kotlinx.android.synthetic.main.item_reaction_counter.view.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 
@@ -54,7 +55,7 @@ class ReactionCountAdapter(private val context: Context, private val layoutId: I
             holder = convertView.tag as ViewHolder
         }
 
-        val icon = reactionImageMapping[reactionCountPairList[position].reactionName]
+        val icon = reactionImageMapping[reactionCountPairList[position].reactionType]
         if(icon != null){
             holder.reactionIconView.setImageResource(icon)
         }else{

@@ -79,7 +79,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
             load_icon.visibility = View.GONE
             timelineView.visibility = View.VISIBLE
             Log.d("TimelineFragment", "データの取得が完了した")
-            mAdapter = TimelineAdapter(list)
+            mAdapter = TimelineAdapter(context!!, list)
             mAdapter.addNoteClickListener(this)
 
 

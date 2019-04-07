@@ -1,5 +1,6 @@
 package org.panta.misskey_for_android_v2.adapter
 
+import android.content.Context
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -13,7 +14,7 @@ import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.repository.AbsTimeline
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
-class TimelineAdapter(private val notesList: List<NoteViewData>) : RecyclerView.Adapter<NoteViewHolder>(){
+class TimelineAdapter(private val context: Context, private val notesList: List<NoteViewData>) : RecyclerView.Adapter<NoteViewHolder>(){
 
     var noteClickListener: NoteClickListener? = null
 
@@ -41,7 +42,10 @@ class TimelineAdapter(private val notesList: List<NoteViewData>) : RecyclerView.
             }
             else -> p0.backgroundColor(0)
         }
-        p0.setReactionCount(viewData.reactionCountPairList)
+
+        if(viewData.reactionCountPairList.isNotEmpty()){
+            p0.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, viewData.reactionCountPairList))
+        }
 
 
         //このセット方法はいろいろ面倒なのでリファクタリング(NoteViewHolderを)予定

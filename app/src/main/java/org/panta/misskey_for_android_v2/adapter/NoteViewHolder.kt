@@ -4,10 +4,7 @@ import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_note.view.*
 import org.panta.misskey_for_android_v2.entity.Note
@@ -38,6 +35,8 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val subUserId = itemView.sub_user_id
     private val subNoteText: TextView = itemView.sub_text
 
+    private val reactionView: GridView = itemView.reaction_view
+
     private val replyButton: ImageButton = itemView.reply_button
     private val replyCount: TextView = itemView.reply_count
     private val reNoteButton: ImageButton = itemView.re_note_button
@@ -56,6 +55,7 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         subUserName.visibility = View.GONE
         subUserId.visibility = View.GONE
         subNoteText.visibility =View.GONE
+        reactionView.visibility = View.GONE
 
         initButtonsClickListener()
     }
@@ -197,8 +197,9 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         }
     }
 
-    fun setReactionCount(count : List<ReactionCountPair>){
-        Log.d("NoteViewHolder", count.toString())
+    fun setReactionCount(adapter: ReactionCountAdapter){
+        reactionView.adapter = adapter
+        reactionView.visibility = View.VISIBLE
     }
 
     fun backgroundColor(code: Int){
