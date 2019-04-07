@@ -45,6 +45,11 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val descriptionButton: ImageButton = itemView.description_button
 
     init{
+        viewInit()
+        initButtonsClickListener()
+    }
+
+    fun viewInit(){
         whoReactionUserLink.visibility = View.GONE
         imageView1.visibility = View.GONE
         imageView2.visibility = View.GONE
@@ -57,9 +62,7 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         subNoteText.visibility =View.GONE
         reactionView.visibility = View.GONE
 
-        initButtonsClickListener()
     }
-
     private fun initButtonsClickListener(){
         timelineItem.setOnClickListener {
             clickListener?.onNoteClicked(targetPrimaryId, note)

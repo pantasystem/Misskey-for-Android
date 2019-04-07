@@ -33,6 +33,7 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         val note = notesList[p1].note
 
         Log.d("TimelineAdapter", "ReactionCount ${note.reactionCounts}")
+        p0.viewInit()
 
         when {
             viewData.isOriginReply -> p0.backgroundColor(1)
