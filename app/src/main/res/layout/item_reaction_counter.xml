@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp" app:srcCompat="@drawable/reaction_icon_hmm"
+            android:id="@+id/reaction_image_button" android:scaleType="centerCrop"
+            android:padding="2dp"
+            style="?android:attr/borderlessButtonStyle"/>
+    <TextView
+            android:text="@string/number_0"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginStart="-2dp"
+            android:layout_height="wrap_content" android:textSize="18sp" android:id="@+id/reaction_count"/>
+
+</LinearLayout>
