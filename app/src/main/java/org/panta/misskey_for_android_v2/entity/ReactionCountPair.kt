@@ -1,7 +1,7 @@
 package org.panta.misskey_for_android_v2.entity
 
-<<<<<<< HEAD
 import org.panta.misskey_for_android_v2.constant.ReactionConstData
+
 
 data class ReactionCountPair(val reactionType: String, val reactionCount: String){
 
@@ -51,6 +51,3 @@ data class ReactionCountPair(val reactionType: String, val reactionCount: String
         }
     }
 }
-=======
-data class ReactionCountPair(val reactionName: String, val reactionCount: String)
->>>>>>> master
