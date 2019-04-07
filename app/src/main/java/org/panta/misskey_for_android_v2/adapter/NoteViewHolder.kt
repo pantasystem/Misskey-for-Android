@@ -2,6 +2,7 @@ package org.panta.misskey_for_android_v2.adapter
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -12,6 +13,7 @@ import kotlinx.android.synthetic.main.item_note.view.*
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.entity.ReactionCount
+import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 
 class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
@@ -195,8 +197,8 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         }
     }
 
-    fun setReactionCount(count : ReactionCount){
-
+    fun setReactionCount(count : List<ReactionCountPair>){
+        Log.d("NoteViewHolder", count.toString())
     }
 
     fun backgroundColor(code: Int){

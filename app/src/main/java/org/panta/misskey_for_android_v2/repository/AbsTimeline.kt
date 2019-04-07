@@ -8,6 +8,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.entity.Note
+import org.panta.misskey_for_android_v2.entity.ReactionCount
+import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.interfaces.CallBackListener
 import org.panta.misskey_for_android_v2.interfaces.ITimeline
 import org.panta.misskey_for_android_v2.network.HttpsConnection
@@ -53,7 +55,7 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
             apiRequestCounter++
             val jsonToRequest = createRequestTimelineJson(sinceId = noteId)
             val list:List<Note> = reverseTimeline(requestTimeline(jsonToRequest))
-            callBack(insertReply(list))
+            callBack(insertReplyAndCreateInfo(list))
         }catch(e: Exception){
             Log.e("AbsTimeline", "エラー発生",e)
         }
@@ -69,7 +71,7 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
             val jsonToRequest = createRequestTimelineJson(untilId = noteId)
 
             val list:List<Note> = requestTimeline(jsonToRequest)
-            callBack(insertReply(list))
+            callBack(insertReplyAndCreateInfo(list))
         }catch(e: Exception){
             Log.e("AbsTimeline", "エラー発生",e)
         }
@@ -92,7 +94,7 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
                 cacheTimeline
             }
 
-            callBack(insertReply(timeline))
+            callBack(insertReplyAndCreateInfo(timeline))
         }catch(e: Exception){
             Log.e("AbsTimeline", "エラー発生",e)
         }
@@ -131,17 +133,27 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
         return reversedList
     }
 
-    private fun insertReply(list: List<Note>): List<NoteViewData>{
+    private fun insertReplyAndCreateInfo(list: List<Note>): List<NoteViewData>{
         val replyList = ArrayList<NoteViewData>()
         for(n in list){
             val noteType = checkUpNoteType(n)
             val reply = n.reply
-            if(reply == null){
-                replyList.add(NoteViewData(n, isReply = false, isOriginReply = false, type = noteType))
-            }else{
-                replyList.add(NoteViewData(reply, isReply = false, isOriginReply = true, type = noteType))
-                replyList.add(NoteViewData(n, isReply = true, isOriginReply = false, type = noteType))
+            when(noteType){
+                NoteType.NOTE,NoteType.QUOTE_RE_NOTE -> replyList.add(NoteViewData(n, isReply = false, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
+                NoteType.RE_NOTE -> replyList.add(NoteViewData(n, isReply = false, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.renote?.reactionCounts)))
+
+                else ->{
+                    replyList.add(NoteViewData(reply!!, isReply = false, isOriginReply = true, type = noteType, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
+                    replyList.add(NoteViewData(n, isReply = true, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
+                }
             }
+            /*if(reply == null){
+
+
+            }else{
+                replyList.add(NoteViewData(reply, isReply = false, isOriginReply = true, type = noteType, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
+                replyList.add(NoteViewData(n, isReply = true, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
+            }*/
         }
         return replyList
     }
@@ -164,6 +176,13 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
         }else{
             NoteType.DO_NOT_KNOW
         }
+    }
+
+    private fun createReactionCountPair(reactionCount: ReactionCount?): List<ReactionCountPair>{
+        if(reactionCount == null){
+            return emptyList()
+        }
+        return ReactionCountPair.createList(reactionCount)
     }
 
 

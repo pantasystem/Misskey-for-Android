@@ -41,6 +41,8 @@ class TimelineAdapter(private val notesList: List<NoteViewData>) : RecyclerView.
             }
             else -> p0.backgroundColor(0)
         }
+        p0.setReactionCount(viewData.reactionCountPairList)
+
 
         //このセット方法はいろいろ面倒なのでリファクタリング(NoteViewHolderを)予定
         when {
@@ -103,6 +105,7 @@ class TimelineAdapter(private val notesList: List<NoteViewData>) : RecyclerView.
                 //resultReaction(it.id)
                 p0.addOnItemClickListener(note.id, note, noteClickListener)
             }
+
         }
     }
 
