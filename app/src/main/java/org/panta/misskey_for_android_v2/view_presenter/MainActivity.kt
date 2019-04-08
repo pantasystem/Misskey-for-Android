@@ -12,6 +12,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
 
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        val fragment = TimelineFragment()
+        val fragment = TimelineFragment.getInstance(TimelineTypeEnum.LOCAL)
         val spf = supportFragmentManager
         val ft = spf.beginTransaction()
         ft.replace(R.id.container, fragment)

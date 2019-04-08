@@ -31,6 +31,7 @@ class HttpsConnection  {
                 requestMethod = "POST"
                 instanceFollowRedirects = true
                 doOutput = true
+                connectTimeout = 3000
 
                 setRequestProperty("Content-Type", "application/json; charset=utf-8")
                 val os = this.outputStream

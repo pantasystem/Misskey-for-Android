@@ -57,7 +57,7 @@ class EditNoteActivity : AppCompatActivity() {
         }else{
             text
         }
-        if(mEditType == RE_NOTE){
+        if(mEditType == RE_NOTE && tmpText == null){
             noteRepository.send(builder.create())
         }else if(tmpText != null){
 

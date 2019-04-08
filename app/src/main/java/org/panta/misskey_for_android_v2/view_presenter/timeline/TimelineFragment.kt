@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_timeline.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.TimelineAdapter
+import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.dialog.DescriptionDialog
 import org.panta.misskey_for_android_v2.dialog.ReactionDialog
 import org.panta.misskey_for_android_v2.entity.Note
@@ -24,8 +25,21 @@ import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActiv
 
 class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, TimelineContract.View, NoteClickListener{
 
+
+    companion object{
+        private const val TIMELINE_TYPE = "TIMELINE_FRAGMENT_TIMELINE_TYPE"
+        fun getInstance(type: TimelineTypeEnum): TimelineFragment{
+            return TimelineFragment().apply{
+                val args = Bundle()
+                args.putString(TIMELINE_TYPE, type.name)
+                this.arguments = args
+            }
+        }
+    }
+
+    private var mTimelineType: TimelineTypeEnum = TimelineTypeEnum.HOME
     lateinit var mLayoutManager: LinearLayoutManager
-    override var mPresenter: TimelineContract.Presenter = TimelinePresenter(this)
+    override lateinit var mPresenter: TimelineContract.Presenter
     private lateinit var mAdapter: TimelineAdapter
 
     private val reactionRequestCode = 23457
@@ -34,6 +48,12 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         super.onCreateView(inflater, container, savedInstanceState)
 
         mLayoutManager = LinearLayoutManager(context)
+        val args = arguments
+        val timelineType = args?.getString(TIMELINE_TYPE)
+        if(timelineType != null){
+            mTimelineType = TimelineTypeEnum.toEnum(timelineType)
+        }
+        mPresenter = TimelinePresenter(this, mTimelineType)
 
         return inflater.inflate(R.layout.fragment_timeline, container, false)
     }
@@ -49,6 +69,12 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     override fun onRefresh() {
         mPresenter.getNewTimeline()
+    }
+
+    override fun stopRefreshing() {
+        activity?.runOnUiThread{
+            refresh.isRefreshing = false
+        }
     }
 
     private val listener = object : RecyclerView.OnScrollListener(){
@@ -68,7 +94,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
             }
             if( ! recyclerView.canScrollVertically(1)){
                 //最後に来た場合
-                refresh.isEnabled = false
+                refresh.isEnabled = false   //stopRefreshing関数を設けているがあえてこの形にしている
                 mPresenter.getOldTimeline()
             }
         }
@@ -86,14 +112,16 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
             timelineView.layoutManager = mLayoutManager
             timelineView.adapter = mAdapter
 
-            refresh.isRefreshing = false
+            stopRefreshing()
 
         }
     }
 
+
+
     override fun showNewTimeline(list: List<NoteViewData>) {
         activity?.runOnUiThread {
-            refresh.isRefreshing = false
+            stopRefreshing()
             mAdapter.addAllFirst(list)
         }
 
@@ -109,6 +137,10 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     override fun onNoteClicked(targetId: String?, note: Note?) {
         Log.d("TimelineFragment", "Noteをクリックした")
+    }
+
+    override fun onError(errorMsg: String) {
+
     }
 
     override fun onReplyButtonClicked(targetId: String?, note: Note?) {

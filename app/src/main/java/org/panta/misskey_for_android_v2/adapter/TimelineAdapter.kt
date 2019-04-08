@@ -32,7 +32,6 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         val viewData = notesList[p1]
         val note = notesList[p1].note
 
-        Log.d("TimelineAdapter", "ReactionCount ${note.reactionCounts}")
         p0.viewInit()
 
         when {
@@ -93,8 +92,8 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
                 p0.addOnItemClickListener(note.renote.id, note.renote, noteClickListener)
             }
             viewData.type == AbsTimeline.NoteType.QUOTE_RE_NOTE -> {
-                p0.setUserId(note.user?.id?: "user id not found")
-                p0.setUserName(note.user?.userName?: "user name not found")
+                p0.setUserId(note.user?.userName?: "user id not found")
+                p0.setUserName(note.user?.name?: "user name not found")
                 p0.setUserIcon(note.user?.avatarUrl?: "not found")
                 p0.setNoteText(note.text?: "not found")
 

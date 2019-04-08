@@ -45,10 +45,10 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
     //JSON作成関数　TimelineクラスはGlobal,Home,Localで分けることにしたのでここを実装して異なるパターンのJSONに対応する
     abstract fun createRequestTimelineJson(sinceId: String? = null, untilId: String? = null, sinceDate: Long? = null, untilDate: Long? = null): String
 
-    override fun getNotesUseSinceId(noteId: String, callBack: (timeline: List<NoteViewData>)->Unit) = GlobalScope.launch{
+    override fun getNotesUseSinceId(noteId: String, callBack: (timeline: List<NoteViewData>?)->Unit) = GlobalScope.launch{
 
         if(apiRequestCounter > 0){
-            return@launch
+            return@launch callBack(null)
         }
 
         try{
@@ -62,9 +62,9 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
 
     }
 
-    override fun getNotesUseUntilId(noteId: String, callBack: (timeline: List<NoteViewData>)->Unit) = GlobalScope.launch{
+    override fun getNotesUseUntilId(noteId: String, callBack: (timeline: List<NoteViewData>?)->Unit) = GlobalScope.launch{
         if(apiRequestCounter > 0){
-            return@launch
+            return@launch callBack(null)
         }
         try{
             apiRequestCounter++
@@ -79,9 +79,9 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
     }
 
 
-    override fun getTimeline(callBack: (timeline: List<NoteViewData>) -> Unit) = GlobalScope.launch{
+    override fun getTimeline(callBack: (timeline: List<NoteViewData>?) -> Unit) = GlobalScope.launch{
         if(apiRequestCounter > 0){
-            return@launch
+            return@launch callBack(null)
         }
         try{
             //FIXME 保存したタイムラインを読み取る処理を書く
@@ -101,14 +101,7 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
 
     }
 
-    //分離予定
-    override fun listenTimelineUpdate(callBack: CallBackListener<Note>): Job {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
-    override fun removeListenTimelineUpdate() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     private fun requestTimeline(json: String): List<Note>{
         Log.d("AbsTimeline", "json $json")
@@ -116,14 +109,6 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
         return mapper.readValue(receivedResult)
     }
 
-    override fun addListenNoteUpdate(noteId: String, callBack: CallBackListener<String>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-
-    override fun removeListenNoteUpdate(noteId: String, callBack: CallBackListener<String>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     private fun reverseTimeline(list: List<Note>):List<Note>{
         val reversedList = ArrayList<Note>()
@@ -142,35 +127,34 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
                 NoteType.NOTE,NoteType.QUOTE_RE_NOTE -> replyList.add(NoteViewData(n, isReply = false, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
                 NoteType.RE_NOTE -> replyList.add(NoteViewData(n, isReply = false, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.renote?.reactionCounts)))
 
-                else ->{
+                NoteType.REPLY ->{
+                    Log.d("AbsTimeline", "$reply")
+                    Log.d("AbsTimeline", "ノートタイプ, $noteType")
                     replyList.add(NoteViewData(reply!!, isReply = false, isOriginReply = true, type = noteType, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
                     replyList.add(NoteViewData(n, isReply = true, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
                 }
+                else-> {
+                    Log.w("AbsTimeline", "わからないタイプのノートが来てしまった:$n")
+                }
             }
-            /*if(reply == null){
 
-
-            }else{
-                replyList.add(NoteViewData(reply, isReply = false, isOriginReply = true, type = noteType, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
-                replyList.add(NoteViewData(n, isReply = true, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
-            }*/
         }
         return replyList
     }
 
+    //FIXME メディアOnlyの時にうまく認識できない
     private fun checkUpNoteType(note: Note): NoteType{
         return if(note.reply != null){
-           //これはリプ
+            //これはリプ
             NoteType.REPLY
-
-        }else if(note.text != null && note.renote == null){
+        }else if(note.renote == null && (note.text != null || note.files != null)){
             //これはNote
             NoteType.NOTE
-        }else if(note.renote != null && note.text == null){
+        }else if(note.renote != null && (note.text == null || note.files == null)){
             //これはリノート
             NoteType.RE_NOTE
 
-        }else if(note.renote != null && note.text != null){
+        }else if(note.renote != null && (note.text != null || note.files != null)){
             //これは引用リノート
             NoteType.QUOTE_RE_NOTE
         }else{
