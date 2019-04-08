@@ -209,7 +209,7 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         if(code == 1){
             timelineItem.setBackgroundColor(Color.parseColor("#d3d3d3"))
         }else{
-            timelineItem.setBackgroundColor(Color.parseColor("#fff3f3f3"))
+            timelineItem.setBackgroundColor(Color.WHITE/*Color.parseColor("#fff3f3f3")*/)
         }
     }
 

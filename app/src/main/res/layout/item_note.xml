@@ -4,11 +4,7 @@
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:id="@+id/base_layout">
 
-    <View
-            android:id="@+id/horizon-line"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+
     <Button
             android:id="@+id/who_reaction_user_link"
             android:text="@string/sample_text_xxx_renoted"
@@ -17,7 +13,6 @@
             android:minWidth="0dp" android:minHeight="0dp"
             android:ellipsize="end" android:textSize="12sp"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_below="@+id/horizon-line"
             android:visibility="gone"/>
     <!--ここからNote-->
     <ImageView
@@ -225,6 +220,12 @@
             android:layout_below="@+id/reaction_view" android:layout_toEndOf="@id/reaction_button"
             style="?android:attr/borderlessButtonStyle"
     />
+    <View
+            android:id="@+id/horizon-line"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/description_button"
+            android:background="@android:color/darker_gray"/>
 
 
 </RelativeLayout>

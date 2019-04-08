@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
 
         fab.setOnClickListener { _ ->
             val intent = Intent(applicationContext, EditNoteActivity::class.java)
@@ -39,11 +41,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        val fragment = TimelineFragment.getInstance(TimelineTypeEnum.LOCAL)
-        val spf = supportFragmentManager
-        val ft = spf.beginTransaction()
-        ft.replace(R.id.container, fragment)
-        ft.commit()
+
+        val pageAdapter = PagerAdapter(supportFragmentManager)
+        view_pager.offscreenPageLimit = 2
+        view_pager.adapter = pageAdapter
+
+        tab_menu.setupWithViewPager(view_pager)
 
 
     }
