@@ -10,8 +10,8 @@ import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
 class TimelinePresenter(private val mView: TimelineContract.View, private val timelineType: TimelineTypeEnum) : TimelineContract.Presenter{
 
-    private var latestNoteId: String? = null
-    private var oldestNoteId: String?=null
+    private var latestNoteData: NoteViewData? = null
+    private var oldestNoteData: NoteViewData?=null
 
     private val mTimeline: ITimeline = when (timelineType) {
         TimelineTypeEnum.GLOBAL -> GlobalTimeline(domain = ApplicationConstant.domain, authKey = ApplicationConstant.authKey)
@@ -22,11 +22,11 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
 
 
     override fun getNewTimeline() {
-        if(latestNoteId == null){
+        if(latestNoteData == null){
             initTimeline()
             return
         }
-        mTimeline.getNotesUseSinceId(latestNoteId!!){
+        mTimeline.getNotesUseSinceId(latestNoteData!!){
             if(it == null){
                 mView.stopRefreshing()
                 return@getNotesUseSinceId
@@ -35,7 +35,7 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
             val latest = searchLatestNoteId(it)
             if(latest != null){
                 //latestNoteId = searchLatestNoteId(it)   //latestローカル変数を渡してはいけないのか？・・
-                latestNoteId = latest
+                latestNoteData = latest
             }
 
         }
@@ -43,11 +43,11 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
     }
 
     override fun getOldTimeline() {
-        if(oldestNoteId == null){
+        if(oldestNoteData == null){
             initTimeline()
             return
         }
-        mTimeline.getNotesUseUntilId(oldestNoteId!!){
+        mTimeline.getNotesUseUntilId(oldestNoteData!!){
             if(it == null){
                 mView.stopRefreshing()
                 return@getNotesUseUntilId
@@ -57,7 +57,7 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
             val oldest = searchOldestNoteId(it)
             if(oldest != null){
                 //oldestNoteId = searchOldestNoteId(it)
-                oldestNoteId = oldest
+                oldestNoteData = oldest
             }
         }
     }
@@ -73,10 +73,10 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
             val latest = searchLatestNoteId(it)
             val oldest = searchOldestNoteId(it)
             if(latest != null){
-                latestNoteId = latest
+                latestNoteData = latest
             }
             if(oldest != null){
-                oldestNoteId = oldest
+                oldestNoteData = oldest
             }
 
         }
@@ -94,20 +94,20 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    private fun searchLatestNoteId(list: List<NoteViewData>): String?{
+    private fun searchLatestNoteId(list: List<NoteViewData>): NoteViewData?{
         for(n in list){
             if(! n.isOriginReply){
-                return n.note.id
+                return n
             }
         }
         return null
     }
 
-    private fun searchOldestNoteId(list: List<NoteViewData>): String?{
+    private fun searchOldestNoteId(list: List<NoteViewData>): NoteViewData?{
         for(n in (list.size - 1).downTo(0)){
             val noteViewData = list[n]
             if(!noteViewData.isOriginReply){
-                return noteViewData.note.id
+                return noteViewData
             }
         }
         return null

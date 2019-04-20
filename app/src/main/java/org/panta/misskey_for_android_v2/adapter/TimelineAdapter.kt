@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.constant.ReactionConstData
 import org.panta.misskey_for_android_v2.entity.FileProperty
 import org.panta.misskey_for_android_v2.entity.Note
+import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.repository.AbsTimeline
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
@@ -46,6 +48,20 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         if(viewData.reactionCountPairList.isNotEmpty()){
             p0.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, viewData.reactionCountPairList))
         }
+        //Test
+        /*val testReactionData = arrayListOf(
+            ReactionCountPair(ReactionConstData.CONGRATS, "10"),
+            ReactionCountPair(ReactionConstData.CONFUSED, "10"),
+            ReactionCountPair(ReactionConstData.ANGRY, "10"),
+            ReactionCountPair(ReactionConstData.HMM, "10"),
+            ReactionCountPair(ReactionConstData.LAUGH, "10"),
+            ReactionCountPair(ReactionConstData.LIKE, "10"),
+            ReactionCountPair(ReactionConstData.LOVE, "10"),
+            ReactionCountPair(ReactionConstData.PUDDING, "10"),
+            ReactionCountPair(ReactionConstData.RIP, "10"),
+            ReactionCountPair(ReactionConstData.SURPRISE, "10")
+            )
+        p0.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, testReactionData))*/
 
 
         //このセット方法はいろいろ面倒なのでリファクタリング(NoteViewHolderを)予定

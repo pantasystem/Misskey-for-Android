@@ -16,11 +16,12 @@ import kotlinx.android.synthetic.main.fragment_timeline.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.TimelineAdapter
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
-import org.panta.misskey_for_android_v2.dialog.DescriptionDialog
 import org.panta.misskey_for_android_v2.dialog.ReactionDialog
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
+import org.panta.misskey_for_android_v2.view_presenter.image_viewer.ImageViewerActivity
+import org.panta.misskey_for_android_v2.view_presenter.note_description.NoteDescriptionActivity
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 
 class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, TimelineContract.View, NoteClickListener{
@@ -137,6 +138,9 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     override fun onNoteClicked(targetId: String?, note: Note?) {
         Log.d("TimelineFragment", "Noteをクリックした")
+        val intent = Intent(context, NoteDescriptionActivity::class.java)
+        intent.putExtra(NoteDescriptionActivity.NOTE_DESCRIPTION_NOTE_PROPERTY, note)
+        startActivity(intent)
     }
 
     override fun onError(errorMsg: String) {
@@ -201,6 +205,14 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
             }
         }.show()
 
+
+    }
+
+    override fun onImageClicked(clickedIndex: Int, clickedImageUrlCollection: Array<String>) {
+        val intent = Intent(context, ImageViewerActivity::class.java)
+        intent.putExtra(ImageViewerActivity.IMAGE_URL_LIST, clickedImageUrlCollection)
+        intent.putExtra(ImageViewerActivity.CLICKED_IMAGE_URL, clickedIndex)
+        startActivity(intent)
 
     }
 

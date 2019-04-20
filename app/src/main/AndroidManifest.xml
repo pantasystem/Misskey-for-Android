@@ -13,6 +13,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".view_presenter.image_viewer.ImageViewerActivity">
+        </activity>
         <activity android:name=".view_presenter.note_description.NoteDescriptionActivity">
         </activity>
         <activity android:name=".view_presenter.note_editor.EditNoteActivity">

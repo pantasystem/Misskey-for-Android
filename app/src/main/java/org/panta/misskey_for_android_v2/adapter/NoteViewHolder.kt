@@ -2,15 +2,12 @@ package org.panta.misskey_for_android_v2.adapter
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.widget.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_note.view.*
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
-import org.panta.misskey_for_android_v2.entity.ReactionCount
-import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 
 class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
@@ -82,6 +79,20 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         descriptionButton.setOnClickListener{
             clickListener?.onDescriptionButtonClicked(targetPrimaryId, note)
         }
+
+        /*val imagesTouchListener = object : View.OnTouchListener{
+            @SuppressLint("ClickableViewAccessibility")
+            override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
+                return true
+            }
+        }
+
+        userIcon.setOnTouchListener(imagesTouchListener)
+        imageView1.setOnTouchListener(imagesTouchListener)
+        imageView2.setOnTouchListener(imagesTouchListener)
+        imageView3.setOnTouchListener(imagesTouchListener)
+        imageView4.setOnTouchListener(imagesTouchListener)
+        subUserIcon.setOnTouchListener(imagesTouchListener)*/
     }
 
 
@@ -146,6 +157,25 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
                 imageView4.visibility = View.VISIBLE
             }
         }
+
+        val imageClickListener = View.OnClickListener { p0 ->
+            val clickedImageIndex = when(p0){
+                imageView1 -> 0
+                imageView2 -> 1
+                imageView3 -> 2
+                imageView4 -> 3
+                else -> 0
+            }
+
+            clickListener?.onImageClicked(clickedImageIndex, urlList.toTypedArray())
+        }
+
+        imageView1.setOnClickListener(imageClickListener)
+        imageView2.setOnClickListener(imageClickListener)
+        imageView3.setOnClickListener(imageClickListener)
+        imageView4.setOnClickListener(imageClickListener)
+
+
     }
 
     private fun picasso(imageUrl: String, imageView: ImageView){

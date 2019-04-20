@@ -168,7 +168,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/sub_text"
             android:layout_toEndOf="@+id/user_icon"
-            android:columnWidth="40dp"
+            android:columnWidth="50dp"
             android:numColumns="auto_fit" android:visibility="gone"/>
 
 

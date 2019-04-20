@@ -4,13 +4,11 @@ import android.util.Log
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.ReactionCount
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
-import org.panta.misskey_for_android_v2.interfaces.CallBackListener
 import org.panta.misskey_for_android_v2.interfaces.ITimeline
 import org.panta.misskey_for_android_v2.network.HttpsConnection
 import org.panta.misskey_for_android_v2.network.StreamConverter
@@ -45,7 +43,7 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
     //JSON作成関数　TimelineクラスはGlobal,Home,Localで分けることにしたのでここを実装して異なるパターンのJSONに対応する
     abstract fun createRequestTimelineJson(sinceId: String? = null, untilId: String? = null, sinceDate: Long? = null, untilDate: Long? = null): String
 
-    override fun getNotesUseSinceId(noteId: String, callBack: (timeline: List<NoteViewData>?)->Unit) = GlobalScope.launch{
+    override fun getNotesUseSinceId(noteViewData: NoteViewData, callBack: (timeline: List<NoteViewData>?)->Unit) = GlobalScope.launch{
 
         if(apiRequestCounter > 0){
             return@launch callBack(null)
@@ -53,7 +51,7 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
 
         try{
             apiRequestCounter++
-            val jsonToRequest = createRequestTimelineJson(sinceId = noteId)
+            val jsonToRequest = createRequestTimelineJson(sinceId = noteViewData.note.id)
             val list:List<Note> = reverseTimeline(requestTimeline(jsonToRequest))
             callBack(insertReplyAndCreateInfo(list))
         }catch(e: Exception){
@@ -62,13 +60,13 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
 
     }
 
-    override fun getNotesUseUntilId(noteId: String, callBack: (timeline: List<NoteViewData>?)->Unit) = GlobalScope.launch{
+    override fun getNotesUseUntilId(noteViewData: NoteViewData, callBack: (timeline: List<NoteViewData>?)->Unit) = GlobalScope.launch{
         if(apiRequestCounter > 0){
             return@launch callBack(null)
         }
         try{
             apiRequestCounter++
-            val jsonToRequest = createRequestTimelineJson(untilId = noteId)
+            val jsonToRequest = createRequestTimelineJson(untilId = noteViewData.note.id)
 
             val list:List<Note> = requestTimeline(jsonToRequest)
             callBack(insertReplyAndCreateInfo(list))
@@ -109,7 +107,7 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
         return mapper.readValue(receivedResult)
     }
 
-
+    //FIXME　他のクラスでもよく使用するので分離予定
     private fun reverseTimeline(list: List<Note>):List<Note>{
         val reversedList = ArrayList<Note>()
         for(n in list.size - 1 downTo 0){
