@@ -24,7 +24,7 @@ class UserActivity : AppCompatActivity() {
         user_view_pager.offscreenPageLimit = 2
         user_view_pager.adapter = pageAdapter
 
-        user_tab_menu.setupWithViewPager(view_pager)
+        //user_tab_menu.setupWithViewPager(view_pager)
 
 
     }

@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_note.view.*
+import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.entity.FileProperty
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
@@ -123,27 +125,29 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setUserId(user?.userName.toString())
 
     }
-    fun setImage(urlList: List<String>){
+    fun setImage(fileList: List<FileProperty>){
         imageView1.visibility = View.GONE
         imageView2.visibility = View.GONE
         imageView3.visibility = View.GONE
         imageView4.visibility = View.GONE
 
-        if(urlList.isNotEmpty()){
+        //val a = fileList[0].isSensitive
+
+        if(fileList.isNotEmpty()){
             imageView1.visibility = View.VISIBLE
-            picasso(urlList[0], imageView1)
+            picasso(fileList[0].url!!, imageView1, fileList[0].isSensitive)
         }
-        if(urlList.size >= 2){
-            picasso(urlList[1], imageView2)
+        if(fileList.size >= 2){
+            picasso(fileList[1].url!!, imageView2, fileList[1].isSensitive)
             imageView2.visibility = View.VISIBLE
         }
 
-        if(urlList.size >= 3){
-            picasso(urlList[2], imageView3)
+        if(fileList.size >= 3){
+            picasso(fileList[2].url!!, imageView3, fileList[2].isSensitive)
             imageView3.visibility = View.VISIBLE
         }
-        if(urlList.size >= 4){
-            picasso(urlList[3], imageView4)
+        if(fileList.size >= 4){
+            picasso(fileList[3].url!!, imageView4, fileList[3].isSensitive)
             imageView4.visibility = View.VISIBLE
         }
 
@@ -157,6 +161,7 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
                 else -> 0
             }
 
+            val urlList: List<String> = fileList.map{it.url}.filter{it != null && it.isNotBlank()}.map{it.toString()}
             clickListener?.onImageClicked(clickedImageIndex, urlList.toTypedArray())
         }
 
@@ -255,12 +260,18 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         this.userId.text = userId
     }
 
-    private fun picasso(imageUrl: String, imageView: ImageView){
+    private fun picasso(imageUrl: String, imageView: ImageView, isSensitive: Boolean?){
         imageView.visibility = View.VISIBLE
-        Picasso
-            .get()
-            .load(imageUrl)
-            .into(imageView)
+
+        if(isSensitive != null && isSensitive){
+            imageView.setImageResource(R.drawable.sensitive_image)
+        }else{
+            Picasso
+                .get()
+                .load(imageUrl)
+                .into(imageView)
+        }
+
     }
 
 

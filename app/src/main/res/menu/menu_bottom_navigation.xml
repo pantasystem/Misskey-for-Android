@@ -4,21 +4,21 @@
     <item
             android:id="@+id/home_timeline"
             android:icon="@drawable/home_icon"
-            
-            android:title="Home timeline"/>
+
+            android:title="ホーム"/>
     <item
             android:id="@+id/global_timeline"
             android:icon="@drawable/global_icon"
-            android:title="Global Timeline"/>
+            android:title="グローバル"/>
     <item
             android:id="@+id/notification_item"
             android:icon="@drawable/bell_icon"
-            android:title="Notification"/>
+            android:title="通知"/>
 
     <item
             android:id="@+id/message_item"
             android:icon="@drawable/mail_icon"
-            android:title="Message"/>
+            android:title="メッセージ"/>
 
 
 </menu>

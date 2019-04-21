@@ -140,10 +140,10 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         }
         val imageData = nonNullFiles.filter{
             it.type != null && it.type.startsWith("image")
-        }.map{ it.url }
-        val nonNullUrlList: ArrayList<String> = ArrayList<String>()
+        }
+        val nonNullUrlList = ArrayList<FileProperty>()
         for(n in imageData){
-            if(n != null){
+            if(n.url != null){
                 nonNullUrlList.add(n)
             }
         }

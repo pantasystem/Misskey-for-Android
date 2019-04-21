@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import com.squareup.picasso.Picasso
@@ -20,8 +22,11 @@ import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.repository.MyInfo
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
+import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    val myFragmentTagsStack = Stack<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,15 +51,50 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
 
-        val pageAdapter = PagerAdapter(supportFragmentManager)
+        /*val pageAdapter = PagerAdapter(supportFragmentManager)
         view_pager.offscreenPageLimit = 2
         view_pager.adapter = pageAdapter
 
-        tab_menu.setupWithViewPager(view_pager)
+        tab_menu.setupWithViewPager(view_pager)*/
+
+        val sf = supportFragmentManager
+        val ft = sf.beginTransaction()
+        ft.replace(R.id.main_container, TimelineFragment.getInstance(TimelineTypeEnum.HOME))
+        ft.commit()
+
+        bottom_navigation.setOnNavigationItemSelectedListener {
+            return@setOnNavigationItemSelectedListener when(it.itemId){
+                R.id.home_timeline ->{
+                    setFragment(TimelineFragment.getInstance(TimelineTypeEnum.HOME))
+                    true
+                }
+                R.id.global_timeline ->{
+                    setFragment(TimelineFragment.getInstance(TimelineTypeEnum.GLOBAL))
+                    true
+                }
+                R.id.notification_item ->{
+                    false
+                }
+                R.id.message_item ->{
+                    false
+                }
+                else -> false
+
+            }
+        }
 
         updateHeaderProfile()
 
 
+
+    }
+
+    private fun setFragment(fragment: Fragment){
+        val sf = supportFragmentManager
+        val ft = sf.beginTransaction()
+        ft.addToBackStack(null)
+        ft.replace(R.id.main_container, fragment)
+        ft.commit()
     }
 
     private fun updateHeaderProfile(){
@@ -88,7 +128,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
-        } else {
+            return
+        }
+        val size = supportFragmentManager.fragments.size
+        if(size > 0){
+            supportFragmentManager.popBackStack()
+            val fragments = supportFragmentManager.fragments
+
+        }else{
             super.onBackPressed()
         }
     }
@@ -135,4 +182,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+
+    /*override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        return if(keyCode == KeyEvent.KEYCODE_BACK){
+            supportFragmentManager.popBackStack()
+            super.onKeyDown(keyCode, event)
+        }else{
+            false
+        }
+    }*/
 }
