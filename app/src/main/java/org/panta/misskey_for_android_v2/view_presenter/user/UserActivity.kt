@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_user.*
-import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.content_user.*
 import org.panta.misskey_for_android_v2.R
-import org.panta.misskey_for_android_v2.view_presenter.PagerAdapter
+import org.panta.misskey_for_android_v2.view_presenter.mixed_timeline.PagerAdapter
 
 class UserActivity : AppCompatActivity() {
 
@@ -20,7 +19,8 @@ class UserActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
-        val pageAdapter = PagerAdapter(supportFragmentManager)
+        val pageAdapter =
+            PagerAdapter(supportFragmentManager)
         user_view_pager.offscreenPageLimit = 2
         user_view_pager.adapter = pageAdapter
 

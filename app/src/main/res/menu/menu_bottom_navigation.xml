@@ -7,9 +7,9 @@
 
             android:title="ホーム"/>
     <item
-            android:id="@+id/global_timeline"
-            android:icon="@drawable/global_icon"
-            android:title="グローバル"/>
+            android:id="@+id/mix_timeline"
+            android:icon="@drawable/rice_icon"
+            android:title="炊き込みご飯"/>
     <item
             android:id="@+id/notification_item"
             android:icon="@drawable/bell_icon"

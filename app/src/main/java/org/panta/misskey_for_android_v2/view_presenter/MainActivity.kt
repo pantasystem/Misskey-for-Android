@@ -2,24 +2,22 @@ package org.panta.misskey_for_android_v2.view_presenter
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.repository.MyInfo
+import org.panta.misskey_for_android_v2.view_presenter.mixed_timeline.MixedTimelineFragment
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
 import java.util.*
@@ -68,8 +66,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     setFragment(TimelineFragment.getInstance(TimelineTypeEnum.HOME))
                     true
                 }
-                R.id.global_timeline ->{
-                    setFragment(TimelineFragment.getInstance(TimelineTypeEnum.GLOBAL))
+                R.id.mix_timeline ->{
+                    setFragment(MixedTimelineFragment())
                     true
                 }
                 R.id.notification_item ->{
@@ -108,9 +106,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             .into(my_account_icon)
                     }
 
-                    if(it.name != null){
-                        my_name.text = it.name
-                    }
+                    my_name.text = it.name?: it.userName
+
                     val userName = if(it.host != null){
                         "@${it.userName}@${it.host}"
                     }else{

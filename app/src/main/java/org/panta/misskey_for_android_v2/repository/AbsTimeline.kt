@@ -128,6 +128,7 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
                 NoteType.REPLY ->{
                     Log.d("AbsTimeline", "$reply")
                     Log.d("AbsTimeline", "ノートタイプ, $noteType")
+
                     replyList.add(NoteViewData(reply!!, isReply = false, isOriginReply = true, type = noteType, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
                     replyList.add(NoteViewData(n, isReply = true, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
                 }
@@ -139,6 +140,8 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
         }
         return replyList
     }
+
+
 
     //FIXME メディアOnlyの時にうまく認識できない
     private fun checkUpNoteType(note: Note): NoteType{

@@ -144,6 +144,8 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
             val args = Bundle()
             args.putString(ReactionDialog.TARGET_NOTE_ID, targetId)
             reactionDialog.arguments = args
+
+            //FIXME ミックスタイムラインから呼び出されると落ちる
             reactionDialog.setTargetFragment(this, reactionRequestCode)
             reactionDialog.show(activity?.supportFragmentManager, "reaction_tag")
         }

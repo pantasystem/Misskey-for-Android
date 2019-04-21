@@ -121,8 +121,8 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         userId.setOnClickListener(listener)
 
         setUserIcon(user?.avatarUrl?: "not found")
-        setUserName(user?.name.toString())
-        setUserId(user?.userName.toString())
+        setUserName(user?.name?: user?.userName.toString())
+        setUserId(getUserId(user?.userName.toString(), user?.host))
 
     }
     fun setImage(fileList: List<FileProperty>){
@@ -175,8 +175,8 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     fun setSubUser(user: User){
         setSubUserIcon(user.avatarUrl.toString())
-        setSubUserName(user.name.toString())
-        setSubUserId(user.userName)
+        setSubUserName(user.name?: user.userName)
+        setSubUserId(getUserId(user.userName, user.host))
     }
 
     private fun setSubUserIcon(imageUrl: String){
@@ -186,6 +186,14 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
             .load(imageUrl)
             .into(subUserIcon)
 
+    }
+
+    private fun getUserId(userId: String, host: String?): String{
+        return if(host == null){
+            "@$userId"
+        }else{
+            "@$userId@$host"
+        }
     }
 
     private fun setSubUserName(userName: String){

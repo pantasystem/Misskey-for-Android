@@ -19,11 +19,11 @@ import java.io.Serializable
     @JsonProperty("visibilityUserIds") val visibilityUserIds: List<String?>?,
     @JsonProperty("url") val url: String?,
     @JsonProperty("renoteCount") val reNoteCount: Int,
-    @JsonProperty("reactionCounts") val reactionCounts: ReactionCount?,
+    @JsonProperty("reactions") val reactionCounts: ReactionCount?,
     @JsonProperty("repliesCount") val replyCount: Int,
     @JsonProperty("user") val user: User?,
-    @JsonProperty("files") val files: List<FileProperty?>?,
-    @JsonProperty("mediaIds") val mediaIds: List<Any?>?,
+    @JsonProperty("files") val files: List<FileProperty?>?, //原因
+    @JsonProperty("fileIds") val mediaIds: List<String?>?,
     @JsonProperty("renote") val renote: Note?,
     @JsonProperty("reply") val reply: Note?,
     @JsonProperty("myReaction") val myReaction: String?

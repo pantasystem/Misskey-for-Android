@@ -7,5 +7,5 @@ import java.io.Serializable
 @JsonIgnoreProperties(ignoreUnknown=true) data class Propertie(
     @JsonProperty("width") val width: Int? =null,
     @JsonProperty("height") val height: Int? = null,
-    @JsonProperty("avgColor") val avgColor: List<Int?>? = null
+    @JsonProperty("avgColor") val avgColor: String? = null
 ):Serializable
