@@ -18,13 +18,16 @@ import org.panta.misskey_for_android_v2.adapter.TimelineAdapter
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.dialog.ReactionDialog
 import org.panta.misskey_for_android_v2.entity.Note
+import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
+import org.panta.misskey_for_android_v2.interfaces.UserClickListener
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import org.panta.misskey_for_android_v2.view_presenter.image_viewer.ImageViewerActivity
 import org.panta.misskey_for_android_v2.view_presenter.note_description.NoteDescriptionActivity
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
+import org.panta.misskey_for_android_v2.view_presenter.user.UserActivity
 
-class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, TimelineContract.View, NoteClickListener{
+class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, TimelineContract.View, NoteClickListener, UserClickListener{
 
 
     companion object{
@@ -78,28 +81,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         }
     }
 
-    private val listener = object : RecyclerView.OnScrollListener(){
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-        }
 
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-            val visibleItemCount = recyclerView.childCount
-            val totalItemCount = mLayoutManager.itemCount
-            val firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition()
-            if( ! recyclerView.canScrollVertically(-1)){
-                //先頭に来た場合
-                refresh.isEnabled = true
-                Log.d("TimelineFragment", "先頭に来た")
-            }
-            if( ! recyclerView.canScrollVertically(1)){
-                //最後に来た場合
-                refresh.isEnabled = false   //stopRefreshing関数を設けているがあえてこの形にしている
-                mPresenter.getOldTimeline()
-            }
-        }
-    }
 
     override fun showInitTimeline(list: List<NoteViewData>) {
         activity?.runOnUiThread {
@@ -108,6 +90,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
             Log.d("TimelineFragment", "データの取得が完了した")
             mAdapter = TimelineAdapter(context!!, list)
             mAdapter.addNoteClickListener(this)
+            mAdapter.addUserClickListener(this)
 
 
             timelineView.layoutManager = mLayoutManager
@@ -229,6 +212,34 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
             if(targetNoteId != null){
                 mPresenter.sendReaction(noteId = targetNoteId, reactionType = reaction)
 
+            }
+        }
+    }
+
+    override fun onClickedUser(user: User) {
+        val intent = Intent(context, UserActivity::class.java)
+        startActivity(intent)
+    }
+
+    private val listener = object : RecyclerView.OnScrollListener(){
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+        }
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            val visibleItemCount = recyclerView.childCount
+            val totalItemCount = mLayoutManager.itemCount
+            val firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition()
+            if( ! recyclerView.canScrollVertically(-1)){
+                //先頭に来た場合
+                refresh.isEnabled = true
+                Log.d("TimelineFragment", "先頭に来た")
+            }
+            if( ! recyclerView.canScrollVertically(1)){
+                //最後に来た場合
+                refresh.isEnabled = false   //stopRefreshing関数を設けているがあえてこの形にしている
+                mPresenter.getOldTimeline()
             }
         }
     }

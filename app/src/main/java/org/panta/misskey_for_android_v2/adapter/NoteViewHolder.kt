@@ -255,9 +255,6 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         this.userId.text = userId
     }
 
-
-
-
     private fun picasso(imageUrl: String, imageView: ImageView){
         imageView.visibility = View.VISIBLE
         Picasso
