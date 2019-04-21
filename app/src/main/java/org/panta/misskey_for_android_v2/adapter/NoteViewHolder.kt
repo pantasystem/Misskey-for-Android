@@ -7,11 +7,14 @@ import android.widget.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_note.view.*
 import org.panta.misskey_for_android_v2.entity.Note
+import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
+import org.panta.misskey_for_android_v2.interfaces.UserClickListener
 
 class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     private var clickListener: NoteClickListener? = null
+    private var userClickListener: UserClickListener? = null
     private var targetPrimaryId: String? = null
     private var note: Note? = null
 
@@ -80,83 +83,70 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
             clickListener?.onDescriptionButtonClicked(targetPrimaryId, note)
         }
 
-        /*val imagesTouchListener = object : View.OnTouchListener{
-            @SuppressLint("ClickableViewAccessibility")
-            override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
-                return true
+
+    }
+
+
+    fun setWhoReactionUserLink(user: User?, status: String){
+        whoReactionUserLink.visibility = View.VISIBLE
+        val text = "${user?.name}さんが${status}しました"
+        whoReactionUserLink.text = text
+        whoReactionUserLink.setOnClickListener{
+            if(user != null){
+                userClickListener?.onClickedUser(user)
             }
         }
-
-        userIcon.setOnTouchListener(imagesTouchListener)
-        imageView1.setOnTouchListener(imagesTouchListener)
-        imageView2.setOnTouchListener(imagesTouchListener)
-        imageView3.setOnTouchListener(imagesTouchListener)
-        imageView4.setOnTouchListener(imagesTouchListener)
-        subUserIcon.setOnTouchListener(imagesTouchListener)*/
-    }
-
-
-    fun setWhoReactionUserLink(userName: String, status: String, userPrimaryId: String){
-        whoReactionUserLink.visibility = View.VISIBLE
-        val text = "${userName}さんが${status}しました"
-        whoReactionUserLink.text = text
-    }
-
-    fun setUserIcon(imageUrl: String){
-        Picasso
-            .get()
-            .load(imageUrl)
-            .into(userIcon)
-    }
-    fun setUserName(userNameText: String){
-        userName.text = userNameText
-    }
-    fun setUserId(userId: String){
-        this.userId.text = userId
     }
 
     fun setNoteText(text: String){
         noteText.text= text
     }
 
+    fun setUser(user: User?){
+        val listener = View.OnClickListener {
+            when(it){
+                userIcon, userName, userName ->{
+                    if(user == null){
+
+                    }else{
+                        userClickListener?.onClickedUser(user)
+                    }
+                }
+            }
+        }
+        userIcon.setOnClickListener(listener)
+        userName.setOnClickListener(listener)
+        userId.setOnClickListener(listener)
+
+        setUserIcon(user?.avatarUrl?: "not found")
+        setUserName(user?.name.toString())
+        setUserId(user?.userName.toString())
+
+    }
     fun setImage(urlList: List<String>){
         imageView1.visibility = View.GONE
         imageView2.visibility = View.GONE
         imageView3.visibility = View.GONE
         imageView4.visibility = View.GONE
-        when(urlList.size){
-            0 -> {
 
-            }
-            1->{
-                imageView1.visibility = View.VISIBLE
-                picasso(urlList[0], imageView1)
-            }
-            2->{
-                picasso(urlList[0], imageView1)
-                picasso(urlList[1], imageView2)
-                imageView1.visibility = View.VISIBLE
-                imageView2.visibility = View.VISIBLE
-            }
-            3->{
-                picasso(urlList[0], imageView1)
-                picasso(urlList[1], imageView2)
-                picasso(urlList[2], imageView3)
-                imageView1.visibility = View.VISIBLE
-                imageView2.visibility = View.VISIBLE
-                imageView3.visibility = View.VISIBLE
-            }
-            4->{
-                picasso(urlList[0], imageView1)
-                picasso(urlList[1], imageView2)
-                picasso(urlList[2], imageView3)
-                picasso(urlList[3], imageView4)
-                imageView1.visibility = View.VISIBLE
-                imageView2.visibility = View.VISIBLE
-                imageView3.visibility = View.VISIBLE
-                imageView4.visibility = View.VISIBLE
-            }
+        if(urlList.isNotEmpty()){
+            imageView1.visibility = View.VISIBLE
+            picasso(urlList[0], imageView1)
         }
+        if(urlList.size >= 2){
+            picasso(urlList[1], imageView2)
+            imageView2.visibility = View.VISIBLE
+        }
+
+        if(urlList.size >= 3){
+            picasso(urlList[2], imageView3)
+            imageView3.visibility = View.VISIBLE
+        }
+        if(urlList.size >= 4){
+            picasso(urlList[3], imageView4)
+            imageView4.visibility = View.VISIBLE
+        }
+
 
         val imageClickListener = View.OnClickListener { p0 ->
             val clickedImageIndex = when(p0){
@@ -178,15 +168,13 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     }
 
-    private fun picasso(imageUrl: String, imageView: ImageView){
-        imageView.visibility = View.VISIBLE
-        Picasso
-            .get()
-            .load(imageUrl)
-            .into(imageView)
+    fun setSubUser(user: User){
+        setSubUserIcon(user.avatarUrl.toString())
+        setSubUserName(user.name.toString())
+        setSubUserId(user.userName)
     }
 
-    fun setSubUserIcon(imageUrl: String){
+    private fun setSubUserIcon(imageUrl: String){
         subUserIcon.visibility = View.VISIBLE
         Picasso
             .get()
@@ -195,12 +183,12 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     }
 
-    fun setSubUserName(userName: String){
+    private fun setSubUserName(userName: String){
         subUserName.text= userName
         subUserName.visibility = View.VISIBLE
     }
 
-    fun setSubUserId(userId: String){
+    private fun setSubUserId(userId: String){
         subUserId.text = userId
         subUserId.visibility = View.VISIBLE
     }
@@ -250,8 +238,33 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     }
 
+    fun addOnUserClickListener(listener: UserClickListener){
+        this.userClickListener = listener
+    }
+
+    private fun setUserIcon(imageUrl: String){
+        Picasso
+            .get()
+            .load(imageUrl)
+            .into(userIcon)
+    }
+    private fun setUserName(userNameText: String){
+        userName.text = userNameText
+    }
+    private fun setUserId(userId: String){
+        this.userId.text = userId
+    }
 
 
+
+
+    private fun picasso(imageUrl: String, imageView: ImageView){
+        imageView.visibility = View.VISIBLE
+        Picasso
+            .get()
+            .load(imageUrl)
+            .into(imageView)
+    }
 
 
 }

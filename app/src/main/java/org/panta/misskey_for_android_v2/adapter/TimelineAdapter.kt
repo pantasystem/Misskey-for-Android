@@ -13,12 +13,14 @@ import org.panta.misskey_for_android_v2.entity.FileProperty
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
+import org.panta.misskey_for_android_v2.interfaces.UserClickListener
 import org.panta.misskey_for_android_v2.repository.AbsTimeline
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
 class TimelineAdapter(private val context: Context, private val notesList: List<NoteViewData>) : RecyclerView.Adapter<NoteViewHolder>(){
 
-    var noteClickListener: NoteClickListener? = null
+    private var noteClickListener: NoteClickListener? = null
+    private var userClickListener: UserClickListener? = null
 
     override fun getItemCount(): Int {
         return notesList.size
@@ -39,7 +41,7 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         when {
             viewData.isOriginReply -> p0.backgroundColor(1)
             viewData.isReply -> {
-                p0.setWhoReactionUserLink(note.user?.name?:"not found", "クソリプ", note.user?.id?:"not found")
+                p0.setWhoReactionUserLink(note.user, "クソリプ")
                 p0.backgroundColor(0)
             }
             else -> p0.backgroundColor(0)
@@ -64,13 +66,15 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         p0.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, testReactionData))*/
 
 
+        if(userClickListener != null){
+            p0.addOnUserClickListener(userClickListener!!)
+        }
         //このセット方法はいろいろ面倒なのでリファクタリング(NoteViewHolderを)予定
         when {
             viewData.type == AbsTimeline.NoteType.REPLY -> {
 
-                p0.setUserName(note.user?.name?:"not found")
-                p0.setUserId(note.user?.userName?: "not found")
-                p0.setUserIcon(note.user?.avatarUrl?: "not found")
+
+                p0.setUser(note.user)
                 p0.setNoteText(note.text?: "not found")
 
                 setImageData(p0, note)
@@ -81,9 +85,8 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
             viewData.type == AbsTimeline.NoteType.NOTE -> {
                 //これはNote
                 p0.whoReactionUserLink.visibility = View.GONE
-                p0.setUserId(note.user?.userName?: "user id not found")
-                p0.setUserName(note.user?.name?: "user name not found")
-                p0.setUserIcon(note.user?.avatarUrl?: "not found")
+
+                p0.setUser(note.user)
                 p0.setNoteText(note.text?:"not found")
                 //resultReaction(it.id)
                 setImageData(p0, note)
@@ -94,10 +97,8 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
             viewData.type == AbsTimeline.NoteType.RE_NOTE -> {
                 //これはリノート
 
-                p0.setWhoReactionUserLink(note.user?.name?:"nof found", "無断リノート", note.user?.id?:"note found")
-                p0.setUserId(note.renote?.user?.userName?: "user id not found")
-                p0.setUserName(note.renote?.user?.name?: "user name not found")
-                p0.setUserIcon(note.renote?.user?.avatarUrl?: "not found")
+                p0.setWhoReactionUserLink(note.user, "無断リノート")
+                p0.setUser(note.renote?.user)
                 p0.setNoteText(note.renote?.text?:"")
 
                 setImageData(p0, note.renote!!)
@@ -108,14 +109,14 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
                 p0.addOnItemClickListener(note.renote.id, note.renote, noteClickListener)
             }
             viewData.type == AbsTimeline.NoteType.QUOTE_RE_NOTE -> {
-                p0.setUserId(note.user?.userName?: "user id not found")
-                p0.setUserName(note.user?.name?: "user name not found")
-                p0.setUserIcon(note.user?.avatarUrl?: "not found")
+
+                p0.setUser(note.user)
                 p0.setNoteText(note.text?: "not found")
 
-                p0.setSubUserId(note.renote?.user?.userName?: "user id not found")
-                p0.setSubUserName(note.renote?.user?.name?: "user name not found")
-                p0.setSubUserIcon(note.renote?.user?.avatarUrl?: "not found")
+                if(note.renote?.user != null){
+                    p0.setSubUser(note.renote.user)
+                }
+
                 p0.setSubNoteText(note.renote?.text?:"")
                 setImageData(p0, note)
 
@@ -176,6 +177,10 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
 
     fun addNoteClickListener(listener: NoteClickListener){
         this.noteClickListener = listener
+    }
+
+    fun addUserClickListener(listener: UserClickListener){
+        this.userClickListener = listener
     }
 
 
