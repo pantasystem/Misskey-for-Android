@@ -9,11 +9,15 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
+import org.panta.misskey_for_android_v2.repository.MyInfo
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
 
@@ -25,7 +29,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
 
-        fab.setOnClickListener { _ ->
+        fab.setOnClickListener {
             val intent = Intent(applicationContext, EditNoteActivity::class.java)
             startActivity(intent)
         }
@@ -48,7 +52,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         tab_menu.setupWithViewPager(view_pager)
 
+        updateHeaderProfile()
 
+
+    }
+
+    private fun updateHeaderProfile(){
+        MyInfo(domain = ApplicationConstant.domain, authKey =ApplicationConstant.authKey)
+            .getMyInfo {
+                runOnUiThread {
+                    if(it.avatarUrl != null){
+                        Picasso
+                            .get()
+                            .load(it.avatarUrl)
+                            .into(my_account_icon)
+                    }
+
+                    if(it.name != null){
+                        my_name.text = it.name
+                    }
+                    val userName = if(it.host != null){
+                        "@${it.userName}@${it.host}"
+                    }else{
+                        "@${it.userName}"
+                    }
+                    my_user_name.text = userName
+
+                }
+            }
     }
 
 
@@ -70,9 +101,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

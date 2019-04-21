@@ -5,7 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.panta.misskey_for_android_v2.entity.RequestTimelineProperty
 import java.net.URL
 
-class HomeTimeline(private val domain: String, private val authKey: String) : AbsTimeline(URL("$domain/api/notes/timeline")) {
+class HomeTimeline(domain: String, private val authKey: String) : AbsTimeline(URL("$domain/api/notes/timeline")) {
 
     private val mapper = jacksonObjectMapper()
 
