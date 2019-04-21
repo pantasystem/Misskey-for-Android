@@ -78,6 +78,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                     my_user_name.text = userName
 
+                    follower_count.text = it.followersCount.toString()
+                    following_count.text= it.followingCount.toString()
                 }
             }
     }
