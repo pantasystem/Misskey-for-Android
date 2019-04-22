@@ -13,7 +13,7 @@ import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
 
-class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     private var clickListener: NoteClickListener? = null
     private var userClickListener: UserClickListener? = null
@@ -48,18 +48,18 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val descriptionButton: ImageButton = itemView.description_button
 
     init{
+        imageViewList = listOf(imageView1, imageView2, imageView3, imageView4)
         viewInit()
+
         initButtonsClickListener()
 
-        imageViewList = listOf(imageView1, imageView2, imageView3, imageView4)
     }
 
     fun viewInit(){
         whoReactionUserLink.visibility = View.GONE
-        imageView1.visibility = View.GONE
-        imageView2.visibility = View.GONE
-        imageView3.visibility = View.GONE
-        imageView4.visibility = View.GONE
+        imageViewList.forEach{
+            it.visibility = View.GONE
+        }
 
         subUserIcon.visibility = View.GONE
         subUserName.visibility = View.GONE
@@ -84,13 +84,14 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     fun setNote(note: Note){
         this.setUser(note.user)
-        this.setNoteText(note.text?:"not found")
+        noteText.text= note.text.toString()
         //setImageData(p0, note)
+        this.setImage(filterImageData(note))
         this.setReplyCount(note.replyCount)
         this.setReNoteCount(note.reNoteCount)
     }
 
-    fun setImage(fileList: List<FileProperty>){
+    private fun setImage(fileList: List<FileProperty>){
 
         val imageClickListener = View.OnClickListener { p0 ->
             val clickedImageIndex = when(p0){
@@ -148,6 +149,9 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         this.note = note
 
     }
+    fun addOnUserClickListener(listener: UserClickListener?){
+        this.userClickListener = listener
+    }
 
     private fun setSubUserName(userName: String){
         subUserName.text= userName
@@ -159,9 +163,9 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         subUserId.visibility = View.VISIBLE
     }
 
-    private fun setNoteText(text: String){
+    /*private fun setNoteText(text: String){
         noteText.text= text
-    }
+    }*/
 
     private fun setUser(user: User?){
         val listener = View.OnClickListener {
@@ -180,8 +184,8 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         userId.setOnClickListener(listener)
 
         setUserIcon(user?.avatarUrl?: "not found")
-        setUserName(user?.name?: user?.userName.toString())
-        setUserId(getUserId(user?.userName.toString(), user?.host))
+        this.userName.text = user?.name?: user?.userName.toString()
+        this.userId.text = getUserId(user?.userName.toString(), user?.host)
 
     }
 
@@ -241,9 +245,6 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
             reNoteCount.visibility = View.INVISIBLE
         }
     }
-    fun addOnUserClickListener(listener: UserClickListener){
-        this.userClickListener = listener
-    }
 
     private fun setUserIcon(imageUrl: String){
         Picasso
@@ -251,11 +252,19 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
             .load(imageUrl)
             .into(userIcon)
     }
-    private fun setUserName(userNameText: String){
-        userName.text = userNameText
-    }
-    private fun setUserId(userId: String){
-        this.userId.text = userId
+
+
+    private fun filterImageData(data: Note): List<FileProperty>{
+
+        val fileList = data.files ?: return emptyList()
+        val nonNullUrlList = ArrayList<FileProperty>()
+        for(n in fileList){
+            val isImage = n?.type != null && n.type.startsWith("image")
+            if(isImage && n?.url != null){
+                nonNullUrlList.add(n)
+            }
+        }
+        return nonNullUrlList
     }
 
     private fun picasso(imageUrl: String, imageView: ImageView, isSensitive: Boolean?){

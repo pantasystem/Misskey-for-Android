@@ -2,16 +2,20 @@ package org.panta.misskey_for_android_v2.view_presenter.notification
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_notification.*
 import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.adapter.NotificationAdapter
 import org.panta.misskey_for_android_v2.entity.NotificationProperty
 
 class NotificationFragment : Fragment(), NotificationContract.View{
 
     override var mPresenter: NotificationContract.Presenter = NotificationPresenter(this)
+
+    private lateinit var mLayoutManager: LinearLayoutManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -21,6 +25,7 @@ class NotificationFragment : Fragment(), NotificationContract.View{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mLayoutManager = LinearLayoutManager(context)
         mPresenter.initNotification()
 
     }
@@ -39,7 +44,10 @@ class NotificationFragment : Fragment(), NotificationContract.View{
 
     override fun showInitNotification(list: List<NotificationProperty>) {
         activity?.runOnUiThread{
-            notification_status_test.text = list.toString()
+
+            notification_view.layoutManager = mLayoutManager
+            notification_view.adapter = NotificationAdapter(list)
+
         }
     }
 

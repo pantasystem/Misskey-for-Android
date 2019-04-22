@@ -3,15 +3,12 @@
                                              xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
                                              android:layout_height="match_parent">
 
-    <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/notification_status_test"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"/>
     <android.support.v4.widget.SwipeRefreshLayout android:layout_width="match_parent"
                                                   android:layout_height="match_parent" android:id="@+id/refresh"
-                                                  android:visibility="gone"/>
+                                                  android:visibility="visible">
+        <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/notification_view"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.constraint.ConstraintLayout>

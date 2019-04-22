@@ -12,5 +12,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
     @JsonProperty("id") val id: String,
     @JsonProperty("userId") val userId: String,
     @JsonProperty("user") val user: User,
-    @JsonProperty("note") val note: Note?
+    @JsonProperty("note") val note: Note?,
+    @JsonProperty("reaction") val reaction: String?
 )

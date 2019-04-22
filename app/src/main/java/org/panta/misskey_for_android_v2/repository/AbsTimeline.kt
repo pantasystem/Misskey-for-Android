@@ -20,6 +20,7 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
 
     enum class NoteType{
         REPLY,
+        REPLY_TO,   //返信先
         NOTE,
         RE_NOTE,
         QUOTE_RE_NOTE,
@@ -122,15 +123,13 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
             val noteType = checkUpNoteType(n)
             val reply = n.reply
             when(noteType){
-                NoteType.NOTE,NoteType.QUOTE_RE_NOTE -> replyList.add(NoteViewData(n, isReply = false, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
-                NoteType.RE_NOTE -> replyList.add(NoteViewData(n, isReply = false, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.renote?.reactionCounts)))
+                NoteType.NOTE,NoteType.QUOTE_RE_NOTE -> replyList.add(NoteViewData(n, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
+                NoteType.RE_NOTE -> replyList.add(NoteViewData(n, type = noteType, reactionCountPairList = createReactionCountPair(n.renote?.reactionCounts)))
 
                 NoteType.REPLY ->{
-                    Log.d("AbsTimeline", "$reply")
-                    Log.d("AbsTimeline", "ノートタイプ, $noteType")
 
-                    replyList.add(NoteViewData(reply!!, isReply = false, isOriginReply = true, type = noteType, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
-                    replyList.add(NoteViewData(n, isReply = true, isOriginReply = false, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
+                    replyList.add(NoteViewData(reply!!, type = NoteType.REPLY_TO, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
+                    replyList.add(NoteViewData(n, type = NoteType.REPLY, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
                 }
                 else-> {
                     Log.w("AbsTimeline", "わからないタイプのノートが来てしまった:$n")

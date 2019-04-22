@@ -3,15 +3,10 @@ package org.panta.misskey_for_android_v2.adapter
 import android.content.Context
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
-import org.panta.misskey_for_android_v2.constant.ReactionConstData
-import org.panta.misskey_for_android_v2.entity.FileProperty
-import org.panta.misskey_for_android_v2.entity.Note
-import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
 import org.panta.misskey_for_android_v2.repository.AbsTimeline
@@ -32,103 +27,51 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
 
     }
 
-    override fun onBindViewHolder(p0: NoteViewHolder, p1: Int) {
+    override fun onBindViewHolder(viewHolder: NoteViewHolder, p1: Int) {
         val viewData = notesList[p1]
-        val note = notesList[p1].note
 
-        p0.viewInit()
-
-        when {
-            viewData.isOriginReply -> p0.backgroundColor(1)
-            viewData.isReply -> {
-                p0.setWhoReactionUserLink(note.user, "クソリプ")
-                p0.backgroundColor(0)
-            }
-            else -> p0.backgroundColor(0)
-        }
-
+        viewHolder.viewInit()
+       //リアクションをセットしている
         if(viewData.reactionCountPairList.isNotEmpty()){
-            p0.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, viewData.reactionCountPairList))
+            viewHolder.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, viewData.reactionCountPairList))
         }
-        //Test
-        /*val testReactionData = arrayListOf(
-            ReactionCountPair(ReactionConstData.CONGRATS, "10"),
-            ReactionCountPair(ReactionConstData.CONFUSED, "10"),
-            ReactionCountPair(ReactionConstData.ANGRY, "10"),
-            ReactionCountPair(ReactionConstData.HMM, "10"),
-            ReactionCountPair(ReactionConstData.LAUGH, "10"),
-            ReactionCountPair(ReactionConstData.LIKE, "10"),
-            ReactionCountPair(ReactionConstData.LOVE, "10"),
-            ReactionCountPair(ReactionConstData.PUDDING, "10"),
-            ReactionCountPair(ReactionConstData.RIP, "10"),
-            ReactionCountPair(ReactionConstData.SURPRISE, "10")
-            )
-        p0.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, testReactionData))*/
 
-
-        if(userClickListener != null){
-            p0.addOnUserClickListener(userClickListener!!)
-        }
-        //このセット方法はいろいろ面倒なのでリファクタリング(NoteViewHolderを)予定
-        when {
+        viewHolder.backgroundColor(0)
+        val note = when{
             viewData.type == AbsTimeline.NoteType.REPLY -> {
-                setImageData(p0, note)
-
-                p0.setNote(note)
-                p0.addOnItemClickListener(note.id, note, noteClickListener)
+                viewHolder.setWhoReactionUserLink(viewData.note.user, "クソリプ")
+                viewData.note
+            }
+            viewData.type == AbsTimeline.NoteType.REPLY_TO ->{
+                viewHolder.backgroundColor(1)
+                viewData.note
             }
             viewData.type == AbsTimeline.NoteType.NOTE -> {
                 //これはNote
-                p0.whoReactionUserLink.visibility = View.GONE
-                setImageData(p0, note)
-
-                p0.setNote(note)
-                p0.addOnItemClickListener(note.id, note, noteClickListener)
+                viewHolder.whoReactionUserLink.visibility = View.GONE
+                viewData.note
             }
             viewData.type == AbsTimeline.NoteType.RE_NOTE -> {
                 //これはリノート
-                setImageData(p0, note.renote!!)
-
-                p0.setWhoReactionUserLink(note.user, "無断リノート")
-                p0.setNote(note.renote)
-
-                p0.addOnItemClickListener(note.renote.id, note.renote, noteClickListener)
+                viewHolder.setWhoReactionUserLink(viewData.note.user, "無断リノート")
+                viewData.note.renote!!
             }
             viewData.type == AbsTimeline.NoteType.QUOTE_RE_NOTE -> {
-
-
-
-                if(note.renote?.user != null){
-                    p0.setSubUser(note.renote.user)
+                if(viewData.note.renote?.user != null){
+                    viewHolder.setSubUser(viewData.note.renote.user)
                 }
-
-                p0.setSubNoteText(note.renote?.text?:"")
-                setImageData(p0, note)
-
-                p0.addOnItemClickListener(note.id, note, noteClickListener)
-            }
-
-        }
-    }
-
-    private fun setImageData(p0: NoteViewHolder, data: Note){
-        val fileList = data.files?:return
-        val nonNullFiles = ArrayList<FileProperty>()
-        for(m in fileList){
-            if(m != null){
-                nonNullFiles.add(m)
+                viewHolder.setSubNoteText(viewData.note.renote?.text?:"")
+                viewData.note.renote!!
+            }else ->{
+                null
             }
         }
-        val imageData = nonNullFiles.filter{
-            it.type != null && it.type.startsWith("image")
+
+        if(note != null){
+            viewHolder.addOnItemClickListener(note.id, note, noteClickListener)
+            viewHolder.setNote(note)
         }
-        val nonNullUrlList = ArrayList<FileProperty>()
-        for(n in imageData){
-            if(n.url != null){
-                nonNullUrlList.add(n)
-            }
-        }
-        p0.setImage(nonNullUrlList)
+       
     }
 
     fun addAllFirst(list: List<NoteViewData>){
@@ -137,7 +80,6 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
                 notesList.addAll(0, list)
             }
             Handler().post{
-                //実験段階不具合の可能性有り
                 notifyItemRangeInserted(0, list.size)
             }
         }
@@ -167,3 +109,18 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
 
 
 }
+
+//Test
+/*val testReactionData = arrayListOf(
+    ReactionCountPair(ReactionConstData.CONGRATS, "10"),
+    ReactionCountPair(ReactionConstData.CONFUSED, "10"),
+    ReactionCountPair(ReactionConstData.ANGRY, "10"),
+    ReactionCountPair(ReactionConstData.HMM, "10"),
+    ReactionCountPair(ReactionConstData.LAUGH, "10"),
+    ReactionCountPair(ReactionConstData.LIKE, "10"),
+    ReactionCountPair(ReactionConstData.LOVE, "10"),
+    ReactionCountPair(ReactionConstData.PUDDING, "10"),
+    ReactionCountPair(ReactionConstData.RIP, "10"),
+    ReactionCountPair(ReactionConstData.SURPRISE, "10")
+    )
+p0.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, testReactionData))*/

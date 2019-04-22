@@ -8,4 +8,4 @@ import org.panta.misskey_for_android_v2.repository.AbsTimeline
 //isOriginReplyは途中で追加されたデータなので最新のデータにはならない
 //isReplyが最新となるがViewにはisOriginReplayが先に挿入される
 //通常のNote,RNの場合は両方ともがFalseとなる
-data class NoteViewData(val note: Note, val isReply: Boolean, val isOriginReply: Boolean, val type: AbsTimeline.NoteType, val reactionCountPairList: List<ReactionCountPair>)
+data class NoteViewData(val note: Note,  val type: AbsTimeline.NoteType, val reactionCountPairList: List<ReactionCountPair>)

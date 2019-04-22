@@ -98,7 +98,10 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
 
     private fun searchLatestNoteId(list: List<NoteViewData>): NoteViewData?{
         for(n in list){
-            if(! n.isOriginReply){
+            /*if(! n.isOriginReply){
+                return n
+            }*/
+            if(n.type != AbsTimeline.NoteType.REPLY_TO){
                 return n
             }
         }
@@ -108,7 +111,10 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
     private fun searchOldestNoteId(list: List<NoteViewData>): NoteViewData?{
         for(n in (list.size - 1).downTo(0)){
             val noteViewData = list[n]
-            if(!noteViewData.isOriginReply){
+            /*if(!noteViewData.isOriginReply){
+                return noteViewData
+            }*/
+            if(noteViewData.type != AbsTimeline.NoteType.REPLY_TO){
                 return noteViewData
             }
         }
