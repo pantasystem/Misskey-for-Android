@@ -19,6 +19,7 @@ import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.repository.MyInfo
 import org.panta.misskey_for_android_v2.view_presenter.mixed_timeline.MixedTimelineFragment
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
+import org.panta.misskey_for_android_v2.view_presenter.notification.NotificationFragment
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
 import java.util.*
 
@@ -71,7 +72,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     true
                 }
                 R.id.notification_item ->{
-                    false
+                    setFragment(NotificationFragment())
+                    true
                 }
                 R.id.message_item ->{
                     false

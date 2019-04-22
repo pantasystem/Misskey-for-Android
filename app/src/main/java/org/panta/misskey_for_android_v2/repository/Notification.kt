@@ -21,7 +21,7 @@ class Notification(private val domain: String, private val authKey: String){
             try{
                 val reqObj = RequestNotificationProperty(i = authKey, limit = 10)
                 val reqJson = mapper.writeValueAsString(reqObj)
-                val responseStream = connection.post(URL("$domain/api/i/notification"), reqJson)
+                val responseStream = connection.post(URL("$domain/api/i/notifications"), reqJson)
                 val resJson = StreamConverter().getString(responseStream)
                 val resObj: List<NotificationProperty> = mapper.readValue(resJson)
                 callBack(resObj)

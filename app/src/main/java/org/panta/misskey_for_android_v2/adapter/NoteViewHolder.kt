@@ -31,6 +31,7 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val imageView2: ImageView = itemView.image_2
     private val imageView3: ImageView = itemView.image_3
     private val imageView4: ImageView = itemView.image_4
+    private val imageViewList: List<ImageView>
 
     private val subUserIcon = itemView.sub_user_icon
     private val subUserName = itemView.sub_user_name
@@ -49,6 +50,8 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     init{
         viewInit()
         initButtonsClickListener()
+
+        imageViewList = listOf(imageView1, imageView2, imageView3, imageView4)
     }
 
     fun viewInit(){
@@ -65,6 +68,123 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         reactionView.visibility = View.GONE
 
     }
+
+
+
+    fun setWhoReactionUserLink(user: User?, status: String){
+        whoReactionUserLink.visibility = View.VISIBLE
+        val text = "${user?.name}さんが${status}しました"
+        whoReactionUserLink.text = text
+        whoReactionUserLink.setOnClickListener{
+            if(user != null){
+                userClickListener?.onClickedUser(user)
+            }
+        }
+    }
+
+    fun setNote(note: Note){
+        this.setUser(note.user)
+        this.setNoteText(note.text?:"not found")
+        //setImageData(p0, note)
+        this.setReplyCount(note.replyCount)
+        this.setReNoteCount(note.reNoteCount)
+    }
+
+    fun setImage(fileList: List<FileProperty>){
+
+        val imageClickListener = View.OnClickListener { p0 ->
+            val clickedImageIndex = when(p0){
+                imageView1 -> 0
+                imageView2 -> 1
+                imageView3 -> 2
+                imageView4 -> 3
+                else -> 0
+            }
+
+            val urlList: List<String> = fileList.map{it.url}.filter{it != null && it.isNotBlank()}.map{it.toString()}
+            clickListener?.onImageClicked(clickedImageIndex, urlList.toTypedArray())
+        }
+
+        imageViewList.forEach{
+            it.visibility = View.GONE
+            it.setOnClickListener(imageClickListener)
+        }
+
+
+        for(n in 0.until(fileList.size)){
+            picasso(fileList[n].url!!, imageViewList[n], fileList[n].isSensitive)
+        }
+
+    }
+
+    fun setSubUser(user: User){
+        setSubUserIcon(user.avatarUrl.toString())
+        setSubUserName(user.name?: user.userName)
+        setSubUserId(getUserId(user.userName, user.host))
+    }
+
+    fun setSubNoteText(text: String){
+        subNoteText.text = text
+        subNoteText.visibility = View.VISIBLE
+    }
+
+
+    fun setReactionCount(adapter: ReactionCountAdapter){
+        reactionView.adapter = adapter
+        reactionView.visibility = View.VISIBLE
+    }
+
+    fun backgroundColor(code: Int){
+        if(code == 1){
+            timelineItem.setBackgroundColor(Color.parseColor("#d3d3d3"))
+        }else{
+            timelineItem.setBackgroundColor(Color.WHITE/*Color.parseColor("#fff3f3f3")*/)
+        }
+    }
+
+    fun addOnItemClickListener(targetPrimaryId: String, note: Note, listener: NoteClickListener?){
+        clickListener = listener
+        this.targetPrimaryId = targetPrimaryId
+        this.note = note
+
+    }
+
+    private fun setSubUserName(userName: String){
+        subUserName.text= userName
+        subUserName.visibility = View.VISIBLE
+    }
+
+    private fun setSubUserId(userId: String){
+        subUserId.text = userId
+        subUserId.visibility = View.VISIBLE
+    }
+
+    private fun setNoteText(text: String){
+        noteText.text= text
+    }
+
+    private fun setUser(user: User?){
+        val listener = View.OnClickListener {
+            when(it){
+                userIcon, userName, userName ->{
+                    if(user == null){
+
+                    }else{
+                        userClickListener?.onClickedUser(user)
+                    }
+                }
+            }
+        }
+        userIcon.setOnClickListener(listener)
+        userName.setOnClickListener(listener)
+        userId.setOnClickListener(listener)
+
+        setUserIcon(user?.avatarUrl?: "not found")
+        setUserName(user?.name?: user?.userName.toString())
+        setUserId(getUserId(user?.userName.toString(), user?.host))
+
+    }
+
     private fun initButtonsClickListener(){
         timelineItem.setOnClickListener {
             clickListener?.onNoteClicked(targetPrimaryId, note)
@@ -87,98 +207,6 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
 
     }
-
-
-    fun setWhoReactionUserLink(user: User?, status: String){
-        whoReactionUserLink.visibility = View.VISIBLE
-        val text = "${user?.name}さんが${status}しました"
-        whoReactionUserLink.text = text
-        whoReactionUserLink.setOnClickListener{
-            if(user != null){
-                userClickListener?.onClickedUser(user)
-            }
-        }
-    }
-
-    fun setNoteText(text: String){
-        noteText.text= text
-    }
-
-    fun setUser(user: User?){
-        val listener = View.OnClickListener {
-            when(it){
-                userIcon, userName, userName ->{
-                    if(user == null){
-
-                    }else{
-                        userClickListener?.onClickedUser(user)
-                    }
-                }
-            }
-        }
-        userIcon.setOnClickListener(listener)
-        userName.setOnClickListener(listener)
-        userId.setOnClickListener(listener)
-
-        setUserIcon(user?.avatarUrl?: "not found")
-        setUserName(user?.name?: user?.userName.toString())
-        setUserId(getUserId(user?.userName.toString(), user?.host))
-
-    }
-    fun setImage(fileList: List<FileProperty>){
-        imageView1.visibility = View.GONE
-        imageView2.visibility = View.GONE
-        imageView3.visibility = View.GONE
-        imageView4.visibility = View.GONE
-
-        //val a = fileList[0].isSensitive
-
-        if(fileList.isNotEmpty()){
-            imageView1.visibility = View.VISIBLE
-            picasso(fileList[0].url!!, imageView1, fileList[0].isSensitive)
-        }
-        if(fileList.size >= 2){
-            picasso(fileList[1].url!!, imageView2, fileList[1].isSensitive)
-            imageView2.visibility = View.VISIBLE
-        }
-
-        if(fileList.size >= 3){
-            picasso(fileList[2].url!!, imageView3, fileList[2].isSensitive)
-            imageView3.visibility = View.VISIBLE
-        }
-        if(fileList.size >= 4){
-            picasso(fileList[3].url!!, imageView4, fileList[3].isSensitive)
-            imageView4.visibility = View.VISIBLE
-        }
-
-
-        val imageClickListener = View.OnClickListener { p0 ->
-            val clickedImageIndex = when(p0){
-                imageView1 -> 0
-                imageView2 -> 1
-                imageView3 -> 2
-                imageView4 -> 3
-                else -> 0
-            }
-
-            val urlList: List<String> = fileList.map{it.url}.filter{it != null && it.isNotBlank()}.map{it.toString()}
-            clickListener?.onImageClicked(clickedImageIndex, urlList.toTypedArray())
-        }
-
-        imageView1.setOnClickListener(imageClickListener)
-        imageView2.setOnClickListener(imageClickListener)
-        imageView3.setOnClickListener(imageClickListener)
-        imageView4.setOnClickListener(imageClickListener)
-
-
-    }
-
-    fun setSubUser(user: User){
-        setSubUserIcon(user.avatarUrl.toString())
-        setSubUserName(user.name?: user.userName)
-        setSubUserId(getUserId(user.userName, user.host))
-    }
-
     private fun setSubUserIcon(imageUrl: String){
         subUserIcon.visibility = View.VISIBLE
         Picasso
@@ -196,24 +224,7 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         }
     }
 
-    private fun setSubUserName(userName: String){
-        subUserName.text= userName
-        subUserName.visibility = View.VISIBLE
-    }
-
-    private fun setSubUserId(userId: String){
-        subUserId.text = userId
-        subUserId.visibility = View.VISIBLE
-    }
-
-    fun setSubNoteText(text: String){
-        subNoteText.text = text
-        subNoteText.visibility = View.VISIBLE
-    }
-
-
-
-    fun setReplyCount(count: Int, isDigitTruncation:Boolean = true){
+    private fun setReplyCount(count: Int, isDigitTruncation:Boolean = true){
         if(count > 0){
             replyCount.text = count.toString()
             replyCount.visibility = View.VISIBLE
@@ -222,7 +233,7 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         }
     }
 
-    fun setReNoteCount(count: Int){
+    private fun setReNoteCount(count: Int){
         if(count > 0){
             reNoteCount.text = count.toString()
             reNoteCount.visibility = View.VISIBLE
@@ -230,27 +241,6 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
             reNoteCount.visibility = View.INVISIBLE
         }
     }
-
-    fun setReactionCount(adapter: ReactionCountAdapter){
-        reactionView.adapter = adapter
-        reactionView.visibility = View.VISIBLE
-    }
-
-    fun backgroundColor(code: Int){
-        if(code == 1){
-            timelineItem.setBackgroundColor(Color.parseColor("#d3d3d3"))
-        }else{
-            timelineItem.setBackgroundColor(Color.WHITE/*Color.parseColor("#fff3f3f3")*/)
-        }
-    }
-
-    fun addOnItemClickListener(targetPrimaryId: String, note: Note, listener: NoteClickListener?){
-        clickListener = listener
-        this.targetPrimaryId = targetPrimaryId
-        this.note = note
-
-    }
-
     fun addOnUserClickListener(listener: UserClickListener){
         this.userClickListener = listener
     }

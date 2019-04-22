@@ -72,46 +72,31 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         //このセット方法はいろいろ面倒なのでリファクタリング(NoteViewHolderを)予定
         when {
             viewData.type == AbsTimeline.NoteType.REPLY -> {
-
-
-                p0.setUser(note.user)
-                p0.setNoteText(note.text?: "not found")
-
                 setImageData(p0, note)
-                p0.setReplyCount(note.replyCount)
-                p0.setReNoteCount(note.reNoteCount)
+
+                p0.setNote(note)
                 p0.addOnItemClickListener(note.id, note, noteClickListener)
             }
             viewData.type == AbsTimeline.NoteType.NOTE -> {
                 //これはNote
                 p0.whoReactionUserLink.visibility = View.GONE
-
-                p0.setUser(note.user)
-                p0.setNoteText(note.text?:"not found")
-                //resultReaction(it.id)
                 setImageData(p0, note)
-                p0.setReplyCount(note.replyCount)
-                p0.setReNoteCount(note.reNoteCount)
+
+                p0.setNote(note)
                 p0.addOnItemClickListener(note.id, note, noteClickListener)
             }
             viewData.type == AbsTimeline.NoteType.RE_NOTE -> {
                 //これはリノート
+                setImageData(p0, note.renote!!)
 
                 p0.setWhoReactionUserLink(note.user, "無断リノート")
-                p0.setUser(note.renote?.user)
-                p0.setNoteText(note.renote?.text?:"")
-
-                setImageData(p0, note.renote!!)
-                //resultReaction(it.renote.id)
-                p0.setReplyCount(note.renote.replyCount)
-                p0.setReNoteCount(note.renote.reNoteCount)
+                p0.setNote(note.renote)
 
                 p0.addOnItemClickListener(note.renote.id, note.renote, noteClickListener)
             }
             viewData.type == AbsTimeline.NoteType.QUOTE_RE_NOTE -> {
 
-                p0.setUser(note.user)
-                p0.setNoteText(note.text?: "not found")
+
 
                 if(note.renote?.user != null){
                     p0.setSubUser(note.renote.user)
@@ -120,10 +105,6 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
                 p0.setSubNoteText(note.renote?.text?:"")
                 setImageData(p0, note)
 
-                p0.setReplyCount(note.renote?.replyCount?:0)
-                p0.setReNoteCount(note.renote?.reNoteCount?:0)
-
-                //resultReaction(it.id)
                 p0.addOnItemClickListener(note.id, note, noteClickListener)
             }
 

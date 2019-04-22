@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true) data class NotificationProperty(
-    @JsonProperty("createAt") val createAt: String,
+    @JsonProperty("createdAt") val createdAt: String,
     @JsonProperty("type") val type: String,
     @JsonProperty("isRead") val isRead: Boolean,
     @JsonProperty("noteId") val noteId: String? = null,
