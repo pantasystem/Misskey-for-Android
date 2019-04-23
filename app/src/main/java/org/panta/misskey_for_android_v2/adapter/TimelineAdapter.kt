@@ -11,6 +11,7 @@ import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
 import org.panta.misskey_for_android_v2.repository.AbsTimeline
+import org.panta.misskey_for_android_v2.repository.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
 class TimelineAdapter(private val context: Context, private val notesList: List<NoteViewData>) : RecyclerView.Adapter<NoteViewHolder>(){
@@ -38,21 +39,21 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
             viewHolder.invisibleReactionCount()
         }
         when{
-            viewData.type == AbsTimeline.NoteType.REPLY -> {
+            viewData.type == NoteAdjustment.NoteType.REPLY -> {
                 viewHolder.setReply(viewData)
             }
-            viewData.type == AbsTimeline.NoteType.REPLY_TO ->{
+            viewData.type == NoteAdjustment.NoteType.REPLY_TO ->{
                 viewHolder.setReplyTo(viewData)
             }
-            viewData.type == AbsTimeline.NoteType.NOTE -> {
+            viewData.type == NoteAdjustment.NoteType.NOTE -> {
                 //これはNote
                 viewHolder.setNote(viewData)
             }
-            viewData.type == AbsTimeline.NoteType.RE_NOTE -> {
+            viewData.type == NoteAdjustment.NoteType.RE_NOTE -> {
                 //これはリノート
                 viewHolder.setReNote(viewData)
             }
-            viewData.type == AbsTimeline.NoteType.QUOTE_RE_NOTE -> {
+            viewData.type == NoteAdjustment.NoteType.QUOTE_RE_NOTE -> {
                 viewHolder.setQuoteReNote(viewData)
             }
         }

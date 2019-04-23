@@ -101,7 +101,7 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
             /*if(! n.isOriginReply){
                 return n
             }*/
-            if(n.type != AbsTimeline.NoteType.REPLY_TO){
+            if(n.type != NoteAdjustment.NoteType.REPLY_TO){
                 return n
             }
         }
@@ -114,7 +114,7 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
             /*if(!noteViewData.isOriginReply){
                 return noteViewData
             }*/
-            if(noteViewData.type != AbsTimeline.NoteType.REPLY_TO){
+            if(noteViewData.type != NoteAdjustment.NoteType.REPLY_TO){
                 return noteViewData
             }
         }

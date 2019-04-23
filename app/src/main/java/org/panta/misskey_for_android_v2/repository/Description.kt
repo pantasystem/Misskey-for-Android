@@ -26,14 +26,14 @@ class Description(){
         try{
             var reply: Note? = note.reply
             val replyList = ArrayList<NoteViewData>()
-            replyList.add(NoteViewData(note = note, type = AbsTimeline.NoteType.NOTE, reactionCountPairList = ReactionCountPair.createList(note.reactionCounts!!)))
+            replyList.add(NoteViewData(note = note, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = ReactionCountPair.createList(note.reactionCounts!!)))
             while(reply != null){
                 val reactionPair = if(reply.reactionCounts == null){
                     emptyList()
                 }else{
                     ReactionCountPair.createList(reply.reactionCounts!!)
                 }
-                replyList.add(NoteViewData(note = reply, type = AbsTimeline.NoteType.NOTE, reactionCountPairList = reactionPair))
+                replyList.add(NoteViewData(note = reply, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = reactionPair))
                 reply = reply.reply
             }
             callBack(reverseTimeline(replyList))
