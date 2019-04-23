@@ -1,5 +1,6 @@
 package org.panta.misskey_for_android_v2.view_presenter.timeline
 
+import kotlinx.coroutines.Job
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant.authKey
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant.domain
@@ -28,7 +29,7 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
             initTimeline()
             return
         }
-        mTimeline.getNotesUseSinceId(latestNoteData!!){
+        val job = mTimeline.getNotesUseSinceId(latestNoteData!!){
             if(it == null){
                 mView.stopRefreshing()
                 return@getNotesUseSinceId
@@ -41,7 +42,6 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
             }
 
         }
-
     }
 
     override fun getOldTimeline() {
@@ -49,7 +49,7 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
             initTimeline()
             return
         }
-        mTimeline.getNotesUseUntilId(oldestNoteData!!){
+        val job = mTimeline.getNotesUseUntilId(oldestNoteData!!){
             if(it == null){
                 mView.stopRefreshing()
                 return@getNotesUseUntilId
@@ -65,7 +65,7 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val ti
     }
 
     override fun initTimeline() {
-        mTimeline.getTimeline{
+        val job = mTimeline.getTimeline{
             if(it == null){
                 mView.stopRefreshing()
                 return@getTimeline

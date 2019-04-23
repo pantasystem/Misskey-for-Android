@@ -67,9 +67,10 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         timelineView.addOnScrollListener(listener)
         mPresenter.initTimeline()
 
-        refresh.setOnRefreshListener(this)
+        refresh?.setOnRefreshListener(this)
 
     }
+
 
     override fun onRefresh() {
         mPresenter.getNewTimeline()
@@ -77,7 +78,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     override fun stopRefreshing() {
         activity?.runOnUiThread{
-            refresh.isRefreshing = false
+            refresh?.isRefreshing = false
         }
     }
 
@@ -85,16 +86,16 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     override fun showInitTimeline(list: List<NoteViewData>) {
         activity?.runOnUiThread {
-            load_icon.visibility = View.GONE
-            timelineView.visibility = View.VISIBLE
+            load_icon?.visibility = View.GONE
+            timelineView?.visibility = View.VISIBLE
             Log.d("TimelineFragment", "データの取得が完了した")
             mAdapter = TimelineAdapter(context!!, list)
             mAdapter.addNoteClickListener(this)
             mAdapter.addUserClickListener(this)
 
 
-            timelineView.layoutManager = mLayoutManager
-            timelineView.adapter = mAdapter
+            timelineView?.layoutManager = mLayoutManager
+            timelineView?.adapter = mAdapter
 
             stopRefreshing()
 
@@ -113,7 +114,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     override fun showOldTimeline(list: List<NoteViewData>) {
         activity?.runOnUiThread{
-            refresh.isRefreshing = false
+            refresh?.isRefreshing = false
             mAdapter.addAllLast(list)
         }
 

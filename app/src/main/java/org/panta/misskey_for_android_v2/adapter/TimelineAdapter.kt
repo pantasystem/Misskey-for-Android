@@ -71,6 +71,8 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
             viewHolder.addOnItemClickListener(note.id, note, noteClickListener)
             viewHolder.setNote(note)
         }
+
+        viewHolder.addOnUserClickListener(userClickListener)
        
     }
 

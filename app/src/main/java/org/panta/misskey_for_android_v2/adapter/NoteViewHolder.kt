@@ -84,7 +84,12 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     fun setNote(note: Note){
         this.setUser(note.user)
-        noteText.text= note.text.toString()
+        if(note.text == null){
+            noteText.visibility = View.GONE
+        }else{
+            noteText.visibility = View.VISIBLE
+            noteText.text = note.text
+        }
         //setImageData(p0, note)
         this.setImage(filterImageData(note))
         this.setReplyCount(note.replyCount)
@@ -119,6 +124,15 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     }
 
     fun setSubUser(user: User){
+        subUserIcon.setOnClickListener {
+            userClickListener?.onClickedUser(user)
+        }
+        subUserName.setOnClickListener{
+            userClickListener?.onClickedUser(user)
+        }
+        subUserId.setOnClickListener {
+            userClickListener?.onClickedUser(user)
+        }
         setSubUserIcon(user.avatarUrl.toString())
         setSubUserName(user.name?: user.userName)
         setSubUserId(getUserId(user.userName, user.host))
