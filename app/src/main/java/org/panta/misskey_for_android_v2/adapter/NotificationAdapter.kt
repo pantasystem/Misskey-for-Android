@@ -52,7 +52,7 @@ class NotificationAdapter(private val notificationList: List<NotificationPropert
         if(p0 is NotificationViewHolder){
             p0.setNotification(data)
         }else if(p0 is NoteViewHolder){
-            p0.setNote(data.note!!)
+            //p0.setNote(data.note!!)
         }
     }
 

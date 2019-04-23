@@ -147,14 +147,14 @@ abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
         return if(note.reply != null){
             //これはリプ
             NoteType.REPLY
-        }else if(note.renote == null && (note.text != null || note.files != null)){
+        }else if(note.reNoteId == null && (note.text != null || note.files != null)){
             //これはNote
             NoteType.NOTE
-        }else if(note.renote != null && (note.text == null || note.files == null)){
+        }else if(note.reNoteId != null && note.text == null && note.files.isNullOrEmpty()){
             //これはリノート
             NoteType.RE_NOTE
 
-        }else if(note.renote != null && (note.text != null || note.files != null)){
+        }else if(note.reNoteId != null && (note.text != null || note.files != null)){
             //これは引用リノート
             NoteType.QUOTE_RE_NOTE
         }else{

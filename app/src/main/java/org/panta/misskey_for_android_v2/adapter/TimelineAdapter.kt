@@ -31,50 +31,33 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
     override fun onBindViewHolder(viewHolder: NoteViewHolder, p1: Int) {
         val viewData = notesList[p1]
 
-        viewHolder.viewInit()
        //リアクションをセットしている
         if(viewData.reactionCountPairList.isNotEmpty()){
             viewHolder.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, viewData.reactionCountPairList))
+        }else{
+            viewHolder.invisibleReactionCount()
         }
-
-        viewHolder.backgroundColor(0)
-        val note = when{
+        when{
             viewData.type == AbsTimeline.NoteType.REPLY -> {
-                viewHolder.setWhoReactionUserLink(viewData.note.user, "クソリプ")
-                viewData.note
+                viewHolder.setReply(viewData)
             }
             viewData.type == AbsTimeline.NoteType.REPLY_TO ->{
-                viewHolder.backgroundColor(1)
-                viewData.note
+                viewHolder.setReplyTo(viewData)
             }
             viewData.type == AbsTimeline.NoteType.NOTE -> {
                 //これはNote
-                viewHolder.whoReactionUserLink.visibility = View.GONE
-                viewData.note
+                viewHolder.setNote(viewData)
             }
             viewData.type == AbsTimeline.NoteType.RE_NOTE -> {
                 //これはリノート
-                viewHolder.setWhoReactionUserLink(viewData.note.user, "無断リノート")
-                viewData.note.renote!!
+                viewHolder.setReNote(viewData)
             }
             viewData.type == AbsTimeline.NoteType.QUOTE_RE_NOTE -> {
-                if(viewData.note.renote?.user != null){
-                    viewHolder.setSubUser(viewData.note.renote.user)
-                }
-                viewHolder.setSubNoteText(viewData.note.renote?.text?:"")
-                viewData.note
-            }else ->{
-                null
+                viewHolder.setQuoteReNote(viewData)
             }
         }
 
-        if(note != null){
-            viewHolder.addOnItemClickListener(note.id, note, noteClickListener)
-            viewHolder.setNote(note)
-        }else{
-            Log.w("TimelineAdapter", "大変だ！！Noteの値がNULLだこれは不具合に違いない")
-        }
-
+        viewHolder.addOnItemClickListener(noteClickListener)
         viewHolder.addOnUserClickListener(userClickListener)
        
     }
