@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_notification.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.NotificationAdapter
+import org.panta.misskey_for_android_v2.adapter.NotificationViewHolder
 import org.panta.misskey_for_android_v2.entity.NotificationProperty
+import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 
 class NotificationFragment : Fragment(), NotificationContract.View{
 
@@ -34,15 +36,15 @@ class NotificationFragment : Fragment(), NotificationContract.View{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showOldNotification(list: List<NotificationProperty>) {
+    override fun showOldNotification(list: List<NotificationViewData>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showNewNotification(list: List<NotificationProperty>) {
+    override fun showNewNotification(list: List<NotificationViewData>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showInitNotification(list: List<NotificationProperty>) {
+    override fun showInitNotification(list: List<NotificationViewData>) {
         activity?.runOnUiThread{
 
             notification_view.layoutManager = mLayoutManager

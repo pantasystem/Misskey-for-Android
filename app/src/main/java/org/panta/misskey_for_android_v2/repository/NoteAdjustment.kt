@@ -61,7 +61,7 @@ class NoteAdjustment{
         }
     }
 
-    private fun createReactionCountPair(reactionCount: ReactionCount?): List<ReactionCountPair>{
+    fun createReactionCountPair(reactionCount: ReactionCount?): List<ReactionCountPair>{
         if(reactionCount == null){
             return emptyList()
         }

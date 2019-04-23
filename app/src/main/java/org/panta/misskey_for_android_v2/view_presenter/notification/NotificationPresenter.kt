@@ -32,8 +32,8 @@ class NotificationPresenter(private val mView: NotificationContract.View) : Noti
 
             mView.showInitNotification(it)
 
-            latestNotification = it.first()
-            oldestNotification = it.last()
+            latestNotification = it.first().notificationProperty
+            oldestNotification = it.last().notificationProperty
 
         }
     }
