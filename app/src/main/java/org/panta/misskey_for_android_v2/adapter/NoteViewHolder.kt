@@ -69,11 +69,9 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     }
 
-
-
     fun setWhoReactionUserLink(user: User?, status: String){
         whoReactionUserLink.visibility = View.VISIBLE
-        val text = "${user?.name}さんが${status}しました"
+        val text = "${user?.name?:user?.userName}さんが${status}しました"
         whoReactionUserLink.text = text
         whoReactionUserLink.setOnClickListener{
             if(user != null){
