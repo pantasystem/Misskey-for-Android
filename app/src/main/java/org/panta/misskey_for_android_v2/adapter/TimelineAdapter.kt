@@ -3,6 +3,7 @@ package org.panta.misskey_for_android_v2.adapter
 import android.content.Context
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +62,7 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
                     viewHolder.setSubUser(viewData.note.renote.user)
                 }
                 viewHolder.setSubNoteText(viewData.note.renote?.text?:"")
-                viewData.note.renote!!
+                viewData.note
             }else ->{
                 null
             }
@@ -70,6 +71,8 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         if(note != null){
             viewHolder.addOnItemClickListener(note.id, note, noteClickListener)
             viewHolder.setNote(note)
+        }else{
+            Log.w("TimelineAdapter", "大変だ！！Noteの値がNULLだこれは不具合に違いない")
         }
 
         viewHolder.addOnUserClickListener(userClickListener)

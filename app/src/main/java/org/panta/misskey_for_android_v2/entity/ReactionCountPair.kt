@@ -47,7 +47,9 @@ data class ReactionCountPair(val reactionType: String, val reactionCount: String
                 array.add(ReactionCountPair(ReactionConstData.SURPRISE, reactionCount.surprise.toString()))
 
             }
-            return array
+            return array.filter{
+                Integer.parseInt(it.reactionCount) > 0
+            }
         }
     }
 }

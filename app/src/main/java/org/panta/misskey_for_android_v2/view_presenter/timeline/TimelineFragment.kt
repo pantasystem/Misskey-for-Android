@@ -27,7 +27,8 @@ import org.panta.misskey_for_android_v2.view_presenter.note_description.NoteDesc
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.user.UserActivity
 
-class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, TimelineContract.View, NoteClickListener, UserClickListener{
+class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, TimelineContract.View,
+    NoteClickListener, UserClickListener{
 
 
     companion object{
@@ -128,7 +129,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     }
 
     override fun onError(errorMsg: String) {
-
+        Log.w("TimelineFragment", "エラー発生 message$errorMsg")
     }
 
     override fun onReplyButtonClicked(targetId: String?, note: Note?) {
@@ -141,22 +142,24 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     override fun onReactionButtonClicked(targetId: String?, note: Note?) {
         if(targetId != null && note != null){
             Log.d("TimelineFragment", "targetId: $targetId")
-            val reactionDialog = ReactionDialog()
-            val args = Bundle()
-            args.putString(ReactionDialog.TARGET_NOTE_ID, targetId)
-            reactionDialog.arguments = args
-
-            //FIXME ミックスタイムラインから呼び出されると落ちる
-            reactionDialog.setTargetFragment(this, reactionRequestCode)
+            val reactionDialog = ReactionDialog.getInstance(targetId, object : ReactionDialog.CallBackListener{
+                override fun callBack(noteId: String?, reactionParameter: String) {
+                    if(noteId != null){
+                        Log.d("TimelineFragment", "成功した")
+                        mPresenter.sendReaction(noteId = noteId, reactionType = reactionParameter)
+                    }
+                }
+            })
+            reactionDialog.setTargetFragment(parentFragment, reactionRequestCode)
             reactionDialog.show(activity?.supportFragmentManager, "reaction_tag")
         }
-
     }
+
 
     override fun onReNoteButtonClicked(targetId: String?, note: Note?) {
         val intent = Intent(context, EditNoteActivity::class.java)
-        intent.putExtra(EditNoteActivity.CREATE_NOTE_TARGET_ID, targetId)
-        intent.putExtra(EditNoteActivity.EDIT_TYPE, EditNoteActivity.RE_NOTE)
+            .putExtra(EditNoteActivity.CREATE_NOTE_TARGET_ID, targetId)
+            .putExtra(EditNoteActivity.EDIT_TYPE, EditNoteActivity.RE_NOTE)
         startActivity(intent)
     }
 
@@ -202,32 +205,12 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == reactionRequestCode && data != null){
-            if(resultCode != Activity.RESULT_OK){
-               return
-            }
-            val targetNoteId: String? = data.getStringExtra(ReactionDialog.TARGET_NOTE_ID)
-            val reaction = data.getStringExtra(ReactionDialog.SELECTED_REACTION_CODE)
-            Log.d("TimelineView", "選択しましたid:$targetNoteId, reaction:$reaction")
-
-            if(targetNoteId != null){
-                mPresenter.sendReaction(noteId = targetNoteId, reactionType = reaction)
-
-            }
-        }
-    }
-
     override fun onClickedUser(user: User) {
         val intent = Intent(context, UserActivity::class.java)
         startActivity(intent)
     }
 
     private val listener = object : RecyclerView.OnScrollListener(){
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-        }
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
