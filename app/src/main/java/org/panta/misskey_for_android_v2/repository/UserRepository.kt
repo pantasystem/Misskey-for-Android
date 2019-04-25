@@ -12,6 +12,7 @@ import java.net.URL
 
 class UserRepository(private val domain: String, private val authKey: String){
 
+    //TODO UserTimelineは機能が少ないので統合する
     private val httpsConnection = HttpsConnection()
     fun getUserInfo(userPrimaryId: String, callBack: (User)->Unit){
         GlobalScope.launch{

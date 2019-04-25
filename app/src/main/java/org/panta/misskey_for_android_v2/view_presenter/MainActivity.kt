@@ -1,9 +1,11 @@
 package org.panta.misskey_for_android_v2.view_presenter
 
+import android.app.FragmentManager
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -23,6 +25,8 @@ import org.panta.misskey_for_android_v2.view_presenter.notification.Notification
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
 import java.util.*
 
+private const val FRAGMENT_HOME = "FRAGMENT_HOME"
+private const val FRAGMENT_OTHER = "FRAGMENT_OTHER"
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     val myFragmentTagsStack = Stack<String>()
@@ -49,13 +53,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-
-        /*val pageAdapter = PagerAdapter(supportFragmentManager)
-        view_pager.offscreenPageLimit = 2
-        view_pager.adapter = pageAdapter
-
-        tab_menu.setupWithViewPager(view_pager)*/
-
         val sf = supportFragmentManager
         val ft = sf.beginTransaction()
         ft.replace(R.id.main_container, TimelineFragment.getInstance(TimelineTypeEnum.HOME))
@@ -64,15 +61,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         bottom_navigation.setOnNavigationItemSelectedListener {
             return@setOnNavigationItemSelectedListener when(it.itemId){
                 R.id.home_timeline ->{
-                    setFragment(TimelineFragment.getInstance(TimelineTypeEnum.HOME))
+                    setFragment(TimelineFragment.getInstance(TimelineTypeEnum.HOME), FRAGMENT_HOME)
                     true
                 }
                 R.id.mix_timeline ->{
-                    setFragment(MixedTimelineFragment())
+                    setFragment(MixedTimelineFragment(), FRAGMENT_OTHER)
                     true
                 }
                 R.id.notification_item ->{
-                    setFragment(NotificationFragment())
+                    setFragment(NotificationFragment(), FRAGMENT_OTHER)
                     true
                 }
                 R.id.message_item ->{
@@ -85,16 +82,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         updateHeaderProfile()
 
-
-
     }
 
-    private fun setFragment(fragment: Fragment){
-        val sf = supportFragmentManager
-        val ft = sf.beginTransaction()
-        ft.addToBackStack(null)
+    private fun setFragment(fragment: Fragment, fragmentName: String){
+        val fm = supportFragmentManager
+        val ft = fm.beginTransaction()
         ft.replace(R.id.main_container, fragment)
+
+        val count = fm.backStackEntryCount
+
+        if(fragmentName == FRAGMENT_OTHER){
+            ft.addToBackStack(fragmentName)
+        }
         ft.commit()
+
+        fm.addOnBackStackChangedListener( object : android.support.v4.app.FragmentManager.OnBackStackChangedListener{
+            override fun onBackStackChanged() {
+                if(fm.backStackEntryCount <= count){
+                    fm.popBackStack(FRAGMENT_OTHER, POP_BACK_STACK_INCLUSIVE)
+                    fm.removeOnBackStackChangedListener(this)
+                    bottom_navigation.menu.getItem(0).isChecked = true
+                }
+            }
+        })
     }
 
     private fun updateHeaderProfile(){
@@ -125,15 +135,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     override fun onBackPressed() {
+
+        //NavigationDrawerが開いているときに戻るボタンを押したときの動作
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
             return
         }
-        val size = supportFragmentManager.fragments.size
-        if(size > 0){
-            supportFragmentManager.popBackStack()
-            val fragments = supportFragmentManager.fragments
-
+        val selectedItemId = bottom_navigation?.selectedItemId
+        if(R.id.home_timeline != selectedItemId){
+            bottom_navigation.selectedItemId = R.id.home_timeline
         }else{
             super.onBackPressed()
         }
