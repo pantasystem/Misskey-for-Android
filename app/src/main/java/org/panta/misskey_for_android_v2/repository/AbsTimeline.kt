@@ -20,14 +20,14 @@ abstract class AbsTimeline(private val timelineURL: URL, private val isDeployRep
 
 
 
-    private var apiRequestCounter: Int = 0
+    /*private var apiRequestCounter: Int = 0
         set(value){
             field = value
             GlobalScope.launch{
                 delay(1000)
                 field = 0
             }
-        }
+        }*/
 
     private val mConnection = HttpsConnection()
     private val mapper = jacksonObjectMapper()
@@ -41,12 +41,12 @@ abstract class AbsTimeline(private val timelineURL: URL, private val isDeployRep
 
     override fun getNotesUseSinceId(noteViewData: NoteViewData, callBack: (timeline: List<NoteViewData>?)->Unit) = GlobalScope.launch{
 
-        if(apiRequestCounter > 0){
+        /*if(apiRequestCounter > 0){
             return@launch callBack(null)
-        }
+        }*/
 
         try{
-            apiRequestCounter++
+            //apiRequestCounter++
             val jsonToRequest = createRequestTimelineJson(sinceId = noteViewData.note.id)
             val list:List<Note> = reverseTimeline(requestTimeline(jsonToRequest))
             callBack(noteAd.insertReplyAndCreateInfo(list))
@@ -57,11 +57,11 @@ abstract class AbsTimeline(private val timelineURL: URL, private val isDeployRep
     }
 
     override fun getNotesUseUntilId(noteViewData: NoteViewData, callBack: (timeline: List<NoteViewData>?)->Unit) = GlobalScope.launch{
-        if(apiRequestCounter > 0){
+        /*if(apiRequestCounter > 0){
             return@launch callBack(null)
-        }
+        }*/
         try{
-            apiRequestCounter++
+            //apiRequestCounter++
             val jsonToRequest = createRequestTimelineJson(untilId = noteViewData.note.id)
 
             val list:List<Note> = requestTimeline(jsonToRequest)
@@ -74,13 +74,13 @@ abstract class AbsTimeline(private val timelineURL: URL, private val isDeployRep
 
 
     override fun getTimeline(callBack: (timeline: List<NoteViewData>?) -> Unit) = GlobalScope.launch{
-        if(apiRequestCounter > 0){
+        /*if(apiRequestCounter > 0){
             return@launch callBack(null)
-        }
+        }*/
         try{
             //FIXME 保存したタイムラインを読み取る処理を書く
 
-            apiRequestCounter++
+            //apiRequestCounter++
             val cacheTimeline = emptyList<Note>()
             val timeline = if(cacheTimeline.isEmpty()){
                 requestTimeline(createRequestTimelineJson(untilDate = Date().time))
