@@ -87,6 +87,12 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         }
     }
 
+    fun getNote(index: Int): NoteViewData{
+        synchronized(notesList){
+            return notesList[index]
+        }
+    }
+
     fun addNoteClickListener(listener: NoteClickListener){
         this.noteClickListener = listener
     }

@@ -14,7 +14,7 @@ import java.io.Serializable
     @JsonProperty("userId") val userId: String? = null,
     @JsonProperty("folderId") val folderId: String? = null,
     @JsonProperty("comment") val comment: String? = null,
-    @JsonProperty("properties") val properties: Propertie? = null,
+    @JsonProperty("properties") val properties: Property? = null,
     @JsonProperty("isSensitive") val isSensitive: Boolean? = null,
     @JsonProperty("url") val url: String? = null,
     @JsonProperty("webpublicUrl") val webPublicUrl: String? = null,
