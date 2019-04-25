@@ -1,6 +1,5 @@
-package org.panta.misskey_for_android_v2.view_presenter.timeline
+package org.panta.misskey_for_android_v2.view_presenter.user
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -16,60 +15,54 @@ import kotlinx.android.synthetic.main.fragment_timeline.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.TimelineAdapter
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
-import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.dialog.ReactionDialog
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ITimeline
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
-import org.panta.misskey_for_android_v2.repository.*
+import org.panta.misskey_for_android_v2.repository.HomeTimeline
+import org.panta.misskey_for_android_v2.repository.UserTimeline
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import org.panta.misskey_for_android_v2.view_presenter.image_viewer.ImageViewerActivity
 import org.panta.misskey_for_android_v2.view_presenter.note_description.NoteDescriptionActivity
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
-import org.panta.misskey_for_android_v2.view_presenter.user.UserActivity
+import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineContract
+import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
+import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelinePresenter
 
-class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, TimelineContract.View,
-    NoteClickListener, UserClickListener{
 
+//FIXME クソコード　解決策はないのか？
+class UserTimelineFragment : Fragment(), TimelineContract.View,SwipeRefreshLayout.OnRefreshListener, NoteClickListener, UserClickListener {
 
-    companion object{
-        private const val TIMELINE_TYPE = "TIMELINE_FRAGMENT_TIMELINE_TYPE"
-        fun getInstance(type: TimelineTypeEnum): TimelineFragment{
-            return TimelineFragment().apply{
-                val args = Bundle()
-                args.putString(TIMELINE_TYPE, type.name)
-                this.arguments = args
-            }
+    companion object {
+        const val USER_ID_TAG = "UserTimelineFragmentUserIdTag"
+
+        fun getInstance(userId: String): UserTimelineFragment{
+            val bundle = Bundle()
+            bundle.putString(USER_ID_TAG, userId)
+            val fragment = UserTimelineFragment()
+            fragment.arguments = bundle
+            return fragment
         }
     }
 
-    private var mTimelineType: TimelineTypeEnum = TimelineTypeEnum.HOME
+    //private var userTimeline:ITimeline = HomeTimeline(ApplicationConstant.domain, ApplicationConstant.authKey)
+    override var mPresenter: TimelineContract.Presenter = TimelinePresenter(this, HomeTimeline(ApplicationConstant.domain,ApplicationConstant.authKey))
     lateinit var mLayoutManager: LinearLayoutManager
-    override lateinit var mPresenter: TimelineContract.Presenter
     private lateinit var mAdapter: TimelineAdapter
-
     private val reactionRequestCode = 23457
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-
         mLayoutManager = LinearLayoutManager(context)
-        val args = arguments
-        val timelineType = args?.getString(TIMELINE_TYPE)
-        if(timelineType != null){
-            mTimelineType = TimelineTypeEnum.toEnum(timelineType)
-        }
-        val mTimeline: ITimeline = when (mTimelineType) {
-            TimelineTypeEnum.GLOBAL -> GlobalTimeline(domain = ApplicationConstant.domain, authKey = ApplicationConstant.authKey)
-            TimelineTypeEnum.HOME -> HomeTimeline(domain = ApplicationConstant.domain , authKey = ApplicationConstant.authKey)
-            TimelineTypeEnum.SOCIAL -> SocialTimeline(domain = ApplicationConstant.domain, authKey = ApplicationConstant.authKey)
-            TimelineTypeEnum.LOCAL -> LocalTimeline(domain = ApplicationConstant.domain)
-            else -> TODO("DESCRIPTIONを実装する")
-        }
-        mPresenter = TimelinePresenter(this, mTimeline)
 
+
+        val args = arguments
+        val userId = args?.getString(USER_ID_TAG)!!
+
+        mPresenter = TimelinePresenter(this, UserTimeline(ApplicationConstant.domain, userId))
 
         return inflater.inflate(R.layout.fragment_timeline, container, false)
     }
@@ -78,20 +71,6 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         super.onViewCreated(view, savedInstanceState)
         timelineView.addOnScrollListener(listener)
         mPresenter.initTimeline()
-
-        refresh?.setOnRefreshListener(this)
-
-    }
-
-
-    override fun onRefresh() {
-        mPresenter.getNewTimeline()
-    }
-
-    override fun stopRefreshing() {
-        activity?.runOnUiThread{
-            refresh?.isRefreshing = false
-        }
     }
 
 
@@ -113,8 +92,6 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
         }
     }
-
-
 
     override fun showNewTimeline(list: List<NoteViewData>) {
         activity?.runOnUiThread {
@@ -208,6 +185,15 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     }
 
+    override fun onRefresh() {
+        mPresenter.getNewTimeline()
+    }
+
+    override fun stopRefreshing() {
+        activity?.runOnUiThread{
+            refresh?.isRefreshing = false
+        }
+    }
     override fun onImageClicked(clickedIndex: Int, clickedImageUrlCollection: Array<String>) {
         val intent = Intent(context, ImageViewerActivity::class.java)
         intent.putExtra(ImageViewerActivity.IMAGE_URL_LIST, clickedImageUrlCollection)
@@ -241,5 +227,4 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
             }
         }
     }
-
 }

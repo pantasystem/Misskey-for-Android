@@ -8,6 +8,7 @@ import java.io.Serializable
 
 @JsonInclude(JsonInclude.Include.NON_NULL) data class RequestTimelineProperty(
     @JsonProperty("i") var i: String? = null,
+    @JsonProperty("userId") var userId: String? = null,
     @JsonProperty("withFiles") var withFiles: Boolean? = null,
     @JsonProperty("fileType") var fileType: String? = null,
     @JsonProperty("excludeNsfw") var excludeNsfw: Boolean? = null,

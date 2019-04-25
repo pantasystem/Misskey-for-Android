@@ -9,18 +9,12 @@ import org.panta.misskey_for_android_v2.interfaces.ITimeline
 import org.panta.misskey_for_android_v2.repository.*
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
-class TimelinePresenter(private val mView: TimelineContract.View, private val timelineType: TimelineTypeEnum) : TimelineContract.Presenter{
+class TimelinePresenter(private val mView: TimelineContract.View, private val mTimeline: ITimeline) : TimelineContract.Presenter{
 
     private var latestNoteData: NoteViewData? = null
     private var oldestNoteData: NoteViewData?=null
 
-    private val mTimeline: ITimeline = when (timelineType) {
-        TimelineTypeEnum.GLOBAL -> GlobalTimeline(domain = ApplicationConstant.domain, authKey = ApplicationConstant.authKey)
-        TimelineTypeEnum.HOME -> HomeTimeline(domain = ApplicationConstant.domain , authKey = ApplicationConstant.authKey)
-        TimelineTypeEnum.SOCIAL -> SocialTimeline(domain = ApplicationConstant.domain, authKey = ApplicationConstant.authKey)
-        TimelineTypeEnum.LOCAL -> LocalTimeline(domain = ApplicationConstant.domain)
-        else -> TODO("DESCRIPTIONを実装する")
-    }
+
     private val mReaction = Reaction(domain = domain, authKey = authKey)
 
 

@@ -16,7 +16,7 @@ import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import java.net.URL
 import java.util.*
 
-abstract class AbsTimeline(private val timelineURL: URL): ITimeline{
+abstract class AbsTimeline(private val timelineURL: URL, private val isDeployReplyTo: Boolean = true): ITimeline{
 
 
 

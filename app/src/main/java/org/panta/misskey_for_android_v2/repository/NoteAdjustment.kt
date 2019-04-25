@@ -7,7 +7,7 @@ import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import java.util.ArrayList
 
-class NoteAdjustment{
+class NoteAdjustment(private val isDeployReplyTo: Boolean = true){
     enum class NoteType{
         REPLY,
         REPLY_TO,   //返信先
@@ -27,7 +27,9 @@ class NoteAdjustment{
 
                 NoteType.REPLY ->{
 
-                    replyList.add(NoteViewData(reply!!, type = NoteType.REPLY_TO, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
+                    if(isDeployReplyTo){
+                        replyList.add(NoteViewData(reply!!, type = NoteType.REPLY_TO, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
+                    }
                     replyList.add(NoteViewData(n, type = NoteType.REPLY, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
                 }
                 else-> {

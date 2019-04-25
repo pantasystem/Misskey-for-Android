@@ -1,7 +1,7 @@
 package org.panta.misskey_for_android_v2.constant
 
 enum class TimelineTypeEnum{
-    GLOBAL, HOME, LOCAL, SOCIAL, DESCRIPTION;
+    GLOBAL, HOME, LOCAL, SOCIAL, DESCRIPTION, USER;
     companion object {
         fun toEnum(st: String): TimelineTypeEnum{
             return when(st.toUpperCase()){
