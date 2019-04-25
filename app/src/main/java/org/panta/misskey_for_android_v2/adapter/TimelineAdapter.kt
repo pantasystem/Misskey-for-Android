@@ -106,6 +106,19 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         }
     }
 
+    fun removeNote(noteViewData: NoteViewData){
+        synchronized(notesList){
+            val index = notesList.indexOf(noteViewData)
+            if(notesList is ArrayList){
+                notesList.remove(noteViewData)
+
+                Handler().post{
+                    notifyItemRemoved(index)
+                }
+            }
+        }
+    }
+
     fun addNoteClickListener(listener: NoteClickListener){
         this.noteClickListener = listener
     }
