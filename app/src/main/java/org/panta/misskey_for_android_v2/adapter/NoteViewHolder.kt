@@ -205,11 +205,11 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
 
     private fun backgroundColor(code: Int){
-        if(code == 1){
+        /*if(code == 1){
             timelineItem.setBackgroundColor(Color.parseColor("#d3d3d3"))
         }else{
             timelineItem.setBackgroundColor(Color.WHITE/*Color.parseColor("#fff3f3f3")*/)
-        }
+        }*/
     }
 
     //nullの場合はGONE
