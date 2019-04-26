@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content" android:id="@+id/reaction_counter_view">
     <ImageButton
             android:layout_width="30dp"
             android:layout_height="30dp" app:srcCompat="@drawable/reaction_icon_hmm"
@@ -14,7 +14,7 @@
             android:text="@string/number_0"
             android:layout_width="wrap_content"
             android:layout_marginTop="2dp"
-            android:layout_marginStart="-2dp"
-            android:layout_height="wrap_content" android:textSize="18sp" android:id="@+id/reaction_count"/>
+            android:layout_marginStart="2dp"
+            android:layout_height="wrap_content" android:textSize="20sp" android:id="@+id/reaction_count"/>
 
 </LinearLayout>

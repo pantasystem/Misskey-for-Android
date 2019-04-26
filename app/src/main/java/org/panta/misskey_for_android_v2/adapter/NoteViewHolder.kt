@@ -1,6 +1,7 @@
 package org.panta.misskey_for_android_v2.adapter
 
 import android.graphics.Color
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
@@ -37,7 +38,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val subUserId = itemView.sub_user_id
     private val subNoteText: TextView = itemView.sub_text
 
-    private val reactionView: GridView = itemView.reaction_view
+    private val reactionView: RecyclerView = itemView.reaction_view
 
     private val replyButton: ImageButton = itemView.reply_button
     private val replyCount: TextView = itemView.reply_count
@@ -51,7 +52,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         backgroundColor(0)
         invisibleSubContents()
         setNoteContent(content.note)
-        setRelationNoteListener(content.note.id, content.note, timelineItem)
+        setRelationNoteListener(content.note.id, content.note, timelineItem, noteText)
 
         setReplyCount(content.note.replyCount)
         setReNoteCount(content.note.reNoteCount)
@@ -63,7 +64,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         invisibleSubContents()
         setWhoReactionUserLink(content.note.user, "リノート")
         setNoteContent(content.note.renote!!)
-        setRelationNoteListener(content.note.renote.id, content.note.renote, timelineItem)
+        setRelationNoteListener(content.note.renote.id, content.note.renote, timelineItem, noteText)
         setFourControlButtonListener(content.note.renote, content)
 
     }
@@ -82,7 +83,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         invisibleSubContents()
         setNoteContent(content.note)
         setWhoReactionUserLink(content.note.user, "クソリプ")
-        setRelationNoteListener(content.note.id, content.note, timelineItem)
+        setRelationNoteListener(content.note.id, content.note, timelineItem, noteText)
         setFourControlButtonListener(content.note, content)
     }
 
@@ -91,12 +92,14 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         invisibleSubContents()
         backgroundColor(1)
         setNoteContent(content.note)
-        setRelationNoteListener(content.note.id, content.note, timelineItem)
+        setRelationNoteListener(content.note.id, content.note, timelineItem, noteText)
         setFourControlButtonListener(content.note, content)
     }
 
-    fun setReactionCount(adapter: ReactionCountAdapter){
+    fun setReactionCount(adapter: ReactionRecyclerAdapter, linearLayoutManager: LinearLayoutManager){
+
         reactionView.adapter = adapter
+        reactionView.layoutManager = linearLayoutManager
         reactionView.visibility = View.VISIBLE
     }
 

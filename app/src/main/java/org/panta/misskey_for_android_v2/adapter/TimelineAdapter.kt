@@ -2,12 +2,15 @@ package org.panta.misskey_for_android_v2.adapter
 
 import android.content.Context
 import android.os.Handler
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.constant.ReactionConstData
+import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
 import org.panta.misskey_for_android_v2.repository.AbsTimeline
@@ -34,7 +37,12 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
 
        //リアクションをセットしている
         if(viewData.reactionCountPairList.isNotEmpty()){
-            viewHolder.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, viewData.reactionCountPairList))
+            //viewHolder.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, viewData.reactionCountPairList))
+
+            val adapter = ReactionRecyclerAdapter(viewData.reactionCountPairList, viewData.note.myReaction)
+            //val adapter = ReactionRecyclerAdapter(testReactionData, viewData.note.myReaction)
+            val lm = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            viewHolder.setReactionCount(adapter, lm)
         }else{
             viewHolder.invisibleReactionCount()
         }
