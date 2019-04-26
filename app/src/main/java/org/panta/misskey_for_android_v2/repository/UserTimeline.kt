@@ -6,7 +6,7 @@ import org.panta.misskey_for_android_v2.entity.RequestTimelineProperty
 import java.lang.StringBuilder
 import java.net.URL
 
-class UserTimeline(domain: String, private val userId: String) : AbsTimeline(URL("$domain/api/users/notes")){
+class UserTimeline(domain: String, private val userId: String, private val isMediaOnly: Boolean? = null) : AbsTimeline(URL("$domain/api/users/notes")){
 
 
     override fun createRequestTimelineJson(
@@ -23,6 +23,7 @@ class UserTimeline(domain: String, private val userId: String) : AbsTimeline(URL
         rtp.sinceDate = sinceDate
         rtp.untilDate = untilDate
         rtp.userId = userId
+        rtp.withFiles = isMediaOnly
 
         return jacksonObjectMapper().writeValueAsString(rtp)
 

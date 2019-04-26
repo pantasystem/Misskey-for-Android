@@ -9,7 +9,7 @@ enum class TimelineTypeEnum{
                 TimelineTypeEnum.HOME.name -> TimelineTypeEnum.HOME
                 TimelineTypeEnum.LOCAL.name -> TimelineTypeEnum.LOCAL
                 TimelineTypeEnum.SOCIAL.name -> TimelineTypeEnum.SOCIAL
-                TimelineTypeEnum.DESCRIPTION.name -> TimelineTypeEnum.DESCRIPTION
+                TimelineTypeEnum.USER.name -> TimelineTypeEnum.USER
                 else -> TimelineTypeEnum.HOME
             }
         }

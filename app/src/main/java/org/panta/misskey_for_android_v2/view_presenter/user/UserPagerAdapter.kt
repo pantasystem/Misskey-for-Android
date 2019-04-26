@@ -28,11 +28,10 @@ class UserPagerAdapter(fragmentManager: FragmentManager, private val userId: Str
             }
             1 ->{
                 Log.d("PagerAdapter", "SOCIALを表示中")
-                UserTimelineFragment.getInstance(userId)
+                TimelineFragment.getInstance(TimelineTypeEnum.USER, userId)
             }
             2 ->{
-                Log.d("PagerAdapter", "Globalを表示中")
-                TimelineFragment.getInstance(TimelineTypeEnum.GLOBAL)
+                TimelineFragment.getInstance(TimelineTypeEnum.USER, userId, true)
             }
 
             else -> TimelineFragment.getInstance(TimelineTypeEnum.LOCAL)

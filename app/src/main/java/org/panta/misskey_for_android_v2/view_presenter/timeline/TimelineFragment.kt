@@ -1,6 +1,5 @@
 package org.panta.misskey_for_android_v2.view_presenter.timeline
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -36,36 +35,49 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     companion object{
         private const val TIMELINE_TYPE = "TIMELINE_FRAGMENT_TIMELINE_TYPE"
-        fun getInstance(type: TimelineTypeEnum): TimelineFragment{
+        private const val USER_ID = "TIMELINE_FRAGMENT_USER_TIMELINE"
+        private const val IS_MEDIA_ONLY = "IS_MEDIA_ONLY"
+
+        fun getInstance(type: TimelineTypeEnum, userId: String? = null, isMediaOnly: Boolean = false): TimelineFragment{
             return TimelineFragment().apply{
                 val args = Bundle()
                 args.putString(TIMELINE_TYPE, type.name)
+                args.putString(USER_ID, userId)
+                args.putBoolean(IS_MEDIA_ONLY, isMediaOnly)
                 this.arguments = args
             }
         }
+
     }
+
+    private val reactionRequestCode = 23457
 
     private var mTimelineType: TimelineTypeEnum = TimelineTypeEnum.HOME
     lateinit var mLayoutManager: LinearLayoutManager
     override lateinit var mPresenter: TimelineContract.Presenter
     private lateinit var mAdapter: TimelineAdapter
 
-    private val reactionRequestCode = 23457
+    private var isMediaOnly: Boolean? = null
+    private var userId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        mLayoutManager = LinearLayoutManager(context)
         val args = arguments
         val timelineType = args?.getString(TIMELINE_TYPE)
+        isMediaOnly = args?.getBoolean(IS_MEDIA_ONLY)
+        userId = args?.getString(USER_ID)
+
         if(timelineType != null){
             mTimelineType = TimelineTypeEnum.toEnum(timelineType)
         }
+
         val mTimeline: ITimeline = when (mTimelineType) {
             TimelineTypeEnum.GLOBAL -> GlobalTimeline(domain = ApplicationConstant.domain, authKey = ApplicationConstant.authKey)
             TimelineTypeEnum.HOME -> HomeTimeline(domain = ApplicationConstant.domain , authKey = ApplicationConstant.authKey)
             TimelineTypeEnum.SOCIAL -> SocialTimeline(domain = ApplicationConstant.domain, authKey = ApplicationConstant.authKey)
             TimelineTypeEnum.LOCAL -> LocalTimeline(domain = ApplicationConstant.domain)
+            TimelineTypeEnum.USER -> UserTimeline(domain = ApplicationConstant.domain, userId = userId!!, isMediaOnly = isMediaOnly)
             else -> TODO("DESCRIPTIONを実装する")
         }
         mPresenter = TimelinePresenter(this, mTimeline)
@@ -78,6 +90,8 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         super.onViewCreated(view, savedInstanceState)
         timelineView.addOnScrollListener(listener)
         mPresenter.initTimeline()
+        mLayoutManager = LinearLayoutManager(context)
+
 
         refresh?.setOnRefreshListener(this)
 
