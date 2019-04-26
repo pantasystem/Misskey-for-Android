@@ -11,13 +11,14 @@ import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.ReactionConstData
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
+import org.panta.misskey_for_android_v2.interfaces.IOperationAdapter
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
 import org.panta.misskey_for_android_v2.repository.AbsTimeline
 import org.panta.misskey_for_android_v2.repository.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
-class TimelineAdapter(private val context: Context, private val notesList: List<NoteViewData>) : RecyclerView.Adapter<NoteViewHolder>(){
+class TimelineAdapter(private val context: Context, private val notesList: List<NoteViewData>) : RecyclerView.Adapter<NoteViewHolder>(), IOperationAdapter<NoteViewData>{
 
     private var noteClickListener: NoteClickListener? = null
     private var userClickListener: UserClickListener? = null
@@ -71,7 +72,7 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
        
     }
 
-    fun addAllFirst(list: List<NoteViewData>){
+    override fun addAllFirst(list: List<NoteViewData>){
         if(notesList is ArrayList){
             synchronized(notesList){
                 notesList.addAll(0, list)
@@ -82,7 +83,7 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         }
     }
 
-    fun addAllLast(list: List<NoteViewData>){
+    override fun addAllLast(list: List<NoteViewData>){
         if(notesList is ArrayList){
             val lastIndex = notesList.size
             synchronized(notesList){
@@ -95,13 +96,13 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         }
     }
 
-    fun getNote(index: Int): NoteViewData{
+    override fun getNote(index: Int): NoteViewData{
         synchronized(notesList){
             return notesList[index]
         }
     }
 
-    fun updateNote(noteViewData: NoteViewData){
+    override fun updateNote(noteViewData: NoteViewData){
         synchronized(notesList){
             val index = notesList.indexOf(noteViewData)
             if(notesList is ArrayList){
@@ -114,7 +115,7 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
         }
     }
 
-    fun removeNote(noteViewData: NoteViewData){
+    override fun removeNote(noteViewData: NoteViewData){
         synchronized(notesList){
             val index = notesList.indexOf(noteViewData)
             if(notesList is ArrayList){

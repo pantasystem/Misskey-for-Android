@@ -1,14 +1,16 @@
 package org.panta.misskey_for_android_v2.adapter
 
+import android.os.Handler
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.NotificationType
+import org.panta.misskey_for_android_v2.interfaces.IOperationAdapter
 import org.panta.misskey_for_android_v2.repository.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 
-class NotificationAdapter(private val notificationList: List<NotificationViewData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class NotificationAdapter(private val notificationList: List<NotificationViewData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IOperationAdapter<NotificationViewData>{
     override fun getItemCount(): Int {
         return notificationList.size
     }
@@ -61,6 +63,62 @@ class NotificationAdapter(private val notificationList: List<NotificationViewDat
                 }
             }
             viewHolder.setNote(data.noteViewData!!)
+        }
+    }
+
+    override fun addAllFirst(list: List<NotificationViewData>) {
+        if(notificationList is ArrayList){
+            synchronized(notificationList){
+                notificationList.addAll(0, list)
+            }
+            Handler().post{
+                notifyItemRangeInserted(0, list.size)
+            }
+        }
+    }
+
+    override fun addAllLast(list: List<NotificationViewData>) {
+        if(notificationList is ArrayList){
+            val lastIndex = notificationList.size
+            synchronized(notificationList){
+                notificationList.addAll(list)
+            }
+            Handler().post{
+                //実験段階不具合の可能性有り
+                notifyItemRangeInserted(lastIndex, list.size)
+            }
+        }
+    }
+
+    override fun getNote(index: Int): NotificationViewData {
+        synchronized(notificationList){
+            return notificationList[index]
+        }
+    }
+
+    override fun removeNote(noteViewData: NotificationViewData) {
+        synchronized(notificationList){
+            val index = notificationList.indexOf(noteViewData)
+            if(notificationList is ArrayList){
+                notificationList[index] = noteViewData
+
+                Handler().post{
+                    notifyItemChanged(index)
+                }
+            }
+        }
+    }
+
+    override fun updateNote(noteViewData: NotificationViewData) {
+        synchronized(notificationList){
+            val index = notificationList.indexOf(noteViewData)
+            if(notificationList is ArrayList){
+                notificationList.remove(noteViewData)
+
+                Handler().post{
+                    notifyItemRemoved(index)
+                }
+            }
         }
     }
 
