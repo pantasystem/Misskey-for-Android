@@ -32,6 +32,7 @@ import java.util.*
 
 private const val FRAGMENT_HOME = "FRAGMENT_HOME"
 private const val FRAGMENT_OTHER = "FRAGMENT_OTHER"
+const val DOMAIN_AUTH_KEY_TAG = "MainActivityUserDomainAndAuthKey"
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var i: String? = null
@@ -61,8 +62,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         /*~~basic init*/
-
         sharedOperator = SharedPreferenceOperator(getSharedPreferences("privateUserData", Context.MODE_PRIVATE))
+
+        val authKey = intent.getSerializableExtra(DOMAIN_AUTH_KEY_TAG) as DomainAuthKeyPair?
+        if(authKey != null){
+            sharedOperator.put("i", authKey.i)
+            sharedOperator.put("domain", authKey.domain)
+        }
+
+
         i = sharedOperator.get("i", null)
         domain = sharedOperator.get("domain", null)
 
@@ -85,7 +93,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     true
                 }
                 R.id.mix_timeline ->{
-                    setFragment(MixedTimelineFragment(), FRAGMENT_OTHER)
+                    setFragment(MixedTimelineFragment.getInstance(connectionInfo), FRAGMENT_OTHER)
                     true
                 }
                 R.id.notification_item ->{
