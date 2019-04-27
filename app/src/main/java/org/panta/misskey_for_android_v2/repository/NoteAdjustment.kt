@@ -63,7 +63,7 @@ class NoteAdjustment(private val isDeployReplyTo: Boolean = true){
         }
     }
 
-    fun createReactionCountPair(reactionCount: ReactionCount?): List<ReactionCountPair>{
+    fun createReactionCountPair(reactionCount: Map<String, Int>?): List<ReactionCountPair>{
         if(reactionCount == null){
             return emptyList()
         }

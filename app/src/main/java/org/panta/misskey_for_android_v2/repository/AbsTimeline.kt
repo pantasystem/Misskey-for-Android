@@ -105,7 +105,7 @@ abstract class AbsTimeline(private val timelineURL: URL, private val isDeployRep
 
 
 
-    private fun createReactionCountPair(reactionCount: ReactionCount?): List<ReactionCountPair>{
+    private fun createReactionCountPair(reactionCount: Map<String, Int>?): List<ReactionCountPair>{
         if(reactionCount == null){
             return emptyList()
         }

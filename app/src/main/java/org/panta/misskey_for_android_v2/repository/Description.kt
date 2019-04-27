@@ -31,7 +31,10 @@ class Description(){
                 val reactionPair = if(reply.reactionCounts == null){
                     emptyList()
                 }else{
-                    ReactionCountPair.createList(reply.reactionCounts!!)
+                    //ReactionCountPair.createList(reply.reactionCounts!!)
+                    reply.reactionCounts!!.map{
+                        ReactionCountPair(it.key, it.value.toString())
+                    }
                 }
                 replyList.add(NoteViewData(note = reply, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = reactionPair))
                 reply = reply.reply

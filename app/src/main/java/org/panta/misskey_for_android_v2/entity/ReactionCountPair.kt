@@ -6,8 +6,8 @@ import org.panta.misskey_for_android_v2.constant.ReactionConstData
 data class ReactionCountPair(val reactionType: String, val reactionCount: String){
 
     companion object{
-        fun createList(reactionCount: ReactionCount): List<ReactionCountPair>{
-            val array = ArrayList<ReactionCountPair>()
+        fun createList(reactionCount: Map<String, Int>): List<ReactionCountPair>{
+            /*val array = ArrayList<ReactionCountPair>()
             if(reactionCount.angry != null){
                 array.add(ReactionCountPair(ReactionConstData.ANGRY, reactionCount.angry.toString()))
             }
@@ -49,6 +49,9 @@ data class ReactionCountPair(val reactionType: String, val reactionCount: String
             }
             return array.filter{
                 Integer.parseInt(it.reactionCount) > 0
+            }*/
+            return reactionCount.map{
+                ReactionCountPair(it.key, it.value.toString())
             }
         }
     }

@@ -19,7 +19,7 @@ import java.io.Serializable
     @JsonProperty("visibilityUserIds") val visibilityUserIds: List<String?>?,
     @JsonProperty("url") val url: String?,
     @JsonProperty("renoteCount") val reNoteCount: Int,
-    @JsonProperty("reactions") val reactionCounts: ReactionCount?,
+    @JsonProperty("reactions") val reactionCounts: Map<String, Int>?,
     @JsonProperty("repliesCount") val replyCount: Int,
     @JsonProperty("user") val user: User?,
     @JsonProperty("files") val files: List<FileProperty?>?, //原因
