@@ -1,6 +1,7 @@
 package org.panta.misskey_for_android_v2.view_presenter
 
 import android.app.FragmentManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -18,18 +19,24 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
+import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
 import org.panta.misskey_for_android_v2.repository.MyInfo
+import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.view_presenter.mixed_timeline.MixedTimelineFragment
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.notification.NotificationFragment
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
+import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
 import java.util.*
 
 private const val FRAGMENT_HOME = "FRAGMENT_HOME"
 private const val FRAGMENT_OTHER = "FRAGMENT_OTHER"
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    val myFragmentTagsStack = Stack<String>()
+    private var i: String? = null
+    private var domain: String? = null
+    private lateinit var sharedOperator: ISharedPreferenceOperator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,15 +60,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
+        /*~~basic init*/
+
+        sharedOperator = SharedPreferenceOperator(getSharedPreferences("privateUserData", Context.MODE_PRIVATE))
+        i = sharedOperator.get("i", null)
+        domain = sharedOperator.get("domain", null)
+
+        if(i == null && domain == null){
+            val intent = Intent(applicationContext, AuthActivity::class.java)
+            startActivity(intent)
+            return
+        }
+        val connectionInfo = DomainAuthKeyPair(domain = domain!!, i = i!!)
+
         val sf = supportFragmentManager
         val ft = sf.beginTransaction()
-        ft.replace(R.id.main_container, TimelineFragment.getInstance(TimelineTypeEnum.HOME))
+        ft.replace(R.id.main_container, TimelineFragment.getInstance(info = connectionInfo  , type = TimelineTypeEnum.HOME))
         ft.commit()
 
         bottom_navigation.setOnNavigationItemSelectedListener {
             return@setOnNavigationItemSelectedListener when(it.itemId){
                 R.id.home_timeline ->{
-                    setFragment(TimelineFragment.getInstance(TimelineTypeEnum.HOME), FRAGMENT_HOME)
+                    setFragment(TimelineFragment.getInstance(connectionInfo, type = TimelineTypeEnum.HOME), FRAGMENT_HOME)
                     true
                 }
                 R.id.mix_timeline ->{
@@ -69,7 +89,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     true
                 }
                 R.id.notification_item ->{
-                    setFragment(NotificationFragment(), FRAGMENT_OTHER)
+                    setFragment(NotificationFragment.getInstance(connectionInfo), FRAGMENT_OTHER)
                     true
                 }
                 R.id.message_item ->{
@@ -83,6 +103,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         updateHeaderProfile()
 
     }
+
 
     private fun setFragment(fragment: Fragment, fragmentName: String){
         val fm = supportFragmentManager
@@ -107,8 +128,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
     }
 
+
     private fun updateHeaderProfile(){
-        MyInfo(domain = ApplicationConstant.domain, authKey =ApplicationConstant.authKey)
+        MyInfo(domain = domain!! , authKey = i!!)
             .getMyInfo {
                 runOnUiThread {
                     if(it.avatarUrl != null){
@@ -192,12 +214,4 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    /*override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        return if(keyCode == KeyEvent.KEYCODE_BACK){
-            supportFragmentManager.popBackStack()
-            super.onKeyDown(keyCode, event)
-        }else{
-            false
-        }
-    }*/
 }

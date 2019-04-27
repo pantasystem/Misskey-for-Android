@@ -9,6 +9,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_user.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
+import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.repository.UserRepository
 import java.lang.IllegalArgumentException
@@ -17,6 +18,7 @@ class UserActivity : AppCompatActivity() {
 
     companion object{
         const val USER_PROPERTY_TAG = "UserActivityUserPropertyTag"
+        const val CONNECTION_INFO = "UserActivityConnectionInfo"
     }
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,12 +28,13 @@ class UserActivity : AppCompatActivity() {
 
         val intent = intent
         val tmpUser: User? = intent.getSerializableExtra(USER_PROPERTY_TAG) as User
+        val info = intent.getSerializableExtra(CONNECTION_INFO) as DomainAuthKeyPair
         if(tmpUser == null){
             finish()
             throw IllegalArgumentException("user propertyがNULL")
         }
 
-        UserRepository(ApplicationConstant.domain, ApplicationConstant.authKey).getUserInfo(tmpUser.id){
+        UserRepository(info.domain, info.i).getUserInfo(tmpUser.id){
             runOnUiThread{
                 Picasso.get().load(it.avatarUrl).into(profile_icon)
 
@@ -54,7 +57,7 @@ class UserActivity : AppCompatActivity() {
 
         val ad = profile_view_pager.adapter
         val adapter = if(ad == null){
-            UserPagerAdapter(supportFragmentManager, tmpUser.id)
+            UserPagerAdapter(supportFragmentManager, tmpUser.id, info)
         }else{
             ad.notifyDataSetChanged()
             ad

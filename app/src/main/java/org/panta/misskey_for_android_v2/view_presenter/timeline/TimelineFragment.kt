@@ -17,6 +17,7 @@ import org.panta.misskey_for_android_v2.adapter.TimelineAdapter
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.dialog.ReactionDialog
+import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ITimeline
@@ -34,13 +35,15 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
 
     companion object{
+        private const val CONNECTION_INFOMATION = "TimelineFragmentConnectionInfomation"
         private const val TIMELINE_TYPE = "TIMELINE_FRAGMENT_TIMELINE_TYPE"
         private const val USER_ID = "TIMELINE_FRAGMENT_USER_TIMELINE"
         private const val IS_MEDIA_ONLY = "IS_MEDIA_ONLY"
 
-        fun getInstance(type: TimelineTypeEnum, userId: String? = null, isMediaOnly: Boolean = false): TimelineFragment{
+        fun getInstance(info: DomainAuthKeyPair , type: TimelineTypeEnum, userId: String? = null, isMediaOnly: Boolean = false): TimelineFragment{
             return TimelineFragment().apply{
                 val args = Bundle()
+                args.putSerializable(CONNECTION_INFOMATION, info)
                 args.putString(TIMELINE_TYPE, type.name)
                 args.putString(USER_ID, userId)
                 args.putBoolean(IS_MEDIA_ONLY, isMediaOnly)
@@ -50,11 +53,16 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     }
 
+    override lateinit var mPresenter: TimelineContract.Presenter
+
     private val reactionRequestCode = 23457
+
+    //private var instanceDomain: String? = null
+    //private var i: String? = null
+    private var connectionInfo: DomainAuthKeyPair? = null
 
     private var mTimelineType: TimelineTypeEnum = TimelineTypeEnum.HOME
     lateinit var mLayoutManager: LinearLayoutManager
-    override lateinit var mPresenter: TimelineContract.Presenter
     private lateinit var mAdapter: TimelineAdapter
 
     private var isMediaOnly: Boolean? = null
@@ -64,23 +72,25 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         super.onCreateView(inflater, container, savedInstanceState)
 
         val args = arguments
-        val timelineType = args?.getString(TIMELINE_TYPE)
-        isMediaOnly = args?.getBoolean(IS_MEDIA_ONLY)
-        userId = args?.getString(USER_ID)
+
+        connectionInfo = args?.getSerializable(CONNECTION_INFOMATION) as DomainAuthKeyPair
+        val timelineType = args.getString(TIMELINE_TYPE)
+        isMediaOnly = args.getBoolean(IS_MEDIA_ONLY)
+        userId = args.getString(USER_ID)
 
         if(timelineType != null){
             mTimelineType = TimelineTypeEnum.toEnum(timelineType)
         }
 
         val mTimeline: ITimeline = when (mTimelineType) {
-            TimelineTypeEnum.GLOBAL -> GlobalTimeline(domain = ApplicationConstant.domain, authKey = ApplicationConstant.authKey)
-            TimelineTypeEnum.HOME -> HomeTimeline(domain = ApplicationConstant.domain , authKey = ApplicationConstant.authKey)
-            TimelineTypeEnum.SOCIAL -> SocialTimeline(domain = ApplicationConstant.domain, authKey = ApplicationConstant.authKey)
-            TimelineTypeEnum.LOCAL -> LocalTimeline(domain = ApplicationConstant.domain)
-            TimelineTypeEnum.USER -> UserTimeline(domain = ApplicationConstant.domain, userId = userId!!, isMediaOnly = isMediaOnly)
+            TimelineTypeEnum.GLOBAL -> GlobalTimeline(domain = connectionInfo!!.domain , authKey = connectionInfo!!.i)
+            TimelineTypeEnum.HOME -> HomeTimeline(domain = connectionInfo!!.domain  , authKey = connectionInfo!!.i)
+            TimelineTypeEnum.SOCIAL -> SocialTimeline(domain = connectionInfo!!.domain  , authKey = connectionInfo!!.i)
+            TimelineTypeEnum.LOCAL -> LocalTimeline(domain = connectionInfo!!.domain)
+            TimelineTypeEnum.USER -> UserTimeline(domain = connectionInfo!!.domain , userId = userId!!, isMediaOnly = isMediaOnly)
             else -> TODO("DESCRIPTIONを実装する")
         }
-        mPresenter = TimelinePresenter(this, mTimeline)
+        mPresenter = TimelinePresenter(this, mTimeline, connectionInfo!!)
 
 
         return inflater.inflate(R.layout.fragment_timeline, container, false)
@@ -233,6 +243,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     override fun onClickedUser(user: User) {
         val intent = Intent(context, UserActivity::class.java)
         intent.putExtra(UserActivity.USER_PROPERTY_TAG, user)
+        intent.putExtra(UserActivity.CONNECTION_INFO, connectionInfo)
         startActivity(intent)
     }
 

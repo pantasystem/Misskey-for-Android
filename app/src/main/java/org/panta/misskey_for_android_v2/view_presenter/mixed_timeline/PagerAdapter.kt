@@ -5,9 +5,10 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.util.Log
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
+import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
 
-class PagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager){
+class PagerAdapter(fragmentManager: FragmentManager, private val connectionInfo: DomainAuthKeyPair) : FragmentPagerAdapter(fragmentManager){
 
     private val tabTitles = arrayOf<CharSequence>("Local", "Social","Global")
     override fun getCount(): Int {
@@ -24,18 +25,18 @@ class PagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(frag
         return when(tmp){
              0 ->{
                 Log.d("PagerAdapter", "Localを表示中")
-                TimelineFragment.getInstance(TimelineTypeEnum.LOCAL)
+                TimelineFragment.getInstance(connectionInfo, TimelineTypeEnum.LOCAL)
             }
             1 ->{
                 Log.d("PagerAdapter", "SOCIALを表示中")
-                TimelineFragment.getInstance(TimelineTypeEnum.SOCIAL)
+                TimelineFragment.getInstance(connectionInfo, TimelineTypeEnum.SOCIAL)
             }
             2 ->{
                 Log.d("PagerAdapter", "Globalを表示中")
-                TimelineFragment.getInstance(TimelineTypeEnum.GLOBAL)
+                TimelineFragment.getInstance(connectionInfo, TimelineTypeEnum.GLOBAL)
             }
 
-            else -> TimelineFragment.getInstance(TimelineTypeEnum.LOCAL)
+            else -> TimelineFragment.getInstance(connectionInfo, TimelineTypeEnum.LOCAL)
 
 
         }

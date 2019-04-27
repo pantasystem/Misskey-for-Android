@@ -13,6 +13,20 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".view_presenter.user_auth.AuthWebViewActivity">
+        </activity>
+        <activity android:name=".view_presenter.user_auth.AuthActivity">
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                        android:host="misskey_auth"
+                        android:scheme="myapp"/>
+            </intent-filter>
+        </activity>
         <activity
                 android:name=".view_presenter.user.UserActivity"
                 android:label="@string/title_activity_user"

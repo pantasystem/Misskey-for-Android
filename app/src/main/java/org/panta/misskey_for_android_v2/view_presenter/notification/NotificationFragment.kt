@@ -10,17 +10,35 @@ import kotlinx.android.synthetic.main.fragment_notification.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.NotificationAdapter
 import org.panta.misskey_for_android_v2.adapter.NotificationViewHolder
+import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.entity.NotificationProperty
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 
 class NotificationFragment : Fragment(), NotificationContract.View{
 
-    override var mPresenter: NotificationContract.Presenter = NotificationPresenter(this)
+    override lateinit var mPresenter: NotificationContract.Presenter
 
     private lateinit var mLayoutManager: LinearLayoutManager
 
+    companion object{
+        private const val CONNECTION_INFO = "NotificationFragmentConnectionInfo"
+        fun getInstance(info: DomainAuthKeyPair): NotificationFragment{
+            val fragment = NotificationFragment()
+            val bundle = Bundle()
+            bundle.putSerializable(CONNECTION_INFO, info)
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
+    private var connectionInfo: DomainAuthKeyPair? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
+
+        connectionInfo = arguments?.getSerializable(CONNECTION_INFO) as DomainAuthKeyPair
+
+        mPresenter = NotificationPresenter(this, connectionInfo!!)
+
         return inflater.inflate(R.layout.fragment_notification, container, false)
     }
 

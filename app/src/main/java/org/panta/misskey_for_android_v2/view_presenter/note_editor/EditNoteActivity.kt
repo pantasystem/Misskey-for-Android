@@ -6,12 +6,11 @@ import android.util.Log
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_edit_note.*
 import org.panta.misskey_for_android_v2.R
-import org.panta.misskey_for_android_v2.constant.ApplicationConstant.authKey
-import org.panta.misskey_for_android_v2.constant.ApplicationConstant.domain
 import org.panta.misskey_for_android_v2.entity.CreateNoteProperty
+import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.repository.NoteRepository
 
-class EditNoteActivity : AppCompatActivity() {
+class EditNoteActivity(private val connectionInfo: DomainAuthKeyPair) : AppCompatActivity() {
 
     companion object{
         const val EDIT_TYPE = "EDIT_NOTE_ACTIVITY_EDIT_TYPE"
@@ -22,8 +21,8 @@ class EditNoteActivity : AppCompatActivity() {
         const val CREATE_NOTE_TARGET_ID = "EDIT_NOTE_ACTIVITY_CREATE_NOTE_ID"
     }
 
-    private var builder = CreateNoteProperty.Builder(authKey)
-    private val noteRepository = NoteRepository(domain)
+    private var builder = CreateNoteProperty.Builder(connectionInfo.i)
+    private val noteRepository = NoteRepository(connectionInfo.domain)
 
     private var mEditType = 0
     private var mTargetId: String? = null

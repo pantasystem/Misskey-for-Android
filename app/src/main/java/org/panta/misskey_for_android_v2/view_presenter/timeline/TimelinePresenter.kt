@@ -2,20 +2,19 @@ package org.panta.misskey_for_android_v2.view_presenter.timeline
 
 import kotlinx.coroutines.Job
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
-import org.panta.misskey_for_android_v2.constant.ApplicationConstant.authKey
-import org.panta.misskey_for_android_v2.constant.ApplicationConstant.domain
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
+import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.interfaces.ITimeline
 import org.panta.misskey_for_android_v2.repository.*
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
-class TimelinePresenter(private val mView: TimelineContract.View, private val mTimeline: ITimeline) : TimelineContract.Presenter{
+class TimelinePresenter(private val mView: TimelineContract.View, private val mTimeline: ITimeline, info: DomainAuthKeyPair) : TimelineContract.Presenter{
 
     private var latestNoteData: NoteViewData? = null
     private var oldestNoteData: NoteViewData?=null
 
 
-    private val mReaction = Reaction(domain = domain, authKey = authKey)
+    private val mReaction = Reaction(domain = info.domain, authKey = info.i)
 
 
     override fun getNewTimeline() {
