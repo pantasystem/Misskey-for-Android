@@ -65,6 +65,9 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setWhoReactionUserLink(content.note.user, "リノート")
         setNoteContent(content.note.renote!!)
         setRelationNoteListener(content.note.renote.id, content.note.renote, timelineItem, noteText)
+
+        setReplyCount(content.note.renote.replyCount)
+        setReNoteCount(content.note.renote.reNoteCount)
         setFourControlButtonListener(content.note.renote, content)
 
     }
@@ -75,6 +78,9 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setSubContent(content.note.renote!!)
         setRelationNoteListener(content.note.id, content.note, timelineItem)
         setRelationNoteListener(content.note.renote.id, content.note.renote, subNoteText)
+
+        setReplyCount(content.note.replyCount)
+        setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
     }
 
@@ -84,6 +90,9 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setNoteContent(content.note)
         setWhoReactionUserLink(content.note.user, "クソリプ")
         setRelationNoteListener(content.note.id, content.note, timelineItem, noteText)
+
+        setReplyCount(content.note.replyCount)
+        setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
     }
 
@@ -93,6 +102,9 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         backgroundColor(1)
         setNoteContent(content.note)
         setRelationNoteListener(content.note.id, content.note, timelineItem, noteText)
+
+        setReplyCount(content.note.replyCount)
+        setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
     }
 
@@ -235,7 +247,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     }
 
     private fun injectionName(name: String?, id: String?, view: TextView){
-        view.text = if(name == null) id.toString() else id
+        view.text = if(name == null) id.toString() else name.toString()
         view.visibility = View.VISIBLE
     }
 

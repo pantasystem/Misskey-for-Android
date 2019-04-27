@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="color_has_my_reaction_color">#ff6100</color>
+    <color name="light_text_color">#000000</color>
 </resources>
