@@ -42,7 +42,8 @@ class ReactionRecyclerAdapter(private val reactionList: List<ReactionCountPair>,
         if(icon != null){
             p0.showReaction(reaction.reactionCount, icon, isMyReaction)
         }else{
-            p0.showReaction(reaction.reactionCount, R.drawable.human_icon, isMyReaction)
+            //p0.showReaction(reaction.reactionCount, R.drawable.human_icon, isMyReaction)
+            p0.showReaction(reaction.reactionCount, reaction.reactionType, isMyReaction)
         }
 
     }

@@ -2,7 +2,6 @@ package org.panta.misskey_for_android_v2.repository
 
 import android.util.Log
 import org.panta.misskey_for_android_v2.entity.Note
-import org.panta.misskey_for_android_v2.entity.ReactionCount
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import java.util.ArrayList

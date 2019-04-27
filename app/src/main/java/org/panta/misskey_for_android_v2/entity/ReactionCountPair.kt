@@ -52,6 +52,8 @@ data class ReactionCountPair(val reactionType: String, val reactionCount: String
             }*/
             return reactionCount.map{
                 ReactionCountPair(it.key, it.value.toString())
+            }.filter{
+                Integer.parseInt(it.reactionCount) > 0
             }
         }
     }
