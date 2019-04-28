@@ -1,6 +1,5 @@
 package org.panta.misskey_for_android_v2.view_presenter
 
-import android.app.FragmentManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,26 +16,26 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.panta.misskey_for_android_v2.R
-import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
-import org.panta.misskey_for_android_v2.repository.MyInfo
+import org.panta.misskey_for_android_v2.interfaces.MainContract
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.view_presenter.mixed_timeline.MixedTimelineFragment
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.notification.NotificationFragment
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
 import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
-import java.util.*
 
 private const val FRAGMENT_HOME = "FRAGMENT_HOME"
 private const val FRAGMENT_OTHER = "FRAGMENT_OTHER"
 const val DOMAIN_AUTH_KEY_TAG = "MainActivityUserDomainAndAuthKey"
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainContract.View {
 
-    private var i: String? = null
-    private var domain: String? = null
+    override lateinit var mPresenter: MainContract.Presenter
+    //private var i: String? = null
+    //private var domain: String? = null
     private lateinit var sharedOperator: ISharedPreferenceOperator
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,23 +63,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         /*~~basic init*/
         sharedOperator = SharedPreferenceOperator(getSharedPreferences("privateUserData", Context.MODE_PRIVATE))
 
+        mPresenter = MainPresenter(this, sharedOperator)
+
         val authKey = intent.getSerializableExtra(DOMAIN_AUTH_KEY_TAG) as DomainAuthKeyPair?
         if(authKey != null){
-            sharedOperator.put("i", authKey.i)
-            sharedOperator.put("domain", authKey.domain)
+            mPresenter.saveConnectInfo(authKey)
         }
 
+       mPresenter.getPersonalProfile()
 
-        i = sharedOperator.get("i", null)
-        domain = sharedOperator.get("domain", null)
+        mPresenter.initDisplay()
 
-        if(i == null && domain == null){
-            val intent = Intent(applicationContext, AuthActivity::class.java)
-            startActivity(intent)
-            return
-        }
-        val connectionInfo = DomainAuthKeyPair(domain = domain!!, i = i!!)
+        mPresenter.getPersonalProfile()
 
+    }
+
+
+    override fun initDisplay(connectionInfo: DomainAuthKeyPair) {
         val sf = supportFragmentManager
         val ft = sf.beginTransaction()
         ft.replace(R.id.main_container, TimelineFragment.getInstance(info = connectionInfo  , type = TimelineTypeEnum.HOME))
@@ -107,9 +106,36 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
         }
+    }
 
-        updateHeaderProfile()
+    override fun showAuthActivity() {
+        runOnUiThread{
+            val intent = Intent(applicationContext, AuthActivity::class.java)
+            startActivity(intent)
+        }
+    }
 
+    override fun showPersonalProfile(user: User) {
+        runOnUiThread {
+            if(user.avatarUrl != null){
+                Picasso
+                    .get()
+                    .load(user.avatarUrl)
+                    .into(my_account_icon)
+            }
+
+            my_name.text = user.name?: user.userName
+
+            val userName = if(user.host != null){
+                "@${user.userName}@${user.host}"
+            }else{
+                "@${user.userName}"
+            }
+            my_user_name.text = userName
+
+            follower_count.text = user.followersCount.toString()
+            following_count.text= user.followingCount.toString()
+        }
     }
 
 
@@ -136,32 +162,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
     }
 
-
-    private fun updateHeaderProfile(){
-        MyInfo(domain = domain!! , authKey = i!!)
-            .getMyInfo {
-                runOnUiThread {
-                    if(it.avatarUrl != null){
-                        Picasso
-                            .get()
-                            .load(it.avatarUrl)
-                            .into(my_account_icon)
-                    }
-
-                    my_name.text = it.name?: it.userName
-
-                    val userName = if(it.host != null){
-                        "@${it.userName}@${it.host}"
-                    }else{
-                        "@${it.userName}"
-                    }
-                    my_user_name.text = userName
-
-                    follower_count.text = it.followersCount.toString()
-                    following_count.text= it.followingCount.toString()
-                }
-            }
-    }
 
 
     override fun onBackPressed() {

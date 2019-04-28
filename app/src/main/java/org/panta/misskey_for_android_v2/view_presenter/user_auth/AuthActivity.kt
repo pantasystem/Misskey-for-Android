@@ -49,10 +49,7 @@ class AuthActivity : AppCompatActivity() {
 
             auth_button.setOnClickListener{
                 if(token != null && url != null){
-                    /*val intent = Intent(applicationContext, AuthWebViewActivity::class.java)
-                    intent.putExtra(AUTH_WEB_VIEW_URL_TAG, url.toString())
-                    Log.d("AuthActivity", "url: $url")
-                    startActivityForResult(intent, ACTIVITY_RESULT_CODE)*/
+
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                 }else{
                     Log.d("AuthActivity", "token && urlがNULL")
