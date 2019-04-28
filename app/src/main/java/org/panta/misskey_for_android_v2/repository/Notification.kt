@@ -32,7 +32,7 @@ class Notification(private val domain: String, private val authKey: String){
                     if(it.note == null){
                         NotificationViewData(it, null)
                     }else{
-                        val viewData = NoteViewData(it.note, noteAd.checkUpNoteType(it.note), noteAd.createReactionCountPair(it.note.reactionCounts))
+                        val viewData = NoteViewData(it.note.id, false,it.note, noteAd.checkUpNoteType(it.note), noteAd.createReactionCountPair(it.note.reactionCounts))
                         NotificationViewData(it, viewData)
                     }
                 }

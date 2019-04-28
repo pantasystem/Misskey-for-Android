@@ -2,11 +2,9 @@ package org.panta.misskey_for_android_v2.repository
 
 import android.util.Log
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
-import org.panta.misskey_for_android_v2.interfaces.ITimeline
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
 //FIXME そもそもDESCRIPTIONは別のActivity、別のFragmentで定義する可能性があるのでITimelineという型に
@@ -26,7 +24,7 @@ class Description(){
         try{
             var reply: Note? = note.reply
             val replyList = ArrayList<NoteViewData>()
-            replyList.add(NoteViewData(note = note, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = ReactionCountPair.createList(note.reactionCounts!!)))
+            replyList.add(NoteViewData(id = note.id, isIgnore = false ,note = note, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = ReactionCountPair.createList(note.reactionCounts!!)))
             while(reply != null){
                 val reactionPair = if(reply.reactionCounts == null){
                     emptyList()
@@ -36,7 +34,7 @@ class Description(){
                         ReactionCountPair(it.key, it.value.toString())
                     }
                 }
-                replyList.add(NoteViewData(note = reply, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = reactionPair))
+                replyList.add(NoteViewData(id = reply.id, isIgnore = false ,note = reply, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = reactionPair))
                 reply = reply.reply
             }
             callBack(reverseTimeline(replyList))

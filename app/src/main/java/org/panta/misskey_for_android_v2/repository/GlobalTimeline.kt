@@ -3,7 +3,6 @@ package org.panta.misskey_for_android_v2.repository
 import android.util.Log
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.panta.misskey_for_android_v2.entity.RequestTimelineProperty
-import org.panta.misskey_for_android_v2.interfaces.ITimeline
 import java.net.URL
 
 class GlobalTimeline(private val domain: String, private val authKey: String) : AbsTimeline(URL("$domain/api/notes/global-timeline")){

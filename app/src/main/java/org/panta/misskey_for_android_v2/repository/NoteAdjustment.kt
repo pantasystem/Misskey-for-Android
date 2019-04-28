@@ -21,15 +21,15 @@ class NoteAdjustment(private val isDeployReplyTo: Boolean = true){
             val noteType = checkUpNoteType(n)
             val reply = n.reply
             when(noteType){
-                NoteType.NOTE, NoteType.QUOTE_RE_NOTE -> replyList.add(NoteViewData(n, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
-                NoteType.RE_NOTE -> replyList.add(NoteViewData(n, type = noteType, reactionCountPairList = createReactionCountPair(n.renote?.reactionCounts)))
+                NoteType.NOTE, NoteType.QUOTE_RE_NOTE -> replyList.add(NoteViewData(n.id,false,n, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
+                NoteType.RE_NOTE -> replyList.add(NoteViewData(n.id, false, n, type = noteType, reactionCountPairList = createReactionCountPair(n.renote?.reactionCounts)))
 
                 NoteType.REPLY ->{
 
                     if(isDeployReplyTo){
-                        replyList.add(NoteViewData(reply!!, type = NoteType.REPLY_TO, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
+                        replyList.add(NoteViewData(reply!!.id, true,reply, type = NoteType.REPLY_TO, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
                     }
-                    replyList.add(NoteViewData(n, type = NoteType.REPLY, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
+                    replyList.add(NoteViewData(n.id,false, n, type = NoteType.REPLY, reactionCountPairList = createReactionCountPair(n.reactionCounts)))
                 }
                 else-> {
                     Log.w("AbsTimeline", "わからないタイプのノートが来てしまった:$n")

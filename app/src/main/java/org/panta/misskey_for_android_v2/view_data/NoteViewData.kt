@@ -2,6 +2,7 @@ package org.panta.misskey_for_android_v2.view_data
 
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
+import org.panta.misskey_for_android_v2.interfaces.ID
 import org.panta.misskey_for_android_v2.repository.AbsTimeline
 import org.panta.misskey_for_android_v2.repository.NoteAdjustment
 import java.io.Serializable
@@ -10,4 +11,5 @@ import java.io.Serializable
 //isOriginReplyは途中で追加されたデータなので最新のデータにはならない
 //isReplyが最新となるがViewにはisOriginReplayが先に挿入される
 //通常のNote,RNの場合は両方ともがFalseとなる
-data class NoteViewData(val note: Note, val type: NoteAdjustment.NoteType, val reactionCountPairList: List<ReactionCountPair>):Serializable
+data class NoteViewData(override val id: String,
+                        override val isIgnore: Boolean, val note: Note, val type: NoteAdjustment.NoteType, val reactionCountPairList: List<ReactionCountPair>):Serializable, ID
