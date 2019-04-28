@@ -1,24 +1,32 @@
 package org.panta.misskey_for_android_v2.view_presenter.notification
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_notification.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.NotificationAdapter
 import org.panta.misskey_for_android_v2.adapter.NotificationViewHolder
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.entity.NotificationProperty
+import org.panta.misskey_for_android_v2.interfaces.IOperationAdapter
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 
-class NotificationFragment : Fragment(), NotificationContract.View{
+class NotificationFragment : Fragment(), NotificationContract.View,
+    SwipeRefreshLayout.OnRefreshListener{
 
     override lateinit var mPresenter: NotificationContract.Presenter
 
     private lateinit var mLayoutManager: LinearLayoutManager
+    private lateinit var notificationAdapter: IOperationAdapter<NotificationViewData>
 
     companion object{
         private const val CONNECTION_INFO = "NotificationFragmentConnectionInfo"
@@ -51,27 +59,61 @@ class NotificationFragment : Fragment(), NotificationContract.View{
     }
 
     override fun stopRefreshing() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        activity?.runOnUiThread{
+            refresh?.isRefreshing = false
+        }
+    }
+
+    override fun onRefresh() {
+        mPresenter.getNewNotification()
     }
 
     override fun showOldNotification(list: List<NotificationViewData>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        activity?.runOnUiThread{
+            notificationAdapter.addAllLast(list)
+            stopRefreshing()
+        }
     }
 
     override fun showNewNotification(list: List<NotificationViewData>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        activity?.runOnUiThread{
+            notificationAdapter.addAllFirst(list)
+            stopRefreshing()
+
+        }
     }
 
     override fun showInitNotification(list: List<NotificationViewData>) {
         activity?.runOnUiThread{
 
             notification_view.layoutManager = mLayoutManager
-            notification_view.adapter = NotificationAdapter(list)
-
+            val adapter = NotificationAdapter(list)
+            notification_view.adapter = adapter
+            notificationAdapter = adapter
+            notification_view.addOnScrollListener(listener)
+            stopRefreshing()
         }
     }
 
     override fun onError(errorMsg: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
+    }
+
+    private val listener = object : RecyclerView.OnScrollListener(){
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            if( ! recyclerView.canScrollVertically(-1)){
+                //先頭に来た場合
+                refresh.isEnabled = true
+                Log.d("TimelineFragment", "先頭に来た")
+            }
+            if( ! recyclerView.canScrollVertically(1)){
+                //最後に来た場合
+                refresh.isEnabled = false   //stopRefreshing関数を設けているがあえてこの形にしている
+                mPresenter.getOldNotification()
+            }
+        }
     }
 }
