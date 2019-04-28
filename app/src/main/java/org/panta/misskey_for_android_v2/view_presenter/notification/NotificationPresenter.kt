@@ -3,39 +3,41 @@ package org.panta.misskey_for_android_v2.view_presenter.notification
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.entity.NotificationProperty
+import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.repository.Notification
+import org.panta.misskey_for_android_v2.view_data.NotificationViewData
+import org.panta.misskey_for_android_v2.view_presenter.timeline.PagingController
 
-class NotificationPresenter(private val mView: NotificationContract.View, info: DomainAuthKeyPair) : NotificationContract.Presenter{
-
-    private var latestNotification: NotificationProperty? = null
-    private var oldestNotification: NotificationProperty? = null
+class NotificationPresenter(private val mView: NotificationContract.View, info: DomainAuthKeyPair) :
+    NotificationContract.Presenter, ErrorCallBackListener{
 
     private val mNotification = Notification(domain = info.domain, authKey = info.i)
+
+    private val pagingController = PagingController(mNotification, this)
 
     override fun start() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getNewNotification() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        pagingController.getNewItems {
+            mView.showNewNotification(it)
+        }
     }
 
     override fun getOldNotification() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        pagingController.getOldItems {
+            mView.showOldNotification(it)
+        }
     }
 
     override fun initNotification() {
-        mNotification.getNotification {
-            if(it.isEmpty()){
-                mView.stopRefreshing()
-                return@getNotification
-            }
-
+        pagingController.getInit {
             mView.showInitNotification(it)
-
-            latestNotification = it.first().notificationProperty
-            oldestNotification = it.last().notificationProperty
-
         }
+    }
+
+    override fun callBack(e: Exception) {
+
     }
 }
