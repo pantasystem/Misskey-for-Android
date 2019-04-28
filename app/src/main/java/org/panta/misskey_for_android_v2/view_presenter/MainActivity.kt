@@ -43,13 +43,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-
-        fab.setOnClickListener {
-            val intent = Intent(applicationContext, EditNoteActivity::class.java)
-            startActivity(intent)
-        }
-
-
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar,
             R.string.navigation_drawer_open,
@@ -64,6 +57,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         sharedOperator = SharedPreferenceOperator(getSharedPreferences("privateUserData", Context.MODE_PRIVATE))
 
         mPresenter = MainPresenter(this, sharedOperator)
+
+        fab.setOnClickListener {
+            mPresenter.takeEditNote()
+        }
 
         val authKey = intent.getSerializableExtra(DOMAIN_AUTH_KEY_TAG) as DomainAuthKeyPair?
         if(authKey != null){
@@ -138,6 +135,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    override fun showEditNote(connectionInfo: DomainAuthKeyPair) {
+        val intent = Intent(applicationContext, EditNoteActivity::class.java)
+        intent.putExtra(EditNoteActivity.CONNECTION_INFO, connectionInfo)
+        startActivity(intent)
+    }
 
     private fun setFragment(fragment: Fragment, fragmentName: String){
         val fm = supportFragmentManager

@@ -10,19 +10,21 @@ import org.panta.misskey_for_android_v2.entity.CreateNoteProperty
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.repository.NoteRepository
 
-class EditNoteActivity(private val connectionInfo: DomainAuthKeyPair) : AppCompatActivity() {
+class EditNoteActivity : AppCompatActivity() {
 
     companion object{
         const val EDIT_TYPE = "EDIT_NOTE_ACTIVITY_EDIT_TYPE"
         const val CREATE = 0
         const val RE_NOTE = 1
         const val REPLY = 2
+        const val CONNECTION_INFO = "EditNoteActivityConnectionInfo"
 
         const val CREATE_NOTE_TARGET_ID = "EDIT_NOTE_ACTIVITY_CREATE_NOTE_ID"
     }
 
-    private var builder = CreateNoteProperty.Builder(connectionInfo.i)
-    private val noteRepository = NoteRepository(connectionInfo.domain)
+    private lateinit var builder:CreateNoteProperty.Builder
+    private lateinit var noteRepository: NoteRepository
+    private lateinit var connectionInfo: DomainAuthKeyPair
 
     private var mEditType = 0
     private var mTargetId: String? = null
@@ -36,6 +38,10 @@ class EditNoteActivity(private val connectionInfo: DomainAuthKeyPair) : AppCompa
         val intent = intent
         mEditType = intent.getIntExtra(EDIT_TYPE, 0)
         mTargetId = intent.getStringExtra(CREATE_NOTE_TARGET_ID)
+        connectionInfo = intent.getSerializableExtra(CONNECTION_INFO) as DomainAuthKeyPair
+
+        builder = CreateNoteProperty.Builder(connectionInfo.i)
+        noteRepository = NoteRepository(connectionInfo.domain)
 
         when(mEditType){
             RE_NOTE -> builder.renoteId = mTargetId

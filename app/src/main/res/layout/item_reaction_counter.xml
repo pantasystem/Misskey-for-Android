@@ -16,7 +16,7 @@
             android:layout_marginTop="2dp"
             android:layout_marginStart="2dp"
             android:layout_height="wrap_content" android:textSize="20sp" android:id="@+id/reaction_type_string_view"
-            android:textColor="@color/light_text_color"
+            android:textColor="@color/light_primary_text_color"
             android:textStyle="normal"/>
     <TextView
             android:text="@string/number_0"

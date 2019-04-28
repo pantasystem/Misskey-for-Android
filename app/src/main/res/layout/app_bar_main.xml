@@ -34,7 +34,8 @@
 
             android:layout_marginBottom="70dp"
             android:layout_marginEnd="15dp"
-            app:srcCompat="@android:drawable/ic_dialog_email"/>
+            app:srcCompat="@drawable/send_icon" app:backgroundTint="@color/colorPrimary"
+            android:tint="@android:color/background_light"/>
 
     <android.support.design.widget.BottomNavigationView
             android:id="@+id/bottom_navigation"

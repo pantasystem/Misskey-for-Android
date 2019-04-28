@@ -16,7 +16,6 @@ import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.view_presenter.DOMAIN_AUTH_KEY_TAG
 import org.panta.misskey_for_android_v2.view_presenter.MainActivity
 
-const val ACTIVITY_RESULT_CODE = 9789
 class AuthActivity : AppCompatActivity() {
 
     private val auth = AuthRepository(domain = ApplicationConstant.domain, appSecret = ApplicationConstant.appSecret)
@@ -59,11 +58,4 @@ class AuthActivity : AppCompatActivity() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == ACTIVITY_RESULT_CODE){
-            if(resultCode == RESULT_OK){
-
-            }
-        }
-    }
 }

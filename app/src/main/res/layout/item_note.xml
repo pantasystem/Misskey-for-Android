@@ -34,7 +34,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:layout_below="@+id/who_reaction_user_link"
-            android:textColor="@color/light_text_color"
+            android:textColor="@color/light_primary_text_color"
             android:layout_toEndOf="@+id/user_icon"/>
     <TextView
             android:id="@+id/user_id"
@@ -53,7 +53,7 @@
             android:layout_below="@id/user_name" android:layout_marginTop="0dp" android:textSize="14sp"
             android:layout_toEndOf="@+id/user_icon"
             android:layout_marginEnd="15dp" android:layout_marginBottom="3dp"
-            android:textColor="@color/light_text_color"
+            android:textColor="?android:textColorPrimary"
             android:autoLink="web"/>
 
     <TableLayout
@@ -137,7 +137,7 @@
             android:singleLine="true" android:autoLink="web"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginEnd="14dp"
-            android:textColor="@color/light_text_color"
+            android:textColor="@color/light_primary_text_color"
 
             android:layout_below="@+id/image_view"
             android:layout_toEndOf="@+id/sub_user_icon"
@@ -159,7 +159,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/user_icon"
-            android:textColor="@color/light_text_color"
+            android:textColor="@color/light_primary_text_color"
 
             android:layout_below="@id/sub_user_name" android:layout_marginTop="10dp"
             android:textSize="14sp"

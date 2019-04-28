@@ -171,6 +171,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         val intent = Intent(context, EditNoteActivity::class.java)
         intent.putExtra(EditNoteActivity.CREATE_NOTE_TARGET_ID, targetId)
             .putExtra(EditNoteActivity.EDIT_TYPE, EditNoteActivity.REPLY)
+            .putExtra(EditNoteActivity.CONNECTION_INFO, connectionInfo)
         startActivity(intent)
     }
 
@@ -195,6 +196,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         val intent = Intent(context, EditNoteActivity::class.java)
             .putExtra(EditNoteActivity.CREATE_NOTE_TARGET_ID, targetId)
             .putExtra(EditNoteActivity.EDIT_TYPE, EditNoteActivity.RE_NOTE)
+            .putExtra(EditNoteActivity.CONNECTION_INFO, connectionInfo)
         startActivity(intent)
     }
 

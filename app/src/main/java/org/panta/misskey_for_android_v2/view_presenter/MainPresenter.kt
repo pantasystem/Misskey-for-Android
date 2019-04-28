@@ -35,6 +35,15 @@ class MainPresenter(private val mView: MainContract.View, private val sharedOper
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun takeEditNote() {
+        val info = loadConnectInfo()
+        if(info == null){
+            mView.showAuthActivity()
+        }else{
+            mView.showEditNote(info)
+        }
+    }
+
     private fun loadConnectInfo(): DomainAuthKeyPair?{
         val domain = sharedOperator.get("domain", null)
         val i = sharedOperator.get("i", null)

@@ -8,11 +8,13 @@ interface MainContract {
         fun showPersonalProfile(user: User)
         fun showAuthActivity()
         fun initDisplay(connectionInfo: DomainAuthKeyPair)
+        fun showEditNote(connectionInfo: DomainAuthKeyPair)
     }
 
     interface Presenter : BasePresenter{
         fun getPersonalProfile()
         fun saveConnectInfo(info: DomainAuthKeyPair)
         fun initDisplay()
+        fun takeEditNote()
     }
 }
