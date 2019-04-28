@@ -47,6 +47,8 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val reactionButton: ImageButton = itemView.reaction_button
     private val descriptionButton: ImageButton = itemView.description_button
 
+    private val showThreadButton: Button = itemView.show_thread_button
+
     fun setNote(content: NoteViewData){
         whoReactionUserLink.visibility = View.GONE
         backgroundColor(0)
@@ -57,6 +59,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setReplyCount(content.note.replyCount)
         setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
+        showThreadButton.visibility = View.GONE
     }
 
     fun setReNote(content: NoteViewData){
@@ -69,7 +72,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setReplyCount(content.note.renote.replyCount)
         setReNoteCount(content.note.renote.reNoteCount)
         setFourControlButtonListener(content.note.renote, content)
-
+        showThreadButton.visibility = View.GONE
     }
     fun setQuoteReNote(content: NoteViewData){
         backgroundColor(0)
@@ -82,6 +85,8 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setReplyCount(content.note.replyCount)
         setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
+        showThreadButton.visibility = View.GONE
+
     }
 
     fun setReply(content: NoteViewData){
@@ -89,11 +94,13 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         invisibleSubContents()
         setNoteContent(content.note)
         setWhoReactionUserLink(content.note.user, "クソリプ")
-        setRelationNoteListener(content.note.id, content.note, timelineItem, noteText)
+        setRelationNoteListener(content.note.id, content.note, timelineItem, noteText, showThreadButton)
 
         setReplyCount(content.note.replyCount)
         setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
+        showThreadButton.visibility = View.VISIBLE
+
     }
 
     fun setReplyTo(content: NoteViewData){
@@ -106,6 +113,8 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setReplyCount(content.note.replyCount)
         setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
+        showThreadButton.visibility = View.GONE
+
     }
 
     fun setReactionCount(adapter: ReactionRecyclerAdapter, linearLayoutManager: LinearLayoutManager){

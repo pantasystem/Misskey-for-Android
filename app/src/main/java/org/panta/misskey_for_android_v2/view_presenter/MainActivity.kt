@@ -74,6 +74,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         mPresenter.getPersonalMiniProfile()
 
+        title = "ホーム"
+
     }
 
 
@@ -87,14 +89,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             return@setOnNavigationItemSelectedListener when(it.itemId){
                 R.id.home_timeline ->{
                     setFragment(TimelineFragment.getInstance(connectionInfo, type = TimelineTypeEnum.HOME), FRAGMENT_HOME)
+                    title = "ホーム"
                     true
                 }
                 R.id.mix_timeline ->{
                     setFragment(MixedTimelineFragment.getInstance(connectionInfo), FRAGMENT_OTHER)
+                    title = "炊き込みご飯おいしい"
                     true
                 }
                 R.id.notification_item ->{
                     setFragment(NotificationFragment.getInstance(connectionInfo), FRAGMENT_OTHER)
+                    title = "通知"
                     true
                 }
                 R.id.message_item ->{

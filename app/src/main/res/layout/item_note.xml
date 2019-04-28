@@ -11,8 +11,8 @@
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginStart="5dp" android:padding="5dp"
             android:minWidth="0dp" android:minHeight="0dp"
-            android:ellipsize="end" android:textSize="12sp"
             style="?android:attr/borderlessButtonStyle"
+            android:ellipsize="end" android:textSize="12sp"
             android:visibility="gone"/>
     <!--ここからNote-->
     <ImageView
@@ -194,7 +194,7 @@
             android:layout_width="40dp"
             android:layout_height="20dp"
             android:layout_below="@+id/reaction_view"
-            android:layout_toRightOf="@id/reply_button" android:textSize="16dp" android:layout_marginTop="8dp"
+            android:layout_toEndOf="@id/reply_button" android:textSize="16sp" android:layout_marginTop="8dp"
             android:visibility="invisible"/>
     <ImageButton
             android:id="@+id/re_note_button"
@@ -227,12 +227,27 @@
             android:layout_below="@+id/reaction_view" android:layout_toEndOf="@id/reaction_button"
             style="?android:attr/borderlessButtonStyle"
     />
+    <Button
+            android:id="@+id/show_thread_button"
+            android:text="@string/show_talk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp"
+            android:minWidth="0dp" android:minHeight="0dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:padding="3dp"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@+id/user_icon"
+            android:layout_below="@+id/reply_button"/>
     <View
             android:id="@+id/horizon-line"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/description_button"
+            android:layout_below="@id/show_thread_button"
             android:background="@android:color/darker_gray"/>
+
 
 
 </RelativeLayout>
