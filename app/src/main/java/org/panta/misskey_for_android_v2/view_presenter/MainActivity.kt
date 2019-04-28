@@ -26,6 +26,7 @@ import org.panta.misskey_for_android_v2.view_presenter.mixed_timeline.MixedTimel
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.notification.NotificationFragment
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
+import org.panta.misskey_for_android_v2.view_presenter.user.UserActivity
 import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
 
 private const val FRAGMENT_HOME = "FRAGMENT_HOME"
@@ -67,11 +68,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             mPresenter.saveConnectInfo(authKey)
         }
 
-       mPresenter.getPersonalProfile()
+       mPresenter.getPersonalMiniProfile()
 
         mPresenter.initDisplay()
 
-        mPresenter.getPersonalProfile()
+        mPresenter.getPersonalMiniProfile()
 
     }
 
@@ -112,7 +113,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    override fun showPersonalProfile(user: User) {
+    override fun showPersonalMiniProfile(user: User) {
         runOnUiThread {
             if(user.avatarUrl != null){
                 Picasso
@@ -134,6 +135,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             following_count.text= user.followingCount.toString()
         }
     }
+
+    override fun showPersonalProfilePage(user: User, connectionInfo: DomainAuthKeyPair) {
+        val intent = Intent(applicationContext, UserActivity::class.java)
+        intent.putExtra(UserActivity.CONNECTION_INFO, connectionInfo)
+        intent.putExtra(UserActivity.USER_PROPERTY_TAG, user)
+        startActivity(intent)
+    }
+
+
 
     override fun showEditNote(connectionInfo: DomainAuthKeyPair) {
         val intent = Intent(applicationContext, EditNoteActivity::class.java)
@@ -164,8 +174,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
     }
 
-
-
     override fun onBackPressed() {
 
         //NavigationDrawerが開いているときに戻るボタンを押したときの動作
@@ -188,9 +196,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         return when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
@@ -200,28 +206,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_camera -> {
-                // Handle the camera action
-            }
-            R.id.nav_gallery -> {
-
-            }
-            R.id.nav_slideshow -> {
-
-            }
-            R.id.nav_manage -> {
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
+            R.id.nav_profile ->{
+                mPresenter.getPersonalProfilePage()
             }
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
-        return true
+        return false
     }
 
 }
