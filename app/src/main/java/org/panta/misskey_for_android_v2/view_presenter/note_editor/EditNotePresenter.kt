@@ -2,57 +2,59 @@ package org.panta.misskey_for_android_v2.view_presenter.note_editor
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.panta.misskey_for_android_v2.constant.NoteType
 
 import org.panta.misskey_for_android_v2.entity.CreateNoteProperty
+import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.repository.NoteRepository
 
-/*class EditNotePresenter(private val mView: EditNoteContract.View, private val authKey: String) : EditNoteContract.Presenter{
+class EditNotePresenter(private val mView: EditNoteContract.View, private val connectionInfo: DomainAuthKeyPair) : EditNoteContract.Presenter{
 
-    //private val noteApi = NotesAPIAdapter()
-    val noteBuilder = CreateNoteProperty.Builder(authKey)
+    private val noteBuilder = CreateNoteProperty.Builder(connectionInfo.i)
+    private val noteRepository = NoteRepository(connectionInfo.domain)
+
+    private var noteType: NoteType = NoteType.CREATE
+
+    override fun setText(text: String) {
+        noteBuilder.text = if(text.isBlank()){
+            null
+        }else{
+            text
+        }
+    }
+
+    override fun setNoteType(type: Int, targetId: String?) {
+        this.noteType = NoteType.getEnumFromInt(type)
+        if(noteType == NoteType.RE_NOTE){
+            noteBuilder.renoteId = targetId!!
+        }else if(noteType == NoteType.REPLY){
+            noteBuilder.replyId = targetId!!
+        }
+    }
+
+    override fun postNote() {
+        val property = noteBuilder.create()
+        when(noteType){
+            NoteType.CREATE ->{
+                val check = ! property.text.isNullOrBlank() && property.text.length < 1500
+                if(check) noteRepository.send(property)
+                mView.onPosted()
+            }
+            NoteType.REPLY ->{
+                val check = ! property.text.isNullOrBlank() && property.text.length < 1500
+                if(check && property.replyId != null) noteRepository.send(property)
+                mView.onPosted()
+            }
+            NoteType.RE_NOTE ->{
+                if(property.renoteId != null){
+                    noteRepository.send(property)
+                    mView.onPosted()
+                }
+            }
+        }
+    }
 
     override fun start() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-    //FIXME 完全にビジネスロジックが混じってしまっているので修正する
-    override fun normalPost(text: String) {
-        if(text.isEmpty() || text.length > 1500){
-            mView.onError("文字数が多すぎる又は少なすぎます")
-            return
-        }
-
-        GlobalScope.launch {
-            noteApi.create(CreateNote(
-                i = authKey,
-                text = text
-            ))
-            mView.onPosted()
-
-        }
-    }
-
-    override fun reNote(id: String, text: String?) {
-        val data = if(text != null && text.isEmpty()){
-            CreateNote(i = authKey, renoteId = id)
-        }else{
-            CreateNote(i = authKey, text = text, renoteId = id)
-        }
-
-        GlobalScope.launch{
-            noteApi.create(data)
-            mView.onPosted()
-        }
-
-    }
-
-    override fun reply(id: String, text: String) {
-        GlobalScope.launch{
-            noteApi.create(CreateNote(
-                i = authKey,
-                text = text,
-                replyId = id
-            ))
-            mView.onPosted()
-        }
-    }
-}*/
+}

@@ -13,8 +13,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".view_presenter.user_auth.AuthWebViewActivity">
-        </activity>
+
         <activity android:name=".view_presenter.user_auth.AuthActivity">
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW"/>
@@ -36,7 +35,10 @@
         </activity>
         <activity android:name=".view_presenter.note_description.NoteDescriptionActivity">
         </activity>
-        <activity android:name=".view_presenter.note_editor.EditNoteActivity">
+        <activity
+                android:name=".view_presenter.note_editor.EditNoteActivity"
+                android:windowSoftInputMode="adjustResize"
+        >
         </activity>
         <activity
                 android:name=".view_presenter.MainActivity"

@@ -9,11 +9,14 @@ interface EditNoteContract{
     interface View : BaseView<Presenter> {
         fun onPosted()
         fun onError(msg: String)
+        fun showFileManager()
+        fun showCloudFileManager()
     }
 
     interface Presenter : BasePresenter {
-        fun normalPost(text: String)
-        fun reply(id:String, text: String)
-        fun reNote(id: String, text: String?)
+
+        fun setText(text: String)
+        fun postNote()
+        fun setNoteType(type: Int, targetId: String?)
     }
 }

@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_timeline.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.TimelineAdapter
+import org.panta.misskey_for_android_v2.constant.NoteType
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.dialog.ReactionDialog
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
@@ -169,7 +170,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     override fun onReplyButtonClicked(targetId: String?, note: Note?) {
         val intent = Intent(context, EditNoteActivity::class.java)
         intent.putExtra(EditNoteActivity.CREATE_NOTE_TARGET_ID, targetId)
-            .putExtra(EditNoteActivity.EDIT_TYPE, EditNoteActivity.REPLY)
+            .putExtra(EditNoteActivity.EDIT_TYPE, NoteType.REPLY.ordinal)
             .putExtra(EditNoteActivity.CONNECTION_INFO, connectionInfo)
         startActivity(intent)
     }
@@ -194,7 +195,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     override fun onReNoteButtonClicked(targetId: String?, note: Note?) {
         val intent = Intent(context, EditNoteActivity::class.java)
             .putExtra(EditNoteActivity.CREATE_NOTE_TARGET_ID, targetId)
-            .putExtra(EditNoteActivity.EDIT_TYPE, EditNoteActivity.RE_NOTE)
+            .putExtra(EditNoteActivity.EDIT_TYPE, NoteType.RE_NOTE.ordinal)
             .putExtra(EditNoteActivity.CONNECTION_INFO, connectionInfo)
         startActivity(intent)
     }

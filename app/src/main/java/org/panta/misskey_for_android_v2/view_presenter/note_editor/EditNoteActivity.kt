@@ -2,76 +2,80 @@ package org.panta.misskey_for_android_v2.view_presenter.note_editor
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_edit_note.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.entity.CreateNoteProperty
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.repository.NoteRepository
 
-class EditNoteActivity : AppCompatActivity() {
+class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
     companion object{
         const val EDIT_TYPE = "EDIT_NOTE_ACTIVITY_EDIT_TYPE"
-        const val CREATE = 0
-        const val RE_NOTE = 1
-        const val REPLY = 2
+        //const val CREATE = 0
+        //const val RE_NOTE = 1
+        //const val REPLY = 2
         const val CONNECTION_INFO = "EditNoteActivityConnectionInfo"
 
         const val CREATE_NOTE_TARGET_ID = "EDIT_NOTE_ACTIVITY_CREATE_NOTE_ID"
     }
 
-    private lateinit var builder:CreateNoteProperty.Builder
-    private lateinit var noteRepository: NoteRepository
+    //private lateinit var builder:CreateNoteProperty.Builder
+    //private lateinit var noteRepository: NoteRepository
+    override lateinit var mPresenter: EditNoteContract.Presenter
+
     private lateinit var connectionInfo: DomainAuthKeyPair
 
-    private var mEditType = 0
-    private var mTargetId: String? = null
+    //private var mEditType = 0
+    //private var mTargetId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_note)
+        title = "投稿"
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val intent = intent
-        mEditType = intent.getIntExtra(EDIT_TYPE, 0)
-        mTargetId = intent.getStringExtra(CREATE_NOTE_TARGET_ID)
+        val editType = intent.getIntExtra(EDIT_TYPE, 0)
+        val targetId = intent.getStringExtra(CREATE_NOTE_TARGET_ID)
         connectionInfo = intent.getSerializableExtra(CONNECTION_INFO) as DomainAuthKeyPair
 
-        builder = CreateNoteProperty.Builder(connectionInfo.i)
-        noteRepository = NoteRepository(connectionInfo.domain)
+        mPresenter = EditNotePresenter(this, connectionInfo)
 
-        when(mEditType){
-            RE_NOTE -> builder.renoteId = mTargetId
-            REPLY -> builder.replyId = mTargetId
+        mPresenter.setNoteType(editType, targetId)
+
+        bottom_navigation.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+
+            }
+            return@setOnNavigationItemSelectedListener false
         }
 
-        post_note.setOnClickListener{
-            val text = editText.text.toString()
+    }
 
-            send(text)
-
+    override fun onPosted() {
+        runOnUiThread{
+            finish()
         }
     }
 
-    private fun send(text: String){
-        val tmpText = if(text.isBlank()){
-            null
-        }else{
-            text
-        }
-        if(mEditType == RE_NOTE && tmpText == null){
-            noteRepository.send(builder.create())
-        }else if(tmpText != null){
+    override fun onError(msg: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-            builder.text = tmpText
-            val obj = builder.create()
-            Log.d("EditNoteActivity", "input ${obj.text}")
-            noteRepository.send(obj)
-        }
-        finish()
+    override fun showCloudFileManager() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showFileManager() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -80,9 +84,22 @@ class EditNoteActivity : AppCompatActivity() {
                 finish()
                 return true
             }
+            R.id.post_button ->{
+                val text = editText.text.toString()
+
+                mPresenter.setText(text)
+                mPresenter.postNote()
+            }
         }
         return super.onOptionsItemSelected(item)
 
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_edit_note_drawer, menu)
+        return true
+    }
+
+
 }
