@@ -12,7 +12,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/tabLayout">
+            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/follow_follower_tab">
 
         <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
@@ -34,5 +34,5 @@
             android:layout_height="0dp" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabLayout"/>
+            app:layout_constraintTop_toBottomOf="@+id/follow_follower_tab" android:id="@+id/follow_follower_pageer"/>
 </android.support.constraint.ConstraintLayout>
