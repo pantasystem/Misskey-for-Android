@@ -168,11 +168,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     }
 
     override fun onReplyButtonClicked(targetId: String?, note: Note?) {
-        val intent = Intent(context, EditNoteActivity::class.java)
-        intent.putExtra(EditNoteActivity.CREATE_NOTE_TARGET_ID, targetId)
-            .putExtra(EditNoteActivity.EDIT_TYPE, NoteType.REPLY.ordinal)
-            .putExtra(EditNoteActivity.CONNECTION_INFO, connectionInfo)
-        startActivity(intent)
+        EditNoteActivity.startActivity(context!!, connectionInfo!!, targetId, NoteType.REPLY)
     }
 
     override fun onReactionButtonClicked(targetId: String?, note: Note?) {
@@ -193,11 +189,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
 
     override fun onReNoteButtonClicked(targetId: String?, note: Note?) {
-        val intent = Intent(context, EditNoteActivity::class.java)
-            .putExtra(EditNoteActivity.CREATE_NOTE_TARGET_ID, targetId)
-            .putExtra(EditNoteActivity.EDIT_TYPE, NoteType.RE_NOTE.ordinal)
-            .putExtra(EditNoteActivity.CONNECTION_INFO, connectionInfo)
-        startActivity(intent)
+        EditNoteActivity.startActivity(context!!, connectionInfo!!, targetId, NoteType.RE_NOTE)
     }
 
     override fun onDescriptionButtonClicked(targetId: String?, note: Note?) {
@@ -239,14 +231,10 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         intent.putExtra(ImageViewerActivity.IMAGE_URL_LIST, clickedImageUrlCollection)
         intent.putExtra(ImageViewerActivity.CLICKED_IMAGE_URL, clickedIndex)
         startActivity(intent)
-
     }
 
     override fun onClickedUser(user: User) {
-        val intent = Intent(context, UserActivity::class.java)
-        intent.putExtra(UserActivity.USER_PROPERTY_TAG, user)
-        intent.putExtra(UserActivity.CONNECTION_INFO, connectionInfo)
-        startActivity(intent)
+        UserActivity.startActivity(context!!, user, connectionInfo!!)
     }
 
     private val listener = object : RecyclerView.OnScrollListener(){

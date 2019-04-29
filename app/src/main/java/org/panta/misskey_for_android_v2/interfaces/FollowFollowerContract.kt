@@ -1,7 +1,5 @@
-package org.panta.misskey_for_android_v2.view_presenter.follow_follower
+package org.panta.misskey_for_android_v2.interfaces
 
-import org.panta.misskey_for_android_v2.interfaces.BasePresenter
-import org.panta.misskey_for_android_v2.interfaces.BaseView
 import org.panta.misskey_for_android_v2.view_data.FollowViewData
 
 interface FollowFollowerContract{

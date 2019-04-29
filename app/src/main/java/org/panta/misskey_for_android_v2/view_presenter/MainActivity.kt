@@ -16,12 +16,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
 import org.panta.misskey_for_android_v2.interfaces.MainContract
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
+import org.panta.misskey_for_android_v2.view_presenter.follow_follower.FollowFollowerActivity
 import org.panta.misskey_for_android_v2.view_presenter.mixed_timeline.MixedTimelineFragment
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.notification.NotificationFragment
@@ -75,7 +77,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mPresenter.getPersonalMiniProfile()
 
         title = "ホーム"
-
     }
 
 
@@ -109,6 +110,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
         }
+
+
     }
 
     override fun showAuthActivity() {
@@ -138,22 +141,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             follower_count.text = user.followersCount.toString()
             following_count.text= user.followingCount.toString()
+
+
+
         }
     }
 
     override fun showPersonalProfilePage(user: User, connectionInfo: DomainAuthKeyPair) {
-        val intent = Intent(applicationContext, UserActivity::class.java)
-        intent.putExtra(UserActivity.CONNECTION_INFO, connectionInfo)
-        intent.putExtra(UserActivity.USER_PROPERTY_TAG, user)
-        startActivity(intent)
+        UserActivity.startActivity(applicationContext, user, connectionInfo)
     }
 
 
 
     override fun showEditNote(connectionInfo: DomainAuthKeyPair) {
-        val intent = Intent(applicationContext, EditNoteActivity::class.java)
-        intent.putExtra(EditNoteActivity.CONNECTION_INFO, connectionInfo)
-        startActivity(intent)
+        EditNoteActivity.startActivity(applicationContext, connectionInfo, null, null)
+    }
+
+    override fun showFollowFollower(connectionInfo: DomainAuthKeyPair, user: User, type: FollowFollowerType) {
+        /*val intent = Intent(applicationContext, FollowFollowerActivity::class.java)
+        intent.putExtra(FollowFollowerActivity.CONNECTION_INFO, connectionInfo)
+        intent.putExtra(FollowFollowerActivity.FOLLOW_FOLLOWER_TYPE, type)
+        intent.putExtra(FollowFollowerActivity.USER_ID_TAG, user.id)*/
+        FollowFollowerActivity.startActivity(applicationContext, connectionInfo, type, user.id)
     }
 
     private fun setFragment(fragment: Fragment, fragmentName: String){
@@ -211,9 +220,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_profile ->{
-                mPresenter.getPersonalProfilePage()
-            }
+            R.id.nav_profile -> mPresenter.getPersonalProfilePage()
+            R.id.follower_text -> mPresenter.getFollowFollower(FollowFollowerType.FOLLOWER)
+            R.id.following_text -> mPresenter.getFollowFollower(FollowFollowerType.FOLLOWING)
+
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)

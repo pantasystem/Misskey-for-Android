@@ -12,9 +12,9 @@ import kotlinx.android.synthetic.main.fragment_follow_follower.*
 import kotlinx.android.synthetic.main.fragment_timeline.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.FollowsAdapter
-import org.panta.misskey_for_android_v2.adapter.TimelineAdapter
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.interfaces.FollowFollowerContract
 import org.panta.misskey_for_android_v2.repository.FollowFollowerRepository
 import org.panta.misskey_for_android_v2.view_data.FollowViewData
 import java.lang.Exception

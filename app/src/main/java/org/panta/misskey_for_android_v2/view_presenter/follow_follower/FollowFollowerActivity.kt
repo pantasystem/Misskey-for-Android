@@ -1,5 +1,7 @@
 package org.panta.misskey_for_android_v2.view_presenter.follow_follower
 
+import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.view.PagerAdapter
@@ -14,6 +16,14 @@ class FollowFollowerActivity : AppCompatActivity() {
         const val USER_ID_TAG = "FollowFollowerActivityUserIdTag"
         const val FOLLOW_FOLLOWER_TYPE = "FollowFollowerActivityFollowingFollowerType"
         const val CONNECTION_INFO = "FollowFollowerActivityConnectionInfo"
+
+        fun startActivity(context: Context, info: DomainAuthKeyPair, type: FollowFollowerType, userId: String){
+            val intent = Intent(context, FollowFollowerActivity::class.java)
+            intent.putExtra(FollowFollowerActivity.CONNECTION_INFO, info)
+            intent.putExtra(FollowFollowerActivity.FOLLOW_FOLLOWER_TYPE, type)
+            intent.putExtra(FollowFollowerActivity.USER_ID_TAG, userId)
+            context.startActivity(intent)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

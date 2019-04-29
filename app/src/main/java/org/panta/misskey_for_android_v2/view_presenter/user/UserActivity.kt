@@ -1,6 +1,9 @@
 package org.panta.misskey_for_android_v2.view_presenter.user
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -9,16 +12,25 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_user.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
+import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.repository.UserRepository
+import org.panta.misskey_for_android_v2.view_presenter.follow_follower.FollowFollowerActivity
 import java.lang.IllegalArgumentException
 
 class UserActivity : AppCompatActivity() {
 
     companion object{
-        const val USER_PROPERTY_TAG = "UserActivityUserPropertyTag"
-        const val CONNECTION_INFO = "UserActivityConnectionInfo"
+        private const val USER_PROPERTY_TAG = "UserActivityUserPropertyTag"
+        private const val CONNECTION_INFO = "UserActivityConnectionInfo"
+
+        fun startActivity(context: Context?, user: User, info: DomainAuthKeyPair){
+            val intent = Intent(context, UserActivity::class.java)
+            intent.putExtra(USER_PROPERTY_TAG, user)
+            intent.putExtra(CONNECTION_INFO, info)
+            context?.startActivity(intent)
+        }
     }
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +81,13 @@ class UserActivity : AppCompatActivity() {
 
 
 
+    }
 
+    private fun showFollowList(info: DomainAuthKeyPair, user: User, type: FollowFollowerType){
+        val intent = Intent(applicationContext, FollowFollowerActivity::class.java)
+        intent.putExtra(FollowFollowerActivity.CONNECTION_INFO, info)
+        intent.putExtra(FollowFollowerActivity.FOLLOW_FOLLOWER_TYPE, type)
+        intent.putExtra(FollowFollowerActivity.USER_ID_TAG, user.id)
     }
 
 }

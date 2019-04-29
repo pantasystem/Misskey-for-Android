@@ -1,5 +1,6 @@
 package org.panta.misskey_for_android_v2.view_presenter
 
+import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
@@ -7,6 +8,9 @@ import org.panta.misskey_for_android_v2.interfaces.MainContract
 import org.panta.misskey_for_android_v2.repository.MyInfo
 
 class MainPresenter(private val mView: MainContract.View, private val sharedOperator: ISharedPreferenceOperator) : MainContract.Presenter{
+
+    lateinit var mUser: User
+
     override fun getPersonalMiniProfile() {
         val info = loadConnectInfo()
         if(info == null){
@@ -15,6 +19,7 @@ class MainPresenter(private val mView: MainContract.View, private val sharedOper
         }
         MyInfo(domain = info.domain, authKey = info.i).getMyInfo {
             mView.showPersonalMiniProfile(it)
+            mUser = it
         }
     }
 
@@ -56,6 +61,14 @@ class MainPresenter(private val mView: MainContract.View, private val sharedOper
         }
     }
 
+    override fun getFollowFollower(type: FollowFollowerType) {
+        val info = loadConnectInfo()
+        if(info == null){
+            mView.showAuthActivity()
+            return
+        }
+        mView.showFollowFollower(info, mUser, type)
+    }
 
     private fun loadConnectInfo(): DomainAuthKeyPair?{
         val domain = sharedOperator.get("domain", null)
