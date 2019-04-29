@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_auth.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant.domain
+import org.panta.misskey_for_android_v2.constant.getAppSecretKey
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.repository.AuthRepository
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
@@ -18,7 +19,7 @@ import org.panta.misskey_for_android_v2.view_presenter.MainActivity
 
 class AuthActivity : AppCompatActivity() {
 
-    private val auth = AuthRepository(domain = ApplicationConstant.domain, appSecret = ApplicationConstant.appSecret)
+    private val auth = AuthRepository(domain = ApplicationConstant.domain, appSecret = getAppSecretKey())
 
     private var token: String? = null
     private var url: String? = null

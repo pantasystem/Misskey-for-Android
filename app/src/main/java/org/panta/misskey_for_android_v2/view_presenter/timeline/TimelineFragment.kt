@@ -227,10 +227,11 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     }
 
     override fun onImageClicked(clickedIndex: Int, clickedImageUrlCollection: Array<String>) {
-        val intent = Intent(context, ImageViewerActivity::class.java)
+        /*val intent = Intent(context, ImageViewerActivity::class.java)
         intent.putExtra(ImageViewerActivity.IMAGE_URL_LIST, clickedImageUrlCollection)
         intent.putExtra(ImageViewerActivity.CLICKED_IMAGE_URL, clickedIndex)
-        startActivity(intent)
+        startActivity(intent)*/
+        ImageViewerActivity.startActivity(context, clickedImageUrlCollection, clickedIndex)
     }
 
     override fun onClickedUser(user: User) {
