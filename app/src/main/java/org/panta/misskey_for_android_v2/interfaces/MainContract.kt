@@ -17,7 +17,7 @@ interface MainContract {
     interface Presenter : BasePresenter{
         fun getPersonalMiniProfile()
         fun getPersonalProfilePage()
-        fun saveConnectInfo(domain: String, userToken:String)
+        //fun saveConnectInfo(domain: String, userToken:String)
         fun initDisplay()
         fun takeEditNote()
         fun getFollowFollower(type: FollowFollowerType)

@@ -23,7 +23,6 @@ class AuthRepository(private val domain: String, private val appSecret: String){
             val map = HashMap<String, String>()
             map["appSecret"] = appSecret
             val json = mapper.writeValueAsString(map)
-            Log.d("AuthRepository", "getSession json: $json")
             val stream = connection.post(URL("$domain/api/auth/session/generate"), json)
             val session: SessionResponse = mapper.readValue(stream)
             callBack(session)
@@ -40,7 +39,6 @@ class AuthRepository(private val domain: String, private val appSecret: String){
             map["appSecret"] = appSecret
             map["token"] = token
             val json = mapper.writeValueAsString(map)
-            Log.d("AuthRepository", "getAccessToken json: $json")
 
             val stream = connection.post(URL("$domain/api/auth/session/userkey"), json)
             val userKey : UserKeyResponse = mapper.readValue(stream)
