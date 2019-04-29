@@ -10,7 +10,7 @@ internal fun getMiChanWorkAppSecretKey(): String{
 
 
 internal data class DomainAndAppSecret(internal val domain: String, internal val appSecret: String, internal val instanceName: String)
-internal fun getAppSecretKeyAndInstanceDomainPair(): List<DomainAndAppSecret>{
+internal fun getInstanceInfoList(): List<DomainAndAppSecret>{
     return listOf(DomainAndAppSecret("https://misskey.io", getAppSecretKey(), instanceName = "misskey.io"),//v11
         DomainAndAppSecret("https://mi-chan.work", getMiChanWorkAppSecretKey(), instanceName = "みーすきー / Mi-sskey"), /*v11*/
         DomainAndAppSecret("https://misskey.m544.net",ApplicationConstant.getM544AppSecretKey() , instanceName = "めいすきー"), /*v10*/

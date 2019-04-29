@@ -1,8 +1,10 @@
 package org.panta.misskey_for_android_v2.view_presenter
 
+import android.util.Log
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.constant.getAppSecretKey
+import org.panta.misskey_for_android_v2.constant.getInstanceInfoList
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
@@ -75,7 +77,9 @@ class MainPresenter(private val mView: MainContract.View, private val sharedOper
         return if( domain == null || userToken == null ){
             null
         }else{
-            DomainAuthKeyPair(domain, sha256("$userToken${getAppSecretKey()}"))
+            val instanceInfoList = getInstanceInfoList()
+            val appSecret = instanceInfoList.first { it.domain == domain }.appSecret
+            DomainAuthKeyPair(domain, sha256("$userToken$appSecret"))
         }
     }
 }

@@ -68,13 +68,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             mPresenter.takeEditNote()
         }
 
-        //val authKey = intent.getSerializableExtra(DOMAIN_AUTH_KEY_TAG) as DomainAuthKeyPair?
-        //val domain = intent.getStringExtra(DOMAIN_TAG)
-        //val userToken = intent.getStringExtra(USER_TOKEN_TAG)
-        /*if(domain != null && userToken != null){
-            mPresenter.saveConnectInfo(domain = domain, userToken = userToken)
-        }*/
-
        mPresenter.getPersonalMiniProfile()
 
         mPresenter.initDisplay()
