@@ -1,11 +1,13 @@
 package org.panta.misskey_for_android_v2.view_presenter
 
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
+import org.panta.misskey_for_android_v2.constant.getAppSecretKey
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
 import org.panta.misskey_for_android_v2.interfaces.MainContract
 import org.panta.misskey_for_android_v2.repository.MyInfo
+import org.panta.misskey_for_android_v2.util.sha256
 
 class MainPresenter(private val mView: MainContract.View, private val sharedOperator: ISharedPreferenceOperator) : MainContract.Presenter{
 
@@ -23,9 +25,9 @@ class MainPresenter(private val mView: MainContract.View, private val sharedOper
         }
     }
 
-    override fun saveConnectInfo(info: DomainAuthKeyPair) {
-        sharedOperator.put("domain", info.domain)
-        sharedOperator.put("i", info.i)
+    override fun saveConnectInfo(domain: String, userToken: String) {
+        sharedOperator.put("domain", domain)
+        sharedOperator.put("userToken", userToken)
     }
 
     override fun initDisplay() {
@@ -72,11 +74,11 @@ class MainPresenter(private val mView: MainContract.View, private val sharedOper
 
     private fun loadConnectInfo(): DomainAuthKeyPair?{
         val domain = sharedOperator.get("domain", null)
-        val i = sharedOperator.get("i", null)
-        return if( domain == null || i == null ){
+        val userToken = sharedOperator.get("userToken", null)
+        return if( domain == null || userToken == null ){
             null
         }else{
-            DomainAuthKeyPair(domain, i)
+            DomainAuthKeyPair(domain, sha256("$userToken${getAppSecretKey()}"))
         }
     }
 }

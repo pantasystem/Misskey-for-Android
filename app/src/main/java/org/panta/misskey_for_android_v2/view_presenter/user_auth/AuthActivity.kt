@@ -14,8 +14,10 @@ import org.panta.misskey_for_android_v2.constant.getAppSecretKey
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.repository.AuthRepository
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
-import org.panta.misskey_for_android_v2.view_presenter.DOMAIN_AUTH_KEY_TAG
+import org.panta.misskey_for_android_v2.util.sha256
+import org.panta.misskey_for_android_v2.view_presenter.DOMAIN_TAG
 import org.panta.misskey_for_android_v2.view_presenter.MainActivity
+import org.panta.misskey_for_android_v2.view_presenter.USER_TOKEN_TAG
 
 class AuthActivity : AppCompatActivity() {
 
@@ -33,11 +35,12 @@ class AuthActivity : AppCompatActivity() {
         if(Intent.ACTION_VIEW == intent.action){
             Log.d("AuthActivity", "呼び出された")
 
-            auth.getAccessToken( sp.get("token", null)!! , {
-                Log.w("AuthActivity", "getAccessTokenしようとしたらエラー発生", it)
+            auth.getUserToken( sp.get("token", null)!! , {
+                Log.w("AuthActivity", "getUserTokenしようとしたらエラー発生", it)
             }){
                 val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.putExtra(DOMAIN_AUTH_KEY_TAG, DomainAuthKeyPair(domain = domain, i = it))
+                intent.putExtra(USER_TOKEN_TAG, it)
+                intent.putExtra(DOMAIN_TAG, domain)
                 startActivity(intent)
             }
         }else{

@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
@@ -33,7 +34,9 @@ import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
 
 private const val FRAGMENT_HOME = "FRAGMENT_HOME"
 private const val FRAGMENT_OTHER = "FRAGMENT_OTHER"
-const val DOMAIN_AUTH_KEY_TAG = "MainActivityUserDomainAndAuthKey"
+//const val DOMAIN_AUTH_KEY_TAG = "MainActivityUserDomainAndAuthKey"
+const val DOMAIN_TAG = "MainActivityUserDomainKey"
+const val USER_TOKEN_TAG = "MainActivityUserUserToken"
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainContract.View {
 
     override lateinit var mPresenter: MainContract.Presenter
@@ -57,7 +60,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         /*~~basic init*/
-        sharedOperator = SharedPreferenceOperator(getSharedPreferences("privateUserData", Context.MODE_PRIVATE))
+        sharedOperator = SharedPreferenceOperator(getSharedPreferences(ApplicationConstant.APP_SHARED_PREF_KEY, Context.MODE_PRIVATE))
 
         mPresenter = MainPresenter(this, sharedOperator)
 
@@ -65,9 +68,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             mPresenter.takeEditNote()
         }
 
-        val authKey = intent.getSerializableExtra(DOMAIN_AUTH_KEY_TAG) as DomainAuthKeyPair?
-        if(authKey != null){
-            mPresenter.saveConnectInfo(authKey)
+        //val authKey = intent.getSerializableExtra(DOMAIN_AUTH_KEY_TAG) as DomainAuthKeyPair?
+        val domain = intent.getStringExtra(DOMAIN_TAG)
+        val userToken = intent.getStringExtra(USER_TOKEN_TAG)
+        if(domain != null && userToken != null){
+            mPresenter.saveConnectInfo(domain = domain, userToken = userToken)
         }
 
        mPresenter.getPersonalMiniProfile()

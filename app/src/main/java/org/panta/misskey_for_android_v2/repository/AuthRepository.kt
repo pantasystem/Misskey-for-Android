@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.entity.SessionResponse
 import org.panta.misskey_for_android_v2.entity.UserKeyResponse
 import org.panta.misskey_for_android_v2.network.HttpsConnection
+import org.panta.misskey_for_android_v2.util.sha256
 import java.lang.StringBuilder
 import java.net.URL
 import java.security.MessageDigest
@@ -31,7 +32,8 @@ class AuthRepository(private val domain: String, private val appSecret: String){
         }
 
     }
-    fun getAccessToken(token: String, errorCallBack: (e: Exception)->Unit, callBack: (String) -> Unit) = GlobalScope.launch{
+
+    fun getUserToken(token: String, errorCallBack: (e: Exception)->Unit, callBack: (String) -> Unit) = GlobalScope.launch{
         try{
 
             val map = HashMap<String, String>()
@@ -42,28 +44,13 @@ class AuthRepository(private val domain: String, private val appSecret: String){
 
             val stream = connection.post(URL("$domain/api/auth/session/userkey"), json)
             val userKey : UserKeyResponse = mapper.readValue(stream)
-            val i = sha256("${userKey.accessToken}$appSecret")
-            Log.d("AuthRepository", "i: $i")
-            callBack(i.toString())
+            //val i = sha256("${userKey.accessToken}$appSecret")
+            //Log.d("AuthRepository", "i: $i")
+            callBack(userKey.accessToken)
         }catch(e: Exception){
             errorCallBack(e)
         }
     }
 
-    private fun sha256(input: String) = hashString("SHA-256", input)
 
-    private fun hashString(type: String, input: String): String {
-        val HEX_CHARS = "0123456789ABCDEF"
-        val bytes = MessageDigest
-            .getInstance(type)
-            .digest(input.toByteArray())
-        val result = StringBuilder(bytes.size * 2)
-
-        bytes.forEach {
-            val i = it.toInt()
-            result.append(HEX_CHARS[i shr 4 and 0x0f])
-            result.append(HEX_CHARS[i and 0x0f])
-        }
-        return result.toString()
-    }
 }
