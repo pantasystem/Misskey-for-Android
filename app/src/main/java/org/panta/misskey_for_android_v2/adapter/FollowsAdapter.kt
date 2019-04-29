@@ -1,18 +1,81 @@
 package org.panta.misskey_for_android_v2.adapter
 
+import android.os.Handler
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.interfaces.IOperationAdapter
+import org.panta.misskey_for_android_v2.view_data.FollowViewData
+import java.util.*
 
-class FollowsAdapter : RecyclerView.Adapter<FollowViewHolder>(){
+class FollowsAdapter(list: List<FollowViewData>) : RecyclerView.Adapter<FollowViewHolder>(), IOperationAdapter<FollowViewData>{
+
+    //listをキャストして扱うこともできるが元がLinkedListかもしれないのでArrayListとして作成する
+    private val mArrayList = ArrayList<FollowViewData>(list)
     override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        synchronized(mArrayList){
+            return mArrayList.size
+        }
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): FollowViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val inflater = LayoutInflater.from(p0.context).inflate(R.layout.item_follow_follower, p0, false)
+        return FollowViewHolder(inflater)
     }
 
     override fun onBindViewHolder(p0: FollowViewHolder, p1: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val followProperty = mArrayList[p1].follow
+        if(followProperty.follower != null){
+            p0.setFollower(followProperty.follower)
+        }else if(followProperty.followee != null){
+            p0.setFollowing(followProperty.followee)
+        }
+    }
+
+    override fun addAllFirst(list: List<FollowViewData>) {
+        synchronized(mArrayList){
+            mArrayList.addAll(0, list)
+        }
+        Handler().post{
+            notifyItemRangeInserted(0, list.size)
+        }
+    }
+
+    override fun addAllLast(list: List<FollowViewData>) {
+        val lastIndex = mArrayList.size
+        synchronized(mArrayList){
+            mArrayList.addAll(list)
+        }
+        Handler().post{
+            //実験段階不具合の可能性有り
+            notifyItemRangeInserted(lastIndex, list.size)
+        }
+    }
+
+    override fun getNote(index: Int): FollowViewData {
+        return mArrayList[index]
+    }
+
+    override fun removeNote(noteViewData: FollowViewData) {
+        synchronized(mArrayList){
+            val index = mArrayList.indexOf(noteViewData)
+            mArrayList.remove(noteViewData)
+
+            Handler().post{
+                notifyItemRemoved(index)
+            }
+        }
+    }
+
+    override fun updateNote(noteViewData: FollowViewData) {
+        synchronized(mArrayList){
+            val index = mArrayList.indexOf(noteViewData)
+            mArrayList[index] = noteViewData
+
+            Handler().post{
+                notifyItemChanged(index)
+            }
+        }
     }
 }

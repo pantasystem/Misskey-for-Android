@@ -18,13 +18,14 @@ import org.panta.misskey_for_android_v2.repository.AbsTimeline
 import org.panta.misskey_for_android_v2.repository.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
-class TimelineAdapter(private val context: Context, private val notesList: List<NoteViewData>) : RecyclerView.Adapter<NoteViewHolder>(), IOperationAdapter<NoteViewData>{
+class TimelineAdapter(private val context: Context, notesList: List<NoteViewData>) : RecyclerView.Adapter<NoteViewHolder>(), IOperationAdapter<NoteViewData>{
 
+    private val mArrayList = ArrayList<NoteViewData>(notesList)
     private var noteClickListener: NoteClickListener? = null
     private var userClickListener: UserClickListener? = null
 
     override fun getItemCount(): Int {
-        return notesList.size
+        return mArrayList.size
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): NoteViewHolder {
@@ -34,7 +35,7 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
     }
 
     override fun onBindViewHolder(viewHolder: NoteViewHolder, p1: Int) {
-        val viewData = notesList[p1]
+        val viewData = mArrayList[p1]
 
        //リアクションをセットしている
         if(viewData.reactionCountPairList.isNotEmpty()){
@@ -73,57 +74,47 @@ class TimelineAdapter(private val context: Context, private val notesList: List<
     }
 
     override fun addAllFirst(list: List<NoteViewData>){
-        if(notesList is ArrayList){
-            synchronized(notesList){
-                notesList.addAll(0, list)
-            }
-            Handler().post{
-                notifyItemRangeInserted(0, list.size)
-            }
+        synchronized(mArrayList){
+            mArrayList.addAll(0, list)
+        }
+        Handler().post{
+            notifyItemRangeInserted(0, list.size)
         }
     }
 
     override fun addAllLast(list: List<NoteViewData>){
-        if(notesList is ArrayList){
-            val lastIndex = notesList.size
-            synchronized(notesList){
-                notesList.addAll(list)
-            }
-            Handler().post{
-                //実験段階不具合の可能性有り
-                notifyItemRangeInserted(lastIndex, list.size)
-            }
+        val lastIndex = mArrayList.size
+        synchronized(mArrayList){
+            mArrayList.addAll(list)
+        }
+        Handler().post{
+            //実験段階不具合の可能性有り
+            notifyItemRangeInserted(lastIndex, list.size)
         }
     }
 
     override fun getNote(index: Int): NoteViewData{
-        synchronized(notesList){
-            return notesList[index]
-        }
+        return mArrayList[index]
     }
 
     override fun updateNote(noteViewData: NoteViewData){
-        synchronized(notesList){
-            val index = notesList.indexOf(noteViewData)
-            if(notesList is ArrayList){
-                notesList[index] = noteViewData
+        synchronized(mArrayList){
+            val index = mArrayList.indexOf(noteViewData)
+            mArrayList[index] = noteViewData
 
-                Handler().post{
-                    notifyItemChanged(index)
-                }
+            Handler().post{
+                notifyItemChanged(index)
             }
         }
     }
 
     override fun removeNote(noteViewData: NoteViewData){
-        synchronized(notesList){
-            val index = notesList.indexOf(noteViewData)
-            if(notesList is ArrayList){
-                notesList.remove(noteViewData)
+        synchronized(mArrayList){
+            val index = mArrayList.indexOf(noteViewData)
+            mArrayList.remove(noteViewData)
 
-                Handler().post{
-                    notifyItemRemoved(index)
-                }
+            Handler().post{
+                notifyItemRemoved(index)
             }
         }
     }

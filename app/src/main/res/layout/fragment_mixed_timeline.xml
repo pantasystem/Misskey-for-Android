@@ -11,15 +11,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" android:id="@+id/mix_timeline_tab">
 
-        <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Monday"/>
-
-        <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tuesday"/>
 
         <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
