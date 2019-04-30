@@ -29,30 +29,47 @@ abstract class AbsTimeline(private val timelineURL: URL, private val isDeployRep
     abstract fun createRequestTimelineJson(sinceId: String? = null, untilId: String? = null, sinceDate: Long? = null, untilDate: Long? = null): String
 
     override fun getItemsUseSinceId(sinceId: String, callBack: (timeline: List<NoteViewData>?)->Unit) = GlobalScope.launch{
-        val jsonToRequest = createRequestTimelineJson(sinceId = sinceId)
-        val list:List<Note> = reverseTimeline(requestTimeline(jsonToRequest))
-        callBack(noteAd.insertReplyAndCreateInfo(list))
+        try{
+            val jsonToRequest = createRequestTimelineJson(sinceId = sinceId)
+            val list:List<Note> = reverseTimeline(requestTimeline(jsonToRequest))
+            callBack(noteAd.insertReplyAndCreateInfo(list))
+        }catch(e: Exception){
+            e.printStackTrace()
+
+        }
+
 
     }
 
     override fun getItemsUseUntilId(untilId: String, callBack: (timeline: List<NoteViewData>?)->Unit) = GlobalScope.launch{
-        val jsonToRequest = createRequestTimelineJson(untilId = untilId)
+        try{
+            val jsonToRequest = createRequestTimelineJson(untilId = untilId)
 
-        val list:List<Note> = requestTimeline(jsonToRequest)
-        callBack(noteAd.insertReplyAndCreateInfo(list))
+            val list:List<Note> = requestTimeline(jsonToRequest)
+            callBack(noteAd.insertReplyAndCreateInfo(list))
+        }catch(e: Exception){
+            e.printStackTrace()
+
+        }
+
 
     }
 
 
     override fun getItems(callBack: (timeline: List<NoteViewData>?) -> Unit) = GlobalScope.launch{
-        val cacheTimeline = emptyList<Note>()
-        val timeline = if(cacheTimeline.isEmpty()){
-            requestTimeline(createRequestTimelineJson(untilDate = Date().time))
-        }else{
-            cacheTimeline
+        try{
+            val cacheTimeline = emptyList<Note>()
+            val timeline = if(cacheTimeline.isEmpty()){
+                requestTimeline(createRequestTimelineJson(untilDate = Date().time))
+            }else{
+                cacheTimeline
+            }
+
+            callBack(noteAd.insertReplyAndCreateInfo(timeline))
+        }catch(e: Exception){
+            e.printStackTrace()
         }
 
-        callBack(noteAd.insertReplyAndCreateInfo(timeline))
     }
 
 
