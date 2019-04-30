@@ -4,18 +4,13 @@ import android.content.Context
 import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
-import org.panta.misskey_for_android_v2.constant.ReactionConstData
-import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.interfaces.IOperationAdapter
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
-import org.panta.misskey_for_android_v2.repository.AbsTimeline
-import org.panta.misskey_for_android_v2.repository.NoteAdjustment
+import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
 class TimelineAdapter(private val context: Context, notesList: List<NoteViewData>) : RecyclerView.Adapter<NoteViewHolder>(), IOperationAdapter<NoteViewData>{

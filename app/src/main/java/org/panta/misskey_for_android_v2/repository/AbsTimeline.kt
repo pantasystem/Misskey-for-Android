@@ -7,10 +7,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
-import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.network.HttpsConnection
 import org.panta.misskey_for_android_v2.network.StreamConverter
+import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import java.net.URL
 import java.util.*

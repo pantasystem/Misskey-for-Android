@@ -5,7 +5,7 @@ import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.interfaces.FollowFollowerContract
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.view_data.FollowViewData
-import org.panta.misskey_for_android_v2.view_presenter.timeline.PagingController
+import org.panta.misskey_for_android_v2.usecase.PagingController
 
 class FollowFollowerPresenter(private val mView: FollowFollowerContract.View, mTimeline: IItemRepository<FollowViewData>, info: DomainAuthKeyPair)
     : FollowFollowerContract.Presenter, ErrorCallBackListener{

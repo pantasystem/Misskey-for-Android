@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.NotificationType
 import org.panta.misskey_for_android_v2.interfaces.IOperationAdapter
-import org.panta.misskey_for_android_v2.repository.NoteAdjustment
+import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 
 class NotificationAdapter(private val notificationList: List<NotificationViewData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IOperationAdapter<NotificationViewData>{

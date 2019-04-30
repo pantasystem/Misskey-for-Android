@@ -4,13 +4,13 @@ import android.util.Log
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.entity.NotificationProperty
 import org.panta.misskey_for_android_v2.entity.RequestNotificationProperty
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.network.HttpsConnection
 import org.panta.misskey_for_android_v2.network.StreamConverter
+import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 import java.net.URL

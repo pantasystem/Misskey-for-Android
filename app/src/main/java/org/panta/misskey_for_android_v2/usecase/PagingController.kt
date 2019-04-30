@@ -1,4 +1,4 @@
-package org.panta.misskey_for_android_v2.view_presenter.timeline
+package org.panta.misskey_for_android_v2.usecase
 
 import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.interfaces.ID

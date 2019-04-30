@@ -1,12 +1,9 @@
 package org.panta.misskey_for_android_v2.view_presenter.notification
 
-import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
-import org.panta.misskey_for_android_v2.entity.NotificationProperty
 import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.repository.Notification
-import org.panta.misskey_for_android_v2.view_data.NotificationViewData
-import org.panta.misskey_for_android_v2.view_presenter.timeline.PagingController
+import org.panta.misskey_for_android_v2.usecase.PagingController
 
 class NotificationPresenter(private val mView: NotificationContract.View, info: DomainAuthKeyPair) :
     NotificationContract.Presenter, ErrorCallBackListener{

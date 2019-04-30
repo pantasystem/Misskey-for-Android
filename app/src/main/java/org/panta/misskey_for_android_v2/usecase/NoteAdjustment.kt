@@ -1,4 +1,4 @@
-package org.panta.misskey_for_android_v2.repository
+package org.panta.misskey_for_android_v2.usecase
 
 import android.util.Log
 import org.panta.misskey_for_android_v2.entity.Note
