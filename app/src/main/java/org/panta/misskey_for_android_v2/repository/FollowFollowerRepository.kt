@@ -23,24 +23,36 @@ class FollowFollowerRepository(private val userId: String, private val type: Fol
     }
 
     override fun getItems(callBack: (timeline: List<FollowViewData>?) -> Unit) = GlobalScope.launch{
-        val map = HashMap<String, String>()
-        map["userId"] = userId
-        callBack(getFollowFollowerInfo(map, url))
+        try{
+            val map = HashMap<String, String>()
+            map["userId"] = userId
+            callBack(getFollowFollowerInfo(map, url))
+        }catch(e: Exception){
+            e.printStackTrace()
+        }
     }
 
     override fun getItemsUseSinceId(sinceId: String, callBack: (timeline: List<FollowViewData>?) -> Unit) = GlobalScope.launch{
-        val map = HashMap<String, String>()
-        map["sinceId"] = sinceId
-        map["userId"] = userId
-        callBack(getFollowFollowerInfo(map, url))
-
+        try{
+            val map = HashMap<String, String>()
+            map["sinceId"] = sinceId
+            map["userId"] = userId
+            callBack(getFollowFollowerInfo(map, url))
+        }catch(e: Exception){
+            e.printStackTrace()
+        }
     }
 
     override fun getItemsUseUntilId(untilId: String, callBack: (timeline: List<FollowViewData>?) -> Unit) = GlobalScope.launch{
-        val map = HashMap<String, String>()
-        map["untilId"] = untilId
-        map["userId"] = userId
-        callBack(getFollowFollowerInfo(map, url))
+        try{
+            val map = HashMap<String, String>()
+            map["untilId"] = untilId
+            map["userId"] = userId
+            callBack(getFollowFollowerInfo(map, url))
+        }catch(e: Exception){
+            e.printStackTrace()
+        }
+
     }
 
     private suspend fun getFollowFollowerInfo(map: Map<String, String>, url: URL): List<FollowViewData>{
