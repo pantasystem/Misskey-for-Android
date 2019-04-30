@@ -73,6 +73,7 @@ class FollowFollowerFragment : Fragment(), FollowFollowerContract.View{
         activity?.runOnUiThread{
             val adapter = FollowsAdapter(list)
             mAdapter = adapter
+            follow_follower_recycler_view.layoutManager = mLayoutManager
             follow_follower_recycler_view.adapter = adapter
         }
     }
@@ -105,12 +106,12 @@ class FollowFollowerFragment : Fragment(), FollowFollowerContract.View{
             super.onScrolled(recyclerView, dx, dy)
             if( ! recyclerView.canScrollVertically(-1)){
                 //先頭に来た場合
-                refresh.isEnabled = true
+                refresh?.isEnabled = true
                 Log.d("TimelineFragment", "先頭に来た")
             }
             if( ! recyclerView.canScrollVertically(1)){
                 //最後に来た場合
-                refresh.isEnabled = false   //stopRefreshing関数を設けているがあえてこの形にしている
+                refresh?.isEnabled = false   //stopRefreshing関数を設けているがあえてこの形にしている
                 mPresenter.getOldItems()
             }
         }

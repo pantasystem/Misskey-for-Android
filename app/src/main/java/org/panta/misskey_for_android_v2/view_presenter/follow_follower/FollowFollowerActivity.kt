@@ -20,7 +20,7 @@ class FollowFollowerActivity : AppCompatActivity() {
         fun startActivity(context: Context, info: DomainAuthKeyPair, type: FollowFollowerType, userId: String){
             val intent = Intent(context, FollowFollowerActivity::class.java)
             intent.putExtra(FollowFollowerActivity.CONNECTION_INFO, info)
-            intent.putExtra(FollowFollowerActivity.FOLLOW_FOLLOWER_TYPE, type)
+            intent.putExtra(FollowFollowerActivity.FOLLOW_FOLLOWER_TYPE, type.ordinal)
             intent.putExtra(FollowFollowerActivity.USER_ID_TAG, userId)
             context.startActivity(intent)
         }
