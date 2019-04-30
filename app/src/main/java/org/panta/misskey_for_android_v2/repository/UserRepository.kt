@@ -27,35 +27,7 @@ class UserRepository(private val domain: String, private val authKey: String){
             }
         }
     }
-
-    fun getFollower(userId: String, untilId: String?, callBack:(List<FollowProperty>)->Unit) = GlobalScope.launch {
-        try{
-            val properties = getFollowProperty(userId, untilId, URL("$domain/api/users/followers"))
-            callBack(properties)
-        }catch(e: Exception){
-
-        }
-    }
-
-    fun getFollowing(userId: String, untilId: String?, callBack:(List<FollowProperty>)->Unit) = GlobalScope.launch {
-        try{
-            val properties = getFollowProperty(userId, untilId, URL("$domain/api/users/following"))
-            callBack(properties)
-        }catch(e: Exception){
-
-        }
-    }
-
-    private suspend fun getFollowProperty(userId: String, untilId: String?, url: URL): List<FollowProperty>{
-        val map = HashMap<String, String>()
-        map["userId"] = userId
-        if(untilId != null) map["untilId"] = untilId
-
-        val reqJson = jacksonObjectMapper().writeValueAsString(map)
-        val resJson = postRequest(url, reqJson)
-        return jacksonObjectMapper().readValue(resJson)
-    }
-
+    
     private suspend fun postRequest(url: URL, json: String): String{
         val responseStream = httpsConnection.post(url, json)
         return StreamConverter().getString(responseStream)
