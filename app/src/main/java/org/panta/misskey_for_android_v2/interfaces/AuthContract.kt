@@ -8,7 +8,7 @@ interface AuthContract {
     interface View : BaseView<Presenter> {
         fun showBrowser(uri: Uri)
         fun onLoadSession(session: SessionResponse)
-        fun onLoadUserToken(token: String)
+        fun onLoadUserToken(token: String, domain: String)
     }
 
     interface Presenter : BasePresenter {

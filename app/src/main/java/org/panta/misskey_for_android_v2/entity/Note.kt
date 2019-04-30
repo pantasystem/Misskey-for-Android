@@ -22,8 +22,8 @@ import java.io.Serializable
     @JsonProperty("reactions") val reactionCounts: Map<String, Int>?,
     @JsonProperty("repliesCount") val replyCount: Int,
     @JsonProperty("user") val user: User?,
-    @JsonProperty("files") val files: List<FileProperty?>?, //原因
-    @JsonProperty("fileIds") val mediaIds: List<String?>?,
+    @JsonProperty("files") val files: List<FileProperty?>?,
+    //@JsonProperty("fileIds") val mediaIds: List<String?>?,    //v10, v11の互換性が取れない
     @JsonProperty("renote") val renote: Note?,
     @JsonProperty("reply") val reply: Note?,
     @JsonProperty("myReaction") val myReaction: String?

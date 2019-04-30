@@ -29,7 +29,7 @@ import java.io.Serializable
     @JsonProperty("isAdmin") val isAdmin: Boolean,
     @JsonProperty("avatarUrl") val avatarUrl: String?,
     @JsonProperty("bannerUrl") val bannerUrl: String?,
-    @JsonProperty("avatarColor") val avatarColor: String?,
+    @JsonProperty("avatarColor") val avatarColor: Any?,
     @JsonProperty("emojis") val emojis: List<Any?>?,
     @JsonProperty("isVerified") val isVerified: Boolean,
     @JsonProperty("isLocked") val isLocked: Boolean
