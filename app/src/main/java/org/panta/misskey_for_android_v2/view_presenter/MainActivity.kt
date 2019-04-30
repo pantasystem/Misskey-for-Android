@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
@@ -75,6 +76,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mPresenter.getPersonalMiniProfile()
 
         title = "ホーム"
+
+        val header = nav_view.getHeaderView(0)
+        header.following_text.setOnClickListener {
+            mPresenter.getFollowFollower(FollowFollowerType.FOLLOWING)
+        }
+
+        header.follower_text.setOnClickListener{
+            mPresenter.getFollowFollower(FollowFollowerType.FOLLOWER)
+        }
     }
 
 
@@ -219,8 +229,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_profile -> mPresenter.getPersonalProfilePage()
-            R.id.follower_text -> mPresenter.getFollowFollower(FollowFollowerType.FOLLOWER)
-            R.id.following_text -> mPresenter.getFollowFollower(FollowFollowerType.FOLLOWING)
+
 
         }
 
