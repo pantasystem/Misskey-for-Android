@@ -5,11 +5,9 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.util.Log
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
-import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
-import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 
-class FollowPagerAdapter(fragmentManager: FragmentManager, private val connectionInfo: DomainAuthKeyPair, private val userId: String) : FragmentPagerAdapter(fragmentManager){
+class FollowPagerAdapter(fragmentManager: FragmentManager, private val connectionInfo: ConnectionProperty, private val userId: String) : FragmentPagerAdapter(fragmentManager){
 
     private val tabTitles = arrayOf<CharSequence>("フォロー", "フォロワー")
     override fun getCount(): Int {

@@ -1,17 +1,17 @@
 package org.panta.misskey_for_android_v2.interfaces
 
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.User
 
 interface MainContract {
     interface View : BaseView<Presenter>{
         fun showPersonalMiniProfile(user: User)
-        fun showPersonalProfilePage(user: User, connectionInfo: DomainAuthKeyPair)
+        fun showPersonalProfilePage(user: User, connectionInfo: ConnectionProperty)
         fun showAuthActivity()
-        fun initDisplay(connectionInfo: DomainAuthKeyPair)
-        fun showEditNote(connectionInfo: DomainAuthKeyPair)
-        fun showFollowFollower(connectionInfo: DomainAuthKeyPair, user: User, type: FollowFollowerType)
+        fun initDisplay(connectionInfo: ConnectionProperty)
+        fun showEditNote(connectionInfo: ConnectionProperty)
+        fun showFollowFollower(connectionInfo: ConnectionProperty, user: User, type: FollowFollowerType)
     }
 
     interface Presenter : BasePresenter{

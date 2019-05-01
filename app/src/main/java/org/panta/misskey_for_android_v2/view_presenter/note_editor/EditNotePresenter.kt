@@ -1,14 +1,12 @@
 package org.panta.misskey_for_android_v2.view_presenter.note_editor
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.constant.NoteType
 
 import org.panta.misskey_for_android_v2.entity.CreateNoteProperty
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.repository.NoteRepository
 
-class EditNotePresenter(private val mView: EditNoteContract.View, private val connectionInfo: DomainAuthKeyPair) : EditNoteContract.Presenter{
+class EditNotePresenter(private val mView: EditNoteContract.View, private val connectionInfo: ConnectionProperty) : EditNoteContract.Presenter{
 
     private val noteBuilder = CreateNoteProperty.Builder(connectionInfo.i)
     private val noteRepository = NoteRepository(connectionInfo.domain)

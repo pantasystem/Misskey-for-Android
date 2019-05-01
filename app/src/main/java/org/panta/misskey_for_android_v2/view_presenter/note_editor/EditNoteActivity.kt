@@ -4,18 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_edit_note.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.NoteType
-import org.panta.misskey_for_android_v2.entity.CreateNoteProperty
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
-import org.panta.misskey_for_android_v2.repository.NoteRepository
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 
 class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
@@ -28,7 +22,7 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
         const val CREATE_NOTE_TARGET_ID = "EDIT_NOTE_ACTIVITY_CREATE_NOTE_ID"
 
-        fun startActivity(context:Context, info: DomainAuthKeyPair, targetId: String?, type: NoteType?){
+        fun startActivity(context:Context, info: ConnectionProperty, targetId: String?, type: NoteType?){
             val intent = Intent(context, EditNoteActivity::class.java)
             intent.putExtra(EditNoteActivity.CONNECTION_INFO, info)
             if(type != null)  intent.putExtra(EDIT_TYPE, type.ordinal)
@@ -41,7 +35,7 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
     //private lateinit var noteRepository: NoteRepository
     override lateinit var mPresenter: EditNoteContract.Presenter
 
-    private lateinit var connectionInfo: DomainAuthKeyPair
+    private lateinit var connectionInfo: ConnectionProperty
 
     //private var mEditType = 0
     //private var mTargetId: String? = null
@@ -56,7 +50,7 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
         val intent = intent
         val editType = intent.getIntExtra(EDIT_TYPE, 0)
         val targetId = intent.getStringExtra(CREATE_NOTE_TARGET_ID)
-        connectionInfo = intent.getSerializableExtra(CONNECTION_INFO) as DomainAuthKeyPair
+        connectionInfo = intent.getSerializableExtra(CONNECTION_INFO) as ConnectionProperty
 
         mPresenter = EditNotePresenter(this, connectionInfo)
 

@@ -4,11 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.view.PagerAdapter
 import kotlinx.android.synthetic.main.activity_follow_follower.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 
 class FollowFollowerActivity : AppCompatActivity() {
 
@@ -17,7 +16,7 @@ class FollowFollowerActivity : AppCompatActivity() {
         const val FOLLOW_FOLLOWER_TYPE = "FollowFollowerActivityFollowingFollowerType"
         const val CONNECTION_INFO = "FollowFollowerActivityConnectionInfo"
 
-        fun startActivity(context: Context, info: DomainAuthKeyPair, type: FollowFollowerType, userId: String){
+        fun startActivity(context: Context, info: ConnectionProperty, type: FollowFollowerType, userId: String){
             val intent = Intent(context, FollowFollowerActivity::class.java)
             intent.putExtra(FollowFollowerActivity.CONNECTION_INFO, info)
             intent.putExtra(FollowFollowerActivity.FOLLOW_FOLLOWER_TYPE, type.ordinal)
@@ -32,7 +31,7 @@ class FollowFollowerActivity : AppCompatActivity() {
 
         val userId = intent.getStringExtra(USER_ID_TAG)!!
         val tmpType = intent.getIntExtra(FOLLOW_FOLLOWER_TYPE, FollowFollowerType.FOLLOWING.ordinal)
-        val connectionInfo = intent.getSerializableExtra(CONNECTION_INFO) as DomainAuthKeyPair
+        val connectionInfo = intent.getSerializableExtra(CONNECTION_INFO) as ConnectionProperty
         val type = FollowFollowerType.getTypeFromOrdinal(tmpType)
 
         val adapter = FollowPagerAdapter(supportFragmentManager, connectionInfo, userId)

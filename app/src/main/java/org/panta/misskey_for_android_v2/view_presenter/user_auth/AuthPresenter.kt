@@ -6,11 +6,13 @@ import org.panta.misskey_for_android_v2.constant.getAppSecretKey
 import org.panta.misskey_for_android_v2.constant.getInstanceInfoList
 import org.panta.misskey_for_android_v2.interfaces.AuthContract
 import org.panta.misskey_for_android_v2.repository.AuthRepository
+import org.panta.misskey_for_android_v2.repository.SecretRepository
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import java.net.URI
 
 class AuthPresenter(private val mView: AuthContract.View, private val sharedPref: SharedPreferenceOperator, domain: String?, appSecret: String?) : AuthContract.Presenter{
 
+    private val secretRepository = SecretRepository(sharedPref)
     private val authRepository = if(domain == null || appSecret == null){
         val tmpDomain = sharedPref.get("tmpDomain", null)
         val appSecretKey = getInstanceInfoList().first {
@@ -37,8 +39,11 @@ class AuthPresenter(private val mView: AuthContract.View, private val sharedPref
         if(session != null && tmpDomain != null){
             authRepository.getUserToken(session, {}){
                 mView.onLoadUserToken(it, tmpDomain)
-                sharedPref.put(ApplicationConstant.APP_USER_TOKEN_KEY, it)
-                sharedPref.put(ApplicationConstant.APP_DOMAIN_KEY, tmpDomain)
+                //sharedPref.put(ApplicationConstant.APP_USER_TOKEN_KEY, it)
+                //sharedPref.put(ApplicationConstant.APP_DOMAIN_KEY, tmpDomain)
+                //authRepository.putUserToken(it)
+                secretRepository.putUserToken(it)
+                secretRepository.putDomain(tmpDomain)
             }
         }else{
             getSession()

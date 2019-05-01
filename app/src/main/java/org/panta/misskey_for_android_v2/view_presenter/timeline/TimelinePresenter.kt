@@ -1,13 +1,13 @@
 package org.panta.misskey_for_android_v2.view_presenter.timeline
 
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.repository.*
 import org.panta.misskey_for_android_v2.usecase.PagingController
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
-class TimelinePresenter(private val mView: TimelineContract.View, private val mTimeline: IItemRepository<NoteViewData>, info: DomainAuthKeyPair)
+class TimelinePresenter(private val mView: TimelineContract.View, private val mTimeline: IItemRepository<NoteViewData>, info: ConnectionProperty)
     : TimelineContract.Presenter, ErrorCallBackListener{
 
     private val pagingController =

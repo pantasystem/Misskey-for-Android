@@ -1,19 +1,16 @@
 package org.panta.misskey_for_android_v2.view_presenter.user
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_user.*
 import org.panta.misskey_for_android_v2.R
-import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.repository.UserRepository
 import org.panta.misskey_for_android_v2.view_presenter.follow_follower.FollowFollowerActivity
@@ -25,7 +22,7 @@ class UserActivity : AppCompatActivity() {
         private const val USER_PROPERTY_TAG = "UserActivityUserPropertyTag"
         private const val CONNECTION_INFO = "UserActivityConnectionInfo"
 
-        fun startActivity(context: Context?, user: User, info: DomainAuthKeyPair){
+        fun startActivity(context: Context?, user: User, info: ConnectionProperty){
             val intent = Intent(context, UserActivity::class.java)
             intent.putExtra(USER_PROPERTY_TAG, user)
             intent.putExtra(CONNECTION_INFO, info)
@@ -40,7 +37,7 @@ class UserActivity : AppCompatActivity() {
 
         val intent = intent
         val tmpUser: User? = intent.getSerializableExtra(USER_PROPERTY_TAG) as User
-        val info = intent.getSerializableExtra(CONNECTION_INFO) as DomainAuthKeyPair
+        val info = intent.getSerializableExtra(CONNECTION_INFO) as ConnectionProperty
         if(tmpUser == null){
             finish()
             throw IllegalArgumentException("user propertyがNULL")
@@ -83,7 +80,7 @@ class UserActivity : AppCompatActivity() {
 
     }
 
-    private fun showFollowList(info: DomainAuthKeyPair, user: User, type: FollowFollowerType){
+    private fun showFollowList(info: ConnectionProperty, user: User, type: FollowFollowerType){
         val intent = Intent(applicationContext, FollowFollowerActivity::class.java)
         intent.putExtra(FollowFollowerActivity.CONNECTION_INFO, info)
         intent.putExtra(FollowFollowerActivity.FOLLOW_FOLLOWER_TYPE, type)

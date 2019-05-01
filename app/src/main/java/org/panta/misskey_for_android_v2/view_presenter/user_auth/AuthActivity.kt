@@ -12,19 +12,14 @@ import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.InstanceListAdapter
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.DomainAndAppSecret
-import org.panta.misskey_for_android_v2.constant.getAppSecretKey
 import org.panta.misskey_for_android_v2.constant.getInstanceInfoList
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
 import org.panta.misskey_for_android_v2.entity.SessionResponse
 import org.panta.misskey_for_android_v2.interfaces.AuthContract
 import org.panta.misskey_for_android_v2.interfaces.ItemClickListener
-import org.panta.misskey_for_android_v2.repository.AuthRepository
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
-import org.panta.misskey_for_android_v2.util.sha256
 import org.panta.misskey_for_android_v2.view_presenter.DOMAIN_TAG
 import org.panta.misskey_for_android_v2.view_presenter.MainActivity
 import org.panta.misskey_for_android_v2.view_presenter.USER_TOKEN_TAG
-import java.net.URI
 
 class AuthActivity : AppCompatActivity(), AuthContract.View {
 
@@ -36,7 +31,7 @@ class AuthActivity : AppCompatActivity(), AuthContract.View {
         setContentView(R.layout.activity_auth)
         //val sp  = SharedPreferenceOperator(getSharedPreferences("tokenData", Context.MODE_PRIVATE))
 
-        val sharedPref = SharedPreferenceOperator(getSharedPreferences(ApplicationConstant.APP_SHARED_PREF_KEY, Context.MODE_PRIVATE))
+        val sharedPref = SharedPreferenceOperator(this)
 
         //FIXME 不具合の原因
 

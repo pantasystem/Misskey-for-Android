@@ -1,23 +1,23 @@
 package org.panta.misskey_for_android_v2.view_presenter
 
-import android.util.Log
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
-import org.panta.misskey_for_android_v2.constant.getAppSecretKey
 import org.panta.misskey_for_android_v2.constant.getInstanceInfoList
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
 import org.panta.misskey_for_android_v2.interfaces.MainContract
 import org.panta.misskey_for_android_v2.repository.MyInfo
+import org.panta.misskey_for_android_v2.repository.SecretRepository
 import org.panta.misskey_for_android_v2.util.sha256
 
 class MainPresenter(private val mView: MainContract.View, private val sharedOperator: ISharedPreferenceOperator) : MainContract.Presenter{
 
     private lateinit var mUser: User
+    private val secretRepository = SecretRepository(sharedOperator)
 
     override fun getPersonalMiniProfile() {
-        val info = loadConnectInfo()
+        val info = secretRepository.getConnectionInfo()
         if(info == null){
             mView.showAuthActivity()
             return
@@ -30,7 +30,7 @@ class MainPresenter(private val mView: MainContract.View, private val sharedOper
 
 
     override fun initDisplay() {
-        val info = loadConnectInfo()
+        val info = secretRepository.getConnectionInfo()
         if(info == null){
             mView.showAuthActivity()
             return
@@ -43,7 +43,7 @@ class MainPresenter(private val mView: MainContract.View, private val sharedOper
     }
 
     override fun takeEditNote() {
-        val info = loadConnectInfo()
+        val info = secretRepository.getConnectionInfo()
         if(info == null){
             mView.showAuthActivity()
         }else{
@@ -52,7 +52,7 @@ class MainPresenter(private val mView: MainContract.View, private val sharedOper
     }
 
     override fun getPersonalProfilePage() {
-        val info = loadConnectInfo()
+        val info = secretRepository.getConnectionInfo()
         if(info == null){
             mView.showAuthActivity()
             return
@@ -63,7 +63,8 @@ class MainPresenter(private val mView: MainContract.View, private val sharedOper
     }
 
     override fun getFollowFollower(type: FollowFollowerType) {
-        val info = loadConnectInfo()
+        val info  = secretRepository.getConnectionInfo()
+
         if(info == null){
             mView.showAuthActivity()
         }else{
@@ -71,15 +72,5 @@ class MainPresenter(private val mView: MainContract.View, private val sharedOper
         }
     }
 
-    private fun loadConnectInfo(): DomainAuthKeyPair?{
-        val domain = sharedOperator.get(ApplicationConstant.APP_DOMAIN_KEY, null)
-        val userToken = sharedOperator.get(ApplicationConstant.APP_USER_TOKEN_KEY, null)
-        return if( domain == null || userToken == null ){
-            null
-        }else{
-            val instanceInfoList = getInstanceInfoList()
-            val appSecret = instanceInfoList.first { it.domain == domain }.appSecret
-            DomainAuthKeyPair(domain, sha256("$userToken$appSecret"))
-        }
-    }
+
 }

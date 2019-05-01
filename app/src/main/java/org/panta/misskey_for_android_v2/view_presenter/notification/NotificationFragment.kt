@@ -1,7 +1,6 @@
 package org.panta.misskey_for_android_v2.view_presenter.notification
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -14,9 +13,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_notification.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.NotificationAdapter
-import org.panta.misskey_for_android_v2.adapter.NotificationViewHolder
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
-import org.panta.misskey_for_android_v2.entity.NotificationProperty
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.IOperationAdapter
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 
@@ -30,7 +27,7 @@ class NotificationFragment : Fragment(), NotificationContract.View,
 
     companion object{
         private const val CONNECTION_INFO = "NotificationFragmentConnectionInfo"
-        fun getInstance(info: DomainAuthKeyPair): NotificationFragment{
+        fun getInstance(info: ConnectionProperty): NotificationFragment{
             val fragment = NotificationFragment()
             val bundle = Bundle()
             bundle.putSerializable(CONNECTION_INFO, info)
@@ -38,12 +35,12 @@ class NotificationFragment : Fragment(), NotificationContract.View,
             return fragment
         }
     }
-    private var connectionInfo: DomainAuthKeyPair? = null
+    private var connectionInfo: ConnectionProperty? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        connectionInfo = arguments?.getSerializable(CONNECTION_INFO) as DomainAuthKeyPair
+        connectionInfo = arguments?.getSerializable(CONNECTION_INFO) as ConnectionProperty
 
         mPresenter = NotificationPresenter(this, connectionInfo!!)
 

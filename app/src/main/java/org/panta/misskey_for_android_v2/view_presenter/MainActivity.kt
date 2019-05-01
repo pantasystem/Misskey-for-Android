@@ -20,7 +20,7 @@ import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
 import org.panta.misskey_for_android_v2.interfaces.MainContract
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         /*~~basic init*/
-        sharedOperator = SharedPreferenceOperator(getSharedPreferences(ApplicationConstant.APP_SHARED_PREF_KEY, Context.MODE_PRIVATE))
+        sharedOperator = SharedPreferenceOperator(this)
 
         mPresenter = MainPresenter(this, sharedOperator)
 
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    override fun initDisplay(connectionInfo: DomainAuthKeyPair) {
+    override fun initDisplay(connectionInfo: ConnectionProperty) {
         val sf = supportFragmentManager
         val ft = sf.beginTransaction()
         ft.replace(R.id.main_container, TimelineFragment.getInstance(info = connectionInfo  , type = TimelineTypeEnum.HOME))
@@ -155,17 +155,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    override fun showPersonalProfilePage(user: User, connectionInfo: DomainAuthKeyPair) {
+    override fun showPersonalProfilePage(user: User, connectionInfo: ConnectionProperty) {
         UserActivity.startActivity(applicationContext, user, connectionInfo)
     }
 
 
 
-    override fun showEditNote(connectionInfo: DomainAuthKeyPair) {
+    override fun showEditNote(connectionInfo: ConnectionProperty) {
         EditNoteActivity.startActivity(applicationContext, connectionInfo, null, null)
     }
 
-    override fun showFollowFollower(connectionInfo: DomainAuthKeyPair, user: User, type: FollowFollowerType) {
+    override fun showFollowFollower(connectionInfo: ConnectionProperty, user: User, type: FollowFollowerType) {
         /*val intent = Intent(applicationContext, FollowFollowerActivity::class.java)
         intent.putExtra(FollowFollowerActivity.CONNECTION_INFO, connectionInfo)
         intent.putExtra(FollowFollowerActivity.FOLLOW_FOLLOWER_TYPE, type)

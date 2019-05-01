@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_timeline.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.FollowsAdapter
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.FollowFollowerContract
 import org.panta.misskey_for_android_v2.repository.FollowFollowerRepository
 import org.panta.misskey_for_android_v2.view_data.FollowViewData
@@ -25,7 +25,7 @@ class FollowFollowerFragment : Fragment(), FollowFollowerContract.View{
         private const val USER_ID = "followFollowerFragment"
         private const val CONNECTION_INFO = "followFollowerConnectionInfo"
         private const val FOLLOW_FOLLOWER_TYPE = "FOLLOW_FOLLOWER_TYPE_INFO"
-        fun getInstance(userId: String, type: FollowFollowerType,connectionInfo: DomainAuthKeyPair): FollowFollowerFragment{
+        fun getInstance(userId: String, type: FollowFollowerType,connectionInfo: ConnectionProperty): FollowFollowerFragment{
             val fragment = FollowFollowerFragment()
             val bundle = Bundle()
             bundle.putString(USER_ID, userId)
@@ -52,7 +52,7 @@ class FollowFollowerFragment : Fragment(), FollowFollowerContract.View{
         super.onViewCreated(view, savedInstanceState)
 
         val args = arguments
-        val info = args?.getSerializable(CONNECTION_INFO) as DomainAuthKeyPair
+        val info = args?.getSerializable(CONNECTION_INFO) as ConnectionProperty
         val userId = args.getString(USER_ID)!!
         val type = args.getInt(FOLLOW_FOLLOWER_TYPE, 0 )
 

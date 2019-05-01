@@ -17,7 +17,7 @@ import org.panta.misskey_for_android_v2.adapter.TimelineAdapter
 import org.panta.misskey_for_android_v2.constant.NoteType
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.dialog.ReactionDialog
-import org.panta.misskey_for_android_v2.entity.DomainAuthKeyPair
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
@@ -40,7 +40,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         private const val USER_ID = "TIMELINE_FRAGMENT_USER_TIMELINE"
         private const val IS_MEDIA_ONLY = "IS_MEDIA_ONLY"
 
-        fun getInstance(info: DomainAuthKeyPair , type: TimelineTypeEnum, userId: String? = null, isMediaOnly: Boolean = false): TimelineFragment{
+        fun getInstance(info: ConnectionProperty, type: TimelineTypeEnum, userId: String? = null, isMediaOnly: Boolean = false): TimelineFragment{
             return TimelineFragment().apply{
                 val args = Bundle()
                 args.putSerializable(CONNECTION_INFOMATION, info)
@@ -59,7 +59,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     //private var instanceDomain: String? = null
     //private var i: String? = null
-    private var connectionInfo: DomainAuthKeyPair? = null
+    private var connectionInfo: ConnectionProperty? = null
 
     private var mTimelineType: TimelineTypeEnum = TimelineTypeEnum.HOME
     lateinit var mLayoutManager: LinearLayoutManager
@@ -73,7 +73,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
         val args = arguments
 
-        connectionInfo = args?.getSerializable(CONNECTION_INFOMATION) as DomainAuthKeyPair
+        connectionInfo = args?.getSerializable(CONNECTION_INFOMATION) as ConnectionProperty
         val timelineType = args.getString(TIMELINE_TYPE)
         isMediaOnly = args.getBoolean(IS_MEDIA_ONLY)
         userId = args.getString(USER_ID)
