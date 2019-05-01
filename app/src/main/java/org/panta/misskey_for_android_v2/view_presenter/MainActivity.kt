@@ -152,26 +152,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun showPersonalMiniProfile(user: User) {
         runOnUiThread {
-            if(user.avatarUrl != null){
+            if(user.avatarUrl != null && my_account_icon != null){
                 Picasso
                     .get()
                     .load(user.avatarUrl)
                     .into(my_account_icon)
             }
 
-            my_name.text = user.name?: user.userName
+            my_name?.text = user.name?: user.userName
 
             val userName = if(user.host != null){
                 "@${user.userName}@${user.host}"
             }else{
                 "@${user.userName}"
             }
-            my_user_name.text = userName
+            my_user_name?.text = userName
 
-            follower_count.text = user.followersCount.toString()
-            following_count.text= user.followingCount.toString()
-
-
+            follower_count?.text = user.followersCount.toString()
+            following_count?.text= user.followingCount.toString()
 
         }
     }
