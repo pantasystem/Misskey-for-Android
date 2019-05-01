@@ -28,9 +28,12 @@ class ReactionHolder(itemView: View, private val  alwaysColorId: Int, private va
         reactionIcon.visibility = View.VISIBLE
         reactionCount.text = count
         if(isHasMyReaction){
-            reactionCountItem.setBackgroundColor(hasMyReactionColorId)
+            reactionCountItem.setBackgroundResource(R.drawable.shape_selected_reaction_background)
+            //reactionCountItem.background = itemView.resources.getDimension()
         }else{
-            reactionCountItem.setBackgroundColor(alwaysColorId)
+            //reactionCountItem.setBackgroundColor(alwaysColorId)
+            reactionCountItem.setBackgroundResource(R.drawable.shape_normal_reaction_background)
+
         }
     }
 

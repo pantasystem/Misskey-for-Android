@@ -62,6 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/note_text"
             android:layout_toEndOf="@+id/user_icon"
+            android:background="@drawable/shape_image_views_background"
             android:layout_marginEnd="10dp" android:visibility="visible">
 
         <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
