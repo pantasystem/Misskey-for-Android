@@ -1,19 +1,28 @@
 package org.panta.misskey_for_android_v2.service
 
+import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
 import android.util.Log
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.adapter.NoteViewHolder
+import org.panta.misskey_for_android_v2.adapter.NotificationViewHolder
+import org.panta.misskey_for_android_v2.constant.NotificationType
 import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
-import org.panta.misskey_for_android_v2.repository.Notification
+import org.panta.misskey_for_android_v2.repository.NotificationRepository
 import org.panta.misskey_for_android_v2.repository.SecretRepository
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
+import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.usecase.PagingController
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 import java.lang.IllegalArgumentException
@@ -21,8 +30,10 @@ import java.util.*
 
 class NotificationService : Service() {
 
-    private lateinit var notificationRepository: Notification
+    private lateinit var notificationRepository: NotificationRepository
     private lateinit var pagingController: PagingController<NotificationViewData>
+
+    private val notificationChannelId = "Misskey for Adnroid Notification"
 
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -38,7 +49,7 @@ class NotificationService : Service() {
             this.stopSelf()
             return
         }
-        notificationRepository = Notification(conProperty.domain, conProperty.i)
+        notificationRepository = NotificationRepository(conProperty.domain, conProperty.i)
 
         pagingController = PagingController(notificationRepository, object : ErrorCallBackListener{
             override fun callBack(e: Exception) {
@@ -54,6 +65,7 @@ class NotificationService : Service() {
 
             notReadNotifications.forEach{inner ->
                 Log.d("NotificationService", "未読の通知 ${inner.notificationProperty}")
+                showNotificationCompat(inner)
             }
 
             watchDogNotification(20000)
@@ -73,6 +85,8 @@ class NotificationService : Service() {
 
                     notReadNotifications.forEach{inner ->
                         Log.d("NotificationService", "未読の通知 ${inner.notificationProperty}")
+                        showNotificationCompat(inner)
+
                     }
                 }
                 delay(sleepMillSeconds)
@@ -80,8 +94,55 @@ class NotificationService : Service() {
         }
     }
 
-    private fun showNotificationCompat(){
-      val notification = Notification.
+    private fun showNotificationCompat(notificationViewData: NotificationViewData){
+
+
+
+
+
+        try{
+            val type = NotificationType.getEnumFromString(notificationViewData.notificationProperty.type)
+            val typeMessage = when(type){
+                NotificationType.REACTION -> ""
+                NotificationType.RENOTE -> "リノート"
+                NotificationType.FOLLOW -> "フォローされました"
+                NotificationType.MENTION -> "あなたについて投稿"
+                NotificationType.QUOTE -> "引用リノート"
+                NotificationType.REPLY -> "リプライ"
+                NotificationType.RECEIVE_FOLLOW_REQUEST -> "フォローリクエスト"
+                NotificationType.POLL_VOTE -> "投票"
+            }
+            val userName = notificationViewData.notificationProperty.user.name
+            val title = "$userName さんが$typeMessage しました"
+
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                if(notificationManager.getNotificationChannel(notificationChannelId) == null){
+                    val channel = NotificationChannel(notificationChannelId, "Misskey", NotificationManager.IMPORTANCE_HIGH)
+                    channel.apply{
+                        description = "詳細"
+                    }
+                    notificationManager.createNotificationChannel(channel)
+                }
+            }
+
+            val notification = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                Notification.Builder(applicationContext, notificationChannelId)
+            }else{
+                Notification.Builder(applicationContext)
+            }
+
+            val build = notification.apply {
+                setSmallIcon(R.drawable.misskey_icon)
+                setContentTitle(title)
+            }.build()
+
+
+            val nm = NotificationManagerCompat.from(this)
+            nm.notify(1, build)
+        }catch(e: Exception){
+            Log.w("NotificationService", "通知表示中にエラー発生", e)
+        }
 
     }
 }

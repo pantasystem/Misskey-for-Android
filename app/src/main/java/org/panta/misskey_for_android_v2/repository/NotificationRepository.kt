@@ -15,7 +15,7 @@ import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 import java.net.URL
 
-class Notification(private val domain: String, private val authKey: String): IItemRepository<NotificationViewData>{
+class NotificationRepository(private val domain: String, private val authKey: String): IItemRepository<NotificationViewData>{
 
     private val connection = HttpsConnection()
     private val mapper = jacksonObjectMapper()
