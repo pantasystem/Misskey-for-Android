@@ -16,7 +16,7 @@ class SharedPreferenceOperator(private val context: Context) : ISharedPreference
         return sharedPref.getString(key, null)
     }
 
-    override fun put(key: String, value: String) {
+    override fun putString(key: String, value: String) {
         val sharedPref = context.getSharedPreferences(APP_NAME, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
         editor.putString(key, value)

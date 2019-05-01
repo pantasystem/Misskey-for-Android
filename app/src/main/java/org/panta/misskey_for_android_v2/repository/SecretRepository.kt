@@ -36,10 +36,10 @@ class SecretRepository(private val sharedPreferenceOperator: ISharedPreferenceOp
     }
 
     fun putDomain(domain: String){
-        sharedPreferenceOperator.put(APP_DOMAIN, domain)
+        sharedPreferenceOperator.putString(APP_DOMAIN, domain)
     }
 
     fun putUserToken(token: String){
-        sharedPreferenceOperator.put(APP_USER_TOKEN, token)
+        sharedPreferenceOperator.putString(APP_USER_TOKEN, token)
     }
 }
