@@ -33,6 +33,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val imageView4: ImageView = itemView.image_4
     private val imageViewList: List<ImageView> = listOf(imageView1, imageView2, imageView3, imageView4)
 
+    private val subNote = itemView.sub_note
     private val subUserIcon = itemView.sub_user_icon
     private val subUserName = itemView.sub_user_name
     private val subUserId = itemView.sub_user_id
@@ -60,6 +61,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
         showThreadButton.visibility = View.GONE
+        subNote.visibility = View.GONE
     }
 
     fun setReNote(content: NoteViewData){
@@ -73,6 +75,8 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setReNoteCount(content.note.renote.reNoteCount)
         setFourControlButtonListener(content.note.renote, content)
         showThreadButton.visibility = View.GONE
+        subNote.visibility = View.GONE
+
     }
     fun setQuoteReNote(content: NoteViewData){
         backgroundColor(0)
@@ -86,7 +90,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
         showThreadButton.visibility = View.GONE
-
+        subNote.visibility = View.VISIBLE
     }
 
     fun setReply(content: NoteViewData){
@@ -100,6 +104,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
         showThreadButton.visibility = View.VISIBLE
+        subNote.visibility = View.GONE
 
     }
 
