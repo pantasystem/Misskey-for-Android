@@ -8,10 +8,14 @@
                 android:id="@+id/nav_profile"
                 android:icon="@drawable/human_icon"
                 android:title="@string/jp_profile"/>
+        <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/jp_setting"/>
 
     </group>
     <item
-            android:id="@+id/app_bar_switch"
+            android:id="@+id/nav_notification_toggle_switch"
             android:title="@string/jp_notification"
             app:actionLayout="@layout/switch_item" android:icon="@drawable/bell_icon"/>
 
