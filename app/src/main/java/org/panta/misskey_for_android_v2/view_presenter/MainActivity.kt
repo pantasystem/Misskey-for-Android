@@ -4,13 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import android.support.v4.view.GravityCompat
+import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SwitchCompat
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Switch
+import android.widget.ToggleButton
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -30,6 +36,7 @@ import org.panta.misskey_for_android_v2.view_presenter.follow_follower.FollowFol
 import org.panta.misskey_for_android_v2.view_presenter.mixed_timeline.MixedTimelineFragment
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.notification.NotificationFragment
+import org.panta.misskey_for_android_v2.view_presenter.setting.SettingsActivity
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
 import org.panta.misskey_for_android_v2.view_presenter.user.UserActivity
 import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
@@ -99,7 +106,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             mPresenter.getFollowFollower(FollowFollowerType.FOLLOWER)
         }
 
+        //通知Service起動
         startService(Intent(applicationContext, NotificationService::class.java))
+
+        val customView = nav_view.menu.findItem(R.id.nav_notification_toggle_switch).actionView
+        val switch = customView.findViewById<Switch>(R.id.switch_button)
+        switch.setOnCheckedChangeListener { _, b ->
+            if(b){
+                Log.d("MainActivity", "selected true")
+            }else{
+                Log.d("mainActivity", "selected false")
+            }
+        }
+
+
     }
 
 
@@ -185,10 +205,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun showFollowFollower(connectionInfo: ConnectionProperty, user: User, type: FollowFollowerType) {
-        /*val intent = Intent(applicationContext, FollowFollowerActivity::class.java)
-        intent.putExtra(FollowFollowerActivity.CONNECTION_INFO, connectionInfo)
-        intent.putExtra(FollowFollowerActivity.FOLLOW_FOLLOWER_TYPE, type)
-        intent.putExtra(FollowFollowerActivity.USER_ID_TAG, user.id)*/
         FollowFollowerActivity.startActivity(applicationContext, type, user.id)
     }
 
@@ -248,6 +264,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_profile -> mPresenter.getPersonalProfilePage()
+            R.id.nav_setting -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
 
 
         }
