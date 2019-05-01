@@ -10,12 +10,14 @@ import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
 import org.panta.misskey_for_android_v2.interfaces.MainContract
 import org.panta.misskey_for_android_v2.repository.MyInfo
 import org.panta.misskey_for_android_v2.repository.SecretRepository
+import org.panta.misskey_for_android_v2.repository.SettingsRepository
 import org.panta.misskey_for_android_v2.util.sha256
 
 class MainPresenter(private val mView: MainContract.View, sharedOperator: ISharedPreferenceOperator) : MainContract.Presenter{
 
     private lateinit var mUser: User
     private val secretRepository = SecretRepository(sharedOperator)
+    private val settingRepository = SettingsRepository(sharedOperator)
 
     override fun getPersonalMiniProfile() {
         val info = secretRepository.getConnectionInfo()
@@ -40,7 +42,9 @@ class MainPresenter(private val mView: MainContract.View, sharedOperator: IShare
         }
     }
     override fun start() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if(settingRepository.isNotificationEnabled){
+            mView.startNotificationService()
+        }
     }
 
     override fun takeEditNote() {
@@ -77,8 +81,20 @@ class MainPresenter(private val mView: MainContract.View, sharedOperator: IShare
         mView.showMisskeyOnBrowser(Uri.parse(secretRepository.getConnectionInfo()?.domain))
     }
 
-    override fun isEnabledNotification(enabled: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun isEnabledNotification(enabled: Boolean?) {
+        if(enabled == null){
+            mView.showIsEnabledNotification(settingRepository.isNotificationEnabled)
+            return
+        }
+        settingRepository.isNotificationEnabled = enabled
+
+
+        if(enabled){
+            mView.startNotificationService()
+        }else{
+            mView.stopNotificationService()
+        }
+
     }
 
 }

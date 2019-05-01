@@ -17,6 +17,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Switch
+import android.widget.Toast
 import android.widget.ToggleButton
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
@@ -64,6 +65,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //private var domain: String? = null
     private lateinit var sharedOperator: ISharedPreferenceOperator
 
+    private lateinit var mNotificationEnabledSwitch: Switch
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -89,8 +92,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fab.setOnClickListener {
             mPresenter.takeEditNote()
         }
+        mPresenter.start()
 
-       mPresenter.getPersonalMiniProfile()
+        mPresenter.getPersonalMiniProfile()
 
         mPresenter.initDisplay()
 
@@ -107,18 +111,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             mPresenter.getFollowFollower(FollowFollowerType.FOLLOWER)
         }
 
-        //通知Service起動
-        startService(Intent(applicationContext, NotificationService::class.java))
 
         val customView = nav_view.menu.findItem(R.id.nav_notification_toggle_switch).actionView
-        val switch = customView.findViewById<Switch>(R.id.switch_button)
-        switch.setOnCheckedChangeListener { _, b ->
-            if(b){
-                Log.d("MainActivity", "selected true")
-            }else{
-                Log.d("mainActivity", "selected false")
-            }
+        mNotificationEnabledSwitch = customView.findViewById(R.id.switch_button)
+        mNotificationEnabledSwitch.setOnCheckedChangeListener { _, b ->
+            mPresenter.isEnabledNotification(b)
         }
+        mPresenter.isEnabledNotification()
 
 
     }
@@ -199,8 +198,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         UserActivity.startActivity(applicationContext, user)
     }
 
-
-
     override fun showEditNote(connectionInfo: ConnectionProperty) {
         EditNoteActivity.startActivity(applicationContext, null, null)
     }
@@ -211,6 +208,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun showMisskeyOnBrowser(url: Uri) {
         startActivity(Intent(Intent.ACTION_VIEW, url))
+    }
+
+    override fun showIsEnabledNotification(enabled: Boolean) {
+        Log.d("MainActivity", "選択中 $enabled")
+        mNotificationEnabledSwitch.isChecked = enabled
+    }
+
+    override fun startNotificationService() {
+        startService(Intent(applicationContext, NotificationService::class.java))
+        Toast.makeText(applicationContext, "通知はONです", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun stopNotificationService() {
+        stopService(Intent(applicationContext, NotificationService::class.java))
+        Toast.makeText(applicationContext, "通知がOFFになりました", Toast.LENGTH_SHORT).show()
     }
 
     private fun setFragment(fragment: Fragment, fragmentName: String){

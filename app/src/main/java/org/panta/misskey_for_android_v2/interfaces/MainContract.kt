@@ -14,6 +14,9 @@ interface MainContract {
         fun showEditNote(connectionInfo: ConnectionProperty)
         fun showFollowFollower(connectionInfo: ConnectionProperty, user: User, type: FollowFollowerType)
         fun showMisskeyOnBrowser(url: Uri)
+        fun showIsEnabledNotification(enabled: Boolean)
+        fun startNotificationService()
+        fun stopNotificationService()
     }
 
     interface Presenter : BasePresenter{
@@ -24,6 +27,6 @@ interface MainContract {
         fun takeEditNote()
         fun getFollowFollower(type: FollowFollowerType)
         fun openMisskeyOnBrowser()
-        fun isEnabledNotification(enabled: Boolean)
+        fun isEnabledNotification(enabled: Boolean? = null)
     }
 }

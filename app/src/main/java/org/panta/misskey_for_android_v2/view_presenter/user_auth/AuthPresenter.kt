@@ -23,8 +23,8 @@ class AuthPresenter(private val mView: AuthContract.View, private val sharedPref
 
     override fun getSession() {
         authRepository.getSession {
-            sharedPref.put("tmpSession", it.token)
-            sharedPref.put("tmpDomain", mDomain)
+            sharedPref.putString("tmpSession", it.token)
+            sharedPref.putString("tmpDomain", mDomain)
             mView.onLoadSession(it)
         }
     }
