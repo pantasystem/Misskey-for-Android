@@ -13,6 +13,7 @@ import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
+import org.panta.misskey_for_android_v2.usecase.RoundedTransformation
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
 open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -162,7 +163,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private fun setNoteContent(note: Note){
         injectionName(note.user?.name, note.user?.userName, userName)
         injectionId(note.user?.userName, note.user?.host, userId)
-        injectionImage(note.user?.avatarUrl?:"non", userIcon, false)
+        roundInjectionImage(note.user?.avatarUrl?:"non", userIcon)
         injectionTextGoneWhenNull(note.text, noteText)
         setRelationUserListener(note.user!!, userName, userId, userIcon)
         setImage(filterImageData(note))
@@ -172,7 +173,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private fun setSubContent(note: Note){
         injectionName(note.user?.name, note.user?.userName, subUserName)
         injectionId(note.user?.userName, note.user?.host, subUserId)
-        injectionImage(note.user?.avatarUrl?:"non", subUserIcon, false)
+        roundInjectionImage(note.user?.avatarUrl?:"non", subUserIcon)
         injectionTextGoneWhenNull(note.text, subNoteText)
         setRelationUserListener(note.user!!, subUserName, subUserId, subUserIcon)
 
@@ -314,5 +315,13 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     }
 
+    private fun roundInjectionImage(imageUrl: String, imageView: ImageView){
+        val trfm = RoundedTransformation(30, 0)
+        Picasso
+            .get()
+            .load(imageUrl)
+            .transform(trfm)
+            .into(imageView)
+    }
 
 }
