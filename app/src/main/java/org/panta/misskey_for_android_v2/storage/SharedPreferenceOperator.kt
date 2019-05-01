@@ -22,4 +22,16 @@ class SharedPreferenceOperator(private val context: Context) : ISharedPreference
         editor.putString(key, value)
         editor.apply()
     }
+
+    override fun getBoolean(key: String, defaultValue: Boolean): Boolean {
+        val sharedPref = context.getSharedPreferences(APP_NAME, Context.MODE_PRIVATE)
+        return sharedPref.getBoolean(key, defaultValue)
+    }
+
+    override fun putBoolean(key: String, value: Boolean) {
+        val sharedPref = context.getSharedPreferences(APP_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putBoolean(key, value)
+        editor.apply()
+    }
 }
