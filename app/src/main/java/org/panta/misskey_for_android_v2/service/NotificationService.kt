@@ -1,9 +1,6 @@
 package org.panta.misskey_for_android_v2.service
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -25,8 +22,12 @@ import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.usecase.PagingController
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
+import org.panta.misskey_for_android_v2.view_presenter.MainActivity
 import java.lang.IllegalArgumentException
 import java.util.*
+import android.app.PendingIntent
+
+
 
 class NotificationService : Service() {
 
@@ -96,10 +97,6 @@ class NotificationService : Service() {
 
     private fun showNotificationCompat(notificationViewData: NotificationViewData){
 
-
-
-
-
         try{
             val type = NotificationType.getEnumFromString(notificationViewData.notificationProperty.type)
             val typeMessage = when(type){
@@ -132,9 +129,16 @@ class NotificationService : Service() {
                 Notification.Builder(applicationContext)
             }
 
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            intent.putExtra(MainActivity.SHOW_FRAGMENT_TAG, MainActivity.NOTIFICATION)
+
+            val contentIntent = PendingIntent.getActivity(applicationContext, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_ONE_SHOT)
+
             val build = notification.apply {
-                setSmallIcon(R.drawable.misskey_icon)
+                setSmallIcon(org.panta.misskey_for_android_v2.R.drawable.misskey_icon)
                 setContentTitle(title)
+                setContentIntent(contentIntent)
             }.build()
 
 

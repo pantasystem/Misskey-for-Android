@@ -38,7 +38,18 @@ private const val FRAGMENT_HOME = "FRAGMENT_HOME"
 private const val FRAGMENT_OTHER = "FRAGMENT_OTHER"
 //const val DOMAIN_AUTH_KEY_TAG = "MainActivityUserDomainAndAuthKey"
 
+
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainContract.View {
+
+    companion object {
+        const val SHOW_FRAGMENT_TAG = "MainActivityShowFragmentTag"
+        const val HOME = 0
+        const val MIX = 1
+        const val NOTIFICATION = 2
+    }
+
+    //一番目に表示されるフラグメント
+    private var showFirstFragment = 0
 
     override lateinit var mPresenter: MainContract.Presenter
     //private var i: String? = null
@@ -61,6 +72,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         /*~~basic init*/
+        showFirstFragment = intent.getIntExtra(SHOW_FRAGMENT_TAG, 0)
+
         sharedOperator = SharedPreferenceOperator(this)
 
         mPresenter = MainPresenter(this, sharedOperator)
@@ -93,8 +106,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun initDisplay(connectionInfo: ConnectionProperty) {
         val sf = supportFragmentManager
         val ft = sf.beginTransaction()
-        ft.replace(R.id.main_container, TimelineFragment.getInstance(info = connectionInfo  , type = TimelineTypeEnum.HOME))
-        ft.commit()
+        if(showFirstFragment == NOTIFICATION){
+            setFragment(NotificationFragment.getInstance(connectionInfo), FRAGMENT_OTHER)
+            title = "通知"
+        }else{
+            ft.replace(R.id.main_container, TimelineFragment.getInstance(info = connectionInfo  , type = TimelineTypeEnum.HOME))
+            ft.commit()
+        }
+
 
         bottom_navigation.setOnNavigationItemSelectedListener {
             return@setOnNavigationItemSelectedListener when(it.itemId){
