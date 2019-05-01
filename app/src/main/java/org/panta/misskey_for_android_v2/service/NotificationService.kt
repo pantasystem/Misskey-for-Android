@@ -36,6 +36,8 @@ class NotificationService : Service() {
 
     private val notificationChannelId = "Misskey for Adnroid Notification"
 
+    private var isActive = true
+
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
@@ -66,10 +68,15 @@ class NotificationService : Service() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        isActive = false
+    }
+
     private fun watchDogNotification(sleepMillSeconds: Long){
         if(sleepMillSeconds.toString().length < 4) throw IllegalArgumentException("watchDogNotificationsError　1000ミリ秒未満を指定することはできません。")
         GlobalScope.launch{
-            while(true){
+            while(isActive){
                 pagingController.getNewItems {
                     val notReadNotifications = it.filter{ inner ->
                         ! inner.notificationProperty.isRead
