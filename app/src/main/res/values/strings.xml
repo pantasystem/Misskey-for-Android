@@ -108,4 +108,5 @@
     <string name="text_r">R</string>
     <string name="jp_profile">プロフィール</string>
     <string name="show_talk">会話を表示</string>
+    <string name="jp_notification">通知</string>
 </resources>

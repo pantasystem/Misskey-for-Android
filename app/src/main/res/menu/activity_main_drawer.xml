@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
+      xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
       tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
@@ -10,7 +10,10 @@
                 android:title="@string/jp_profile"/>
 
     </group>
-
+    <item
+            android:id="@+id/app_bar_switch"
+            android:title="@string/jp_notification"
+            app:actionLayout="@layout/switch_item" android:icon="@drawable/bell_icon"/>
 
 
 </menu>
