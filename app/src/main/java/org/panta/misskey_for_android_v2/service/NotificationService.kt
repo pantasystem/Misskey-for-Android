@@ -59,16 +59,7 @@ class NotificationService : Service() {
         })
         //init~
 
-        pagingController.getInit { out ->
-            val notReadNotifications = out.filter{ inner ->
-                ! inner.notificationProperty.isRead
-            }
-
-            notReadNotifications.forEach{inner ->
-                Log.d("NotificationService", "未読の通知 ${inner.notificationProperty}")
-                showNotificationCompat(inner)
-            }
-
+        pagingController.getInit {
             watchDogNotification(20000)
         }
 
@@ -100,7 +91,9 @@ class NotificationService : Service() {
         try{
             val type = NotificationType.getEnumFromString(notificationViewData.notificationProperty.type)
             val typeMessage = when(type){
-                NotificationType.REACTION -> ""
+                NotificationType.REACTION ->{
+                    notificationViewData.notificationProperty.reaction.toString()
+                }
                 NotificationType.RENOTE -> "リノート"
                 NotificationType.FOLLOW -> "フォローされました"
                 NotificationType.MENTION -> "あなたについて投稿"

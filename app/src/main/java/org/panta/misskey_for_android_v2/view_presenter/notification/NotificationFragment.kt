@@ -76,7 +76,7 @@ class NotificationFragment : Fragment(), NotificationContract.View,
         activity?.runOnUiThread{
             notificationAdapter.addAllFirst(list)
             stopRefreshing()
-
+            mPresenter.markAllAsRead()
         }
     }
 
@@ -88,6 +88,7 @@ class NotificationFragment : Fragment(), NotificationContract.View,
             notification_view.adapter = adapter
             notificationAdapter = adapter
             notification_view.addOnScrollListener(listener)
+            mPresenter.markAllAsRead()
             stopRefreshing()
         }
     }

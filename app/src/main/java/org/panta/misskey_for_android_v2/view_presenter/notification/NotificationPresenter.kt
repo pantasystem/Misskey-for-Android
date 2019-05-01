@@ -37,4 +37,8 @@ class NotificationPresenter(private val mView: NotificationContract.View, info: 
     override fun callBack(e: Exception) {
 
     }
+
+    override fun markAllAsRead() {
+        mNotification.markAllAsRead()
+    }
 }

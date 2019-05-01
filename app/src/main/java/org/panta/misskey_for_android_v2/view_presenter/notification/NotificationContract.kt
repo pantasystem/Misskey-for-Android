@@ -18,5 +18,6 @@ interface NotificationContract {
         fun getOldNotification()
         fun getNewNotification()
         fun initNotification()
+        fun markAllAsRead()
     }
 }

@@ -56,10 +56,10 @@ class NotificationRepository(private val domain: String, private val authKey: St
 
     }
 
-    fun markAllAsRead(){
+    fun markAllAsRead() = GlobalScope.launch{
         try{
             val map = mapOf("i" to authKey)
-            connection.post(URL("$domain/api/notifications"), mapper.writeValueAsString(map))
+            connection.post(URL("$domain/api/notifications/mark-all-as-read"), mapper.writeValueAsString(map))
         }catch(e: Exception){
             Log.w("Notification", "markAllAsReadでエラー発生", e)
         }
