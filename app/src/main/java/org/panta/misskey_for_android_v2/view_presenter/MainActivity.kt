@@ -36,8 +36,7 @@ import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
 private const val FRAGMENT_HOME = "FRAGMENT_HOME"
 private const val FRAGMENT_OTHER = "FRAGMENT_OTHER"
 //const val DOMAIN_AUTH_KEY_TAG = "MainActivityUserDomainAndAuthKey"
-const val DOMAIN_TAG = "MainActivityUserDomainKey"
-const val USER_TOKEN_TAG = "MainActivityUserUserToken"
+
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainContract.View {
 
     override lateinit var mPresenter: MainContract.Presenter
@@ -156,13 +155,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun showPersonalProfilePage(user: User, connectionInfo: ConnectionProperty) {
-        UserActivity.startActivity(applicationContext, user, connectionInfo)
+        UserActivity.startActivity(applicationContext, user)
     }
 
 
 
     override fun showEditNote(connectionInfo: ConnectionProperty) {
-        EditNoteActivity.startActivity(applicationContext, connectionInfo, null, null)
+        EditNoteActivity.startActivity(applicationContext, null, null)
     }
 
     override fun showFollowFollower(connectionInfo: ConnectionProperty, user: User, type: FollowFollowerType) {
@@ -170,7 +169,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         intent.putExtra(FollowFollowerActivity.CONNECTION_INFO, connectionInfo)
         intent.putExtra(FollowFollowerActivity.FOLLOW_FOLLOWER_TYPE, type)
         intent.putExtra(FollowFollowerActivity.USER_ID_TAG, user.id)*/
-        FollowFollowerActivity.startActivity(applicationContext, connectionInfo, type, user.id)
+        FollowFollowerActivity.startActivity(applicationContext, type, user.id)
     }
 
     private fun setFragment(fragment: Fragment, fragmentName: String){

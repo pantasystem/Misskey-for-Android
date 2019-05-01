@@ -1,9 +1,9 @@
 package org.panta.misskey_for_android_v2.repository
 
+import android.util.Log
 import org.panta.misskey_for_android_v2.constant.getInstanceInfoList
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
-import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.util.sha256
 
 class SecretRepository(private val sharedPreferenceOperator: ISharedPreferenceOperator){
@@ -27,8 +27,8 @@ class SecretRepository(private val sharedPreferenceOperator: ISharedPreferenceOp
         val instanceInfoList = getInstanceInfoList()
         val appSecret = instanceInfoList.firstOrNull{
             it.domain == domain
-        }
-        return if(appSecret != null && domain != null){
+        }?.appSecret
+        return if(appSecret != null && domain != null && userToken != null){
             val i =  sha256("$userToken$appSecret")
             ConnectionProperty(domain, i)
         }else{
@@ -36,8 +36,8 @@ class SecretRepository(private val sharedPreferenceOperator: ISharedPreferenceOp
         }
     }
 
-    fun putDomain(token: String){
-        sharedPreferenceOperator.put(APP_DOMAIN, token)
+    fun putDomain(domain: String){
+        sharedPreferenceOperator.put(APP_DOMAIN, domain)
     }
 
     fun putUserToken(token: String){

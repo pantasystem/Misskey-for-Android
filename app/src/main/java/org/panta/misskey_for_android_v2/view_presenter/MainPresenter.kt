@@ -11,7 +11,7 @@ import org.panta.misskey_for_android_v2.repository.MyInfo
 import org.panta.misskey_for_android_v2.repository.SecretRepository
 import org.panta.misskey_for_android_v2.util.sha256
 
-class MainPresenter(private val mView: MainContract.View, private val sharedOperator: ISharedPreferenceOperator) : MainContract.Presenter{
+class MainPresenter(private val mView: MainContract.View, sharedOperator: ISharedPreferenceOperator) : MainContract.Presenter{
 
     private lateinit var mUser: User
     private val secretRepository = SecretRepository(sharedOperator)

@@ -12,20 +12,22 @@ import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.User
+import org.panta.misskey_for_android_v2.repository.SecretRepository
 import org.panta.misskey_for_android_v2.repository.UserRepository
+import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.view_presenter.follow_follower.FollowFollowerActivity
+import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
 import java.lang.IllegalArgumentException
 
 class UserActivity : AppCompatActivity() {
 
     companion object{
         private const val USER_PROPERTY_TAG = "UserActivityUserPropertyTag"
-        private const val CONNECTION_INFO = "UserActivityConnectionInfo"
+        //private const val CONNECTION_INFO = "UserActivityConnectionInfo"
 
-        fun startActivity(context: Context?, user: User, info: ConnectionProperty){
+        fun startActivity(context: Context?, user: User){
             val intent = Intent(context, UserActivity::class.java)
             intent.putExtra(USER_PROPERTY_TAG, user)
-            intent.putExtra(CONNECTION_INFO, info)
             context?.startActivity(intent)
         }
     }
@@ -37,7 +39,12 @@ class UserActivity : AppCompatActivity() {
 
         val intent = intent
         val tmpUser: User? = intent.getSerializableExtra(USER_PROPERTY_TAG) as User
-        val info = intent.getSerializableExtra(CONNECTION_INFO) as ConnectionProperty
+        val info = SecretRepository(SharedPreferenceOperator(this)).getConnectionInfo()
+        if(info == null){
+            startActivity(Intent(this, AuthActivity::class.java))
+            finish()
+            return
+        }
         if(tmpUser == null){
             finish()
             throw IllegalArgumentException("user propertyがNULL")
@@ -82,7 +89,6 @@ class UserActivity : AppCompatActivity() {
 
     private fun showFollowList(info: ConnectionProperty, user: User, type: FollowFollowerType){
         val intent = Intent(applicationContext, FollowFollowerActivity::class.java)
-        intent.putExtra(FollowFollowerActivity.CONNECTION_INFO, info)
         intent.putExtra(FollowFollowerActivity.FOLLOW_FOLLOWER_TYPE, type)
         intent.putExtra(FollowFollowerActivity.USER_ID_TAG, user.id)
     }

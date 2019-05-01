@@ -17,9 +17,7 @@ import org.panta.misskey_for_android_v2.entity.SessionResponse
 import org.panta.misskey_for_android_v2.interfaces.AuthContract
 import org.panta.misskey_for_android_v2.interfaces.ItemClickListener
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
-import org.panta.misskey_for_android_v2.view_presenter.DOMAIN_TAG
 import org.panta.misskey_for_android_v2.view_presenter.MainActivity
-import org.panta.misskey_for_android_v2.view_presenter.USER_TOKEN_TAG
 
 class AuthActivity : AppCompatActivity(), AuthContract.View {
 
@@ -72,8 +70,7 @@ class AuthActivity : AppCompatActivity(), AuthContract.View {
 
     override fun onLoadUserToken(token: String, domain: String) {
         val intent = Intent(applicationContext, MainActivity::class.java)
-        intent.putExtra(USER_TOKEN_TAG, token)
-        intent.putExtra(DOMAIN_TAG, domain)
+
         startActivity(intent)
     }
 

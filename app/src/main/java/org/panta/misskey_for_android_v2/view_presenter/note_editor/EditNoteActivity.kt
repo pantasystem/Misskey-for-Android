@@ -10,6 +10,9 @@ import kotlinx.android.synthetic.main.activity_edit_note.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.NoteType
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
+import org.panta.misskey_for_android_v2.repository.SecretRepository
+import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
+import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
 
 class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
@@ -18,13 +21,13 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
         //const val CREATE = 0
         //const val RE_NOTE = 1
         //const val REPLY = 2
-        const val CONNECTION_INFO = "EditNoteActivityConnectionInfo"
+        //const val CONNECTION_INFO = "EditNoteActivityConnectionInfo"
 
         const val CREATE_NOTE_TARGET_ID = "EDIT_NOTE_ACTIVITY_CREATE_NOTE_ID"
 
-        fun startActivity(context:Context, info: ConnectionProperty, targetId: String?, type: NoteType?){
+        fun startActivity(context:Context, targetId: String?, type: NoteType?){
             val intent = Intent(context, EditNoteActivity::class.java)
-            intent.putExtra(EditNoteActivity.CONNECTION_INFO, info)
+            //intent.putExtra(EditNoteActivity.CONNECTION_INFO, info)
             if(type != null)  intent.putExtra(EDIT_TYPE, type.ordinal)
             if(targetId != null) intent.putExtra(CREATE_NOTE_TARGET_ID, targetId)
             context.startActivity(intent)
@@ -50,7 +53,14 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
         val intent = intent
         val editType = intent.getIntExtra(EDIT_TYPE, 0)
         val targetId = intent.getStringExtra(CREATE_NOTE_TARGET_ID)
-        connectionInfo = intent.getSerializableExtra(CONNECTION_INFO) as ConnectionProperty
+        val info = SecretRepository(SharedPreferenceOperator(this)).getConnectionInfo()
+        connectionInfo = if(info == null){
+            startActivity(Intent(this, AuthActivity::class.java))
+            finish()
+            return
+        }else{
+            info
+        }
 
         mPresenter = EditNotePresenter(this, connectionInfo)
 

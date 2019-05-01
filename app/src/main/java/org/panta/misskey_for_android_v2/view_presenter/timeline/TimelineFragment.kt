@@ -168,7 +168,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     }
 
     override fun onReplyButtonClicked(targetId: String?, note: Note?) {
-        EditNoteActivity.startActivity(context!!, connectionInfo!!, targetId, NoteType.REPLY)
+        EditNoteActivity.startActivity(context!!, targetId, NoteType.REPLY)
     }
 
     override fun onReactionButtonClicked(targetId: String?, note: Note?) {
@@ -189,7 +189,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
 
     override fun onReNoteButtonClicked(targetId: String?, note: Note?) {
-        EditNoteActivity.startActivity(context!!, connectionInfo!!, targetId, NoteType.RE_NOTE)
+        EditNoteActivity.startActivity(context!!, targetId, NoteType.RE_NOTE)
     }
 
     override fun onDescriptionButtonClicked(targetId: String?, note: Note?) {
@@ -235,7 +235,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     }
 
     override fun onClickedUser(user: User) {
-        UserActivity.startActivity(context!!, user, connectionInfo!!)
+        UserActivity.startActivity(context!!, user)
     }
 
     private val listener = object : RecyclerView.OnScrollListener(){
