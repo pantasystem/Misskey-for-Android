@@ -24,6 +24,7 @@ import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
 import org.panta.misskey_for_android_v2.interfaces.MainContract
+import org.panta.misskey_for_android_v2.service.NotificationService
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.view_presenter.follow_follower.FollowFollowerActivity
 import org.panta.misskey_for_android_v2.view_presenter.mixed_timeline.MixedTimelineFragment
@@ -84,6 +85,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         header.follower_text.setOnClickListener{
             mPresenter.getFollowFollower(FollowFollowerType.FOLLOWER)
         }
+
+        startService(Intent(applicationContext, NotificationService::class.java))
     }
 
 

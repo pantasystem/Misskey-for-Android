@@ -21,22 +21,6 @@ class Notification(private val domain: String, private val authKey: String): IIt
     private val mapper = jacksonObjectMapper()
     private val noteAd = NoteAdjustment()
 
-    /*fun getNotification(sinceId: String? = null, untilId: String? = null,callBack: (List<NotificationViewData>)->Unit){
-        GlobalScope.launch{
-            try{
-                val reqObj = RequestNotificationProperty(i = authKey, limit = 10)
-                val reqJson = mapper.writeValueAsString(reqObj)
-                val responseStream = connection.post(URL("$domain/api/i/notifications"), reqJson)
-                val resJson = StreamConverter().getString(responseStream)
-                val resObj: List<NotificationProperty> = mapper.readValue(resJson)
-
-                val data = makeViewData(resObj)
-                callBack(data)
-            }catch(e: Exception){
-                Log.w("Notification", "getNotificationでエラー発生", e)
-            }
-        }
-    }*/
 
     override fun getItemsUseSinceId(sinceId: String, callBack: (timeline: List<NotificationViewData>?) -> Unit)= GlobalScope.launch {
         try{
@@ -70,6 +54,15 @@ class Notification(private val domain: String, private val authKey: String): IIt
         }
 
 
+    }
+
+    fun markAllAsRead(){
+        try{
+            val map = mapOf("i" to authKey)
+            connection.post(URL("$domain/api/notifications"), mapper.writeValueAsString(map))
+        }catch(e: Exception){
+            Log.w("Notification", "markAllAsReadでエラー発生", e)
+        }
     }
 
     private suspend fun getNotificationData(json: String): List<NotificationViewData>{

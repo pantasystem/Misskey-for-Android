@@ -13,6 +13,12 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
+        <service
+                android:name=".service.NotificationService"
+                android:enabled="true"
+                android:exported="true">
+        </service>
+
         <activity android:name=".view_presenter.follow_follower.FollowFollowerActivity">
         </activity>
         <activity android:name=".view_presenter.user_auth.AuthActivity">
