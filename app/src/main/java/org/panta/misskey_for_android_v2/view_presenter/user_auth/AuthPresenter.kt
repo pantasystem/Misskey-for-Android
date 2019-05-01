@@ -1,20 +1,16 @@
 package org.panta.misskey_for_android_v2.view_presenter.user_auth
 
-import android.net.Uri
-import org.panta.misskey_for_android_v2.constant.ApplicationConstant
-import org.panta.misskey_for_android_v2.constant.getAppSecretKey
 import org.panta.misskey_for_android_v2.constant.getInstanceInfoList
 import org.panta.misskey_for_android_v2.interfaces.AuthContract
 import org.panta.misskey_for_android_v2.repository.AuthRepository
 import org.panta.misskey_for_android_v2.repository.SecretRepository
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
-import java.net.URI
 
 class AuthPresenter(private val mView: AuthContract.View, private val sharedPref: SharedPreferenceOperator, domain: String?, appSecret: String?) : AuthContract.Presenter{
 
     private val secretRepository = SecretRepository(sharedPref)
     private val authRepository = if(domain == null || appSecret == null){
-        val tmpDomain = sharedPref.get("tmpDomain", null)
+        val tmpDomain = sharedPref.getString("tmpDomain", null)
         val appSecretKey = getInstanceInfoList().first {
             it.domain == tmpDomain
         }.appSecret
@@ -23,7 +19,7 @@ class AuthPresenter(private val mView: AuthContract.View, private val sharedPref
         AuthRepository(domain = domain, appSecret = appSecret)
     }
 
-    private var mDomain: String = domain ?: sharedPref.get("tmpDomain", null)!!
+    private var mDomain: String = domain ?: sharedPref.getString("tmpDomain", null)!!
 
     override fun getSession() {
         authRepository.getSession {
@@ -34,8 +30,8 @@ class AuthPresenter(private val mView: AuthContract.View, private val sharedPref
     }
 
     override fun getUserToken() {
-        val session = sharedPref.get("tmpSession", null)
-        val tmpDomain = sharedPref.get("tmpDomain", null)
+        val session = sharedPref.getString("tmpSession", null)
+        val tmpDomain = sharedPref.getString("tmpDomain", null)
         if(session != null && tmpDomain != null){
             authRepository.getUserToken(session, {}){
                 mView.onLoadUserToken(it, tmpDomain)

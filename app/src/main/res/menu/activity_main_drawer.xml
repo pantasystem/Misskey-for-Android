@@ -12,6 +12,10 @@
                 android:id="@+id/nav_setting"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="@string/jp_setting"/>
+        <item
+                android:id="@+id/nav_open_web_misskey"
+                android:icon="@drawable/global_icon"
+                android:title="Webで開く"/>
 
     </group>
     <item

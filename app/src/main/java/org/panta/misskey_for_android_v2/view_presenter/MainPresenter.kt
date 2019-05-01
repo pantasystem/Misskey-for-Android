@@ -1,5 +1,6 @@
 package org.panta.misskey_for_android_v2.view_presenter
 
+import android.net.Uri
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.constant.getInstanceInfoList
@@ -72,5 +73,12 @@ class MainPresenter(private val mView: MainContract.View, sharedOperator: IShare
         }
     }
 
+    override fun openMisskeyOnBrowser() {
+        mView.showMisskeyOnBrowser(Uri.parse(secretRepository.getConnectionInfo()?.domain))
+    }
+
+    override fun isEnabledNotification(enabled: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
 }

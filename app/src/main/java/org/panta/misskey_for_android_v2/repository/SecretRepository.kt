@@ -1,6 +1,5 @@
 package org.panta.misskey_for_android_v2.repository
 
-import android.util.Log
 import org.panta.misskey_for_android_v2.constant.getInstanceInfoList
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
@@ -14,11 +13,11 @@ class SecretRepository(private val sharedPreferenceOperator: ISharedPreferenceOp
     }
 
     fun getDomain(): String?{
-        return sharedPreferenceOperator.get(APP_DOMAIN, null)
+        return sharedPreferenceOperator.getString(APP_DOMAIN, null)
     }
 
     fun getUserToken(): String?{
-        return sharedPreferenceOperator.get(APP_USER_TOKEN, null)
+        return sharedPreferenceOperator.getString(APP_USER_TOKEN, null)
     }
 
     fun getConnectionInfo(): ConnectionProperty?{

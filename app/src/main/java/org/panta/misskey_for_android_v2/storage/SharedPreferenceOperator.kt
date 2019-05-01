@@ -11,7 +11,7 @@ class SharedPreferenceOperator(private val context: Context) : ISharedPreference
     companion object {
         private const val APP_NAME = "misskey_for_Android_pref_version_2.0"
     }
-    override fun get(key: String, defaultValue: String?): String?{
+    override fun getString(key: String, defaultValue: String?): String?{
         val sharedPref = context.getSharedPreferences(APP_NAME, Context.MODE_PRIVATE)
         return sharedPref.getString(key, null)
     }

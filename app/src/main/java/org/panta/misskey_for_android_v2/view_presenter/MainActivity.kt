@@ -2,6 +2,7 @@ package org.panta.misskey_for_android_v2.view_presenter
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
@@ -208,6 +209,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         FollowFollowerActivity.startActivity(applicationContext, type, user.id)
     }
 
+    override fun showMisskeyOnBrowser(url: Uri) {
+        startActivity(Intent(Intent.ACTION_VIEW, url))
+    }
+
     private fun setFragment(fragment: Fragment, fragmentName: String){
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
@@ -265,8 +270,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.nav_profile -> mPresenter.getPersonalProfilePage()
             R.id.nav_setting -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
-
-
+            R.id.nav_open_web_misskey -> mPresenter.openMisskeyOnBrowser()
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
