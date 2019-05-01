@@ -1,7 +1,0 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-
-    <SwitchPreference
-            android:defaultValue="false"
-            android:title="@string/jp_notification" android:key="notification_enabled"/>
-</PreferenceScreen>

@@ -38,7 +38,6 @@ import org.panta.misskey_for_android_v2.view_presenter.follow_follower.FollowFol
 import org.panta.misskey_for_android_v2.view_presenter.mixed_timeline.MixedTimelineFragment
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.notification.NotificationFragment
-import org.panta.misskey_for_android_v2.view_presenter.setting.SettingsActivity
 import org.panta.misskey_for_android_v2.view_presenter.timeline.TimelineFragment
 import org.panta.misskey_for_android_v2.view_presenter.user.UserActivity
 import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
@@ -281,7 +280,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_profile -> mPresenter.getPersonalProfilePage()
-            R.id.nav_setting -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
             R.id.nav_open_web_misskey -> mPresenter.openMisskeyOnBrowser()
         }
 

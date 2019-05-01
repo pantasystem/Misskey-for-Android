@@ -8,10 +8,7 @@
                 android:id="@+id/nav_profile"
                 android:icon="@drawable/human_icon"
                 android:title="@string/jp_profile"/>
-        <item
-                android:id="@+id/nav_setting"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="@string/jp_setting"/>
+
         <item
                 android:id="@+id/nav_open_web_misskey"
                 android:icon="@drawable/global_icon"
