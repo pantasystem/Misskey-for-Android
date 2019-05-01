@@ -198,7 +198,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun showEditNote(connectionInfo: ConnectionProperty) {
-        EditNoteActivity.startActivity(applicationContext, null, null)
+        val intent = Intent(applicationContext, EditNoteActivity::class.java)
+        //intent.putExtra(EditNoteActivity.CONNECTION_INFO, info)
+        startActivity(intent)
     }
 
     override fun showFollowFollower(connectionInfo: ConnectionProperty, user: User, type: FollowFollowerType) {
