@@ -60,7 +60,7 @@ class NotificationService : Service() {
         //init~
 
         pagingController.getInit {
-            watchDogNotification(20000)
+            watchDogNotification(10000)
         }
 
 
