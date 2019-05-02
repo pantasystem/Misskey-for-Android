@@ -86,7 +86,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
             TimelineTypeEnum.GLOBAL -> GlobalTimeline(domain = connectionInfo!!.domain , authKey = connectionInfo!!.i)
             TimelineTypeEnum.HOME -> HomeTimeline(domain = connectionInfo!!.domain  , authKey = connectionInfo!!.i)
             TimelineTypeEnum.SOCIAL -> SocialTimeline(domain = connectionInfo!!.domain  , authKey = connectionInfo!!.i)
-            TimelineTypeEnum.LOCAL -> LocalTimeline(domain = connectionInfo!!.domain)
+            TimelineTypeEnum.LOCAL -> LocalTimeline(domain = connectionInfo!!.domain, authKey = connectionInfo!!.i)
             TimelineTypeEnum.USER -> UserTimeline(domain = connectionInfo!!.domain , userId = userId!!, isMediaOnly = isMediaOnly)
             else -> TODO("DESCRIPTIONを実装する")
         }
