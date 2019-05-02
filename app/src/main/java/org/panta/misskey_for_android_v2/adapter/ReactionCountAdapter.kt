@@ -13,7 +13,7 @@ import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 
 
 
-class ReactionCountAdapter(private val context: Context, private val layoutId: Int, private val reactionCountPairList: List<ReactionCountPair>) : BaseAdapter(){
+@Deprecated("ReactionRecyclerAdapterを使用すること!!") class ReactionCountAdapter(private val context: Context, private val layoutId: Int, private val reactionCountPairList: List<ReactionCountPair>) : BaseAdapter(){
 
     private data class ViewHolder(val reactionIconView: ImageButton, val reactionCount: TextView)
     private val inflater = LayoutInflater.from(context)

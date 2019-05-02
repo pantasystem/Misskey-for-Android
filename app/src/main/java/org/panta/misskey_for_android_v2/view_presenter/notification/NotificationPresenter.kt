@@ -13,12 +13,13 @@ class NotificationPresenter(private val mView: NotificationContract.View, info: 
     private val pagingController = PagingController(mNotification, this)
 
     override fun start() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun getNewNotification() {
         pagingController.getNewItems {
             mView.showNewNotification(it)
+            mView.stopRefreshing()
         }
     }
 
@@ -35,7 +36,7 @@ class NotificationPresenter(private val mView: NotificationContract.View, info: 
     }
 
     override fun callBack(e: Exception) {
-
+        mView.stopRefreshing()
     }
 
     override fun markAllAsRead() {

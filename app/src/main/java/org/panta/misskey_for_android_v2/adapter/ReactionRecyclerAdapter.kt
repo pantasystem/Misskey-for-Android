@@ -8,13 +8,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
+import org.panta.misskey_for_android_v2.interfaces.ItemClickListener
 
-class ReactionRecyclerAdapter(private val reactionList: List<ReactionCountPair>, private val myReactionType: String?) : RecyclerView.Adapter<ReactionHolder>(){
+class ReactionRecyclerAdapter(private val reactionList: List<ReactionCountPair>, private val myReactionType: String?)
+    : RecyclerView.Adapter<ReactionHolder>(){
 
     /*private val reactionList = reactionCountMap.map{
         it.key to it.value
     }*/
-    private val reactionImageMapping = hashMapOf("like" to R.drawable.reaction_icon_like ,
+
+    private var reactionItemClickListener: ItemClickListener<String>? = null
+
+    /*private val reactionImageMapping = hashMapOf("like" to R.drawable.reaction_icon_like ,
         "love" to R.drawable.reaction_icon_love ,
         "laugh" to R.drawable.reaction_icon_laugh,
         "hmm" to R.drawable.reaction_icon_hmm,
@@ -23,7 +28,7 @@ class ReactionRecyclerAdapter(private val reactionList: List<ReactionCountPair>,
         "angry" to R.drawable.reaction_icon_angry,
         "confused" to R.drawable.reaction_icon_confused,
         "rip" to R.drawable.reaction_icon_rip,
-        "pudding" to R.drawable.reaction_icon_pudding)
+        "pudding" to R.drawable.reaction_icon_pudding)*/
 
     override fun getItemCount(): Int {
         return reactionList.size
@@ -38,13 +43,7 @@ class ReactionRecyclerAdapter(private val reactionList: List<ReactionCountPair>,
         val reaction = reactionList[position]
         val isMyReaction = reaction.reactionType == myReactionType
         //val drawable = Drawable.createFromPath("reaction_icon_${reaction.reactionType}.png")
-        val icon = reactionImageMapping[reaction.reactionType]
-        if(icon != null){
-            p0.showReaction(reaction.reactionCount, icon, isMyReaction)
-        }else{
-            //p0.showReaction(reaction.reactionCount, R.drawable.human_icon, isMyReaction)
-            p0.showReaction(reaction.reactionCount, reaction.reactionType, isMyReaction)
-        }
+        p0.showReaction(reaction.reactionCount, reaction.reactionType, isMyReaction)
 
     }
 }
