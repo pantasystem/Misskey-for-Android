@@ -10,13 +10,15 @@ import kotlinx.android.synthetic.main.item_note.view.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.entity.FileProperty
 import org.panta.misskey_for_android_v2.entity.Note
+import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.entity.User
+import org.panta.misskey_for_android_v2.interfaces.ItemClickListener
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
 import org.panta.misskey_for_android_v2.usecase.RoundedTransformation
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
-open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+open class NoteViewHolder(itemView: View, private val linearLayoutManager: LinearLayoutManager?) : RecyclerView.ViewHolder(itemView){
 
     private var contentClickListener: NoteClickListener? = null
     private var userClickListener: UserClickListener? = null
@@ -63,6 +65,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setFourControlButtonListener(content.note, content)
         showThreadButton.visibility = View.GONE
         subNote.visibility = View.GONE
+        setReactionCount(content, content.note)
     }
 
     fun setReNote(content: NoteViewData){
@@ -77,6 +80,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setFourControlButtonListener(content.note.renote, content)
         showThreadButton.visibility = View.GONE
         subNote.visibility = View.GONE
+        setReactionCount(content, content.note.renote)
 
     }
     fun setQuoteReNote(content: NoteViewData){
@@ -92,6 +96,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setFourControlButtonListener(content.note, content)
         showThreadButton.visibility = View.GONE
         subNote.visibility = View.VISIBLE
+        setReactionCount(content, content.note)
     }
 
     fun setReply(content: NoteViewData){
@@ -106,6 +111,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setFourControlButtonListener(content.note, content)
         showThreadButton.visibility = View.VISIBLE
         subNote.visibility = View.GONE
+        setReactionCount(content, content.note)
 
     }
 
@@ -120,15 +126,10 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
         showThreadButton.visibility = View.GONE
-
+        setReactionCount(content, content.note)
     }
 
-    fun setReactionCount(adapter: ReactionRecyclerAdapter, linearLayoutManager: LinearLayoutManager){
 
-        reactionView.adapter = adapter
-        reactionView.layoutManager = linearLayoutManager
-        reactionView.visibility = View.VISIBLE
-    }
 
     fun invisibleReactionCount(){
         reactionView.visibility = View.GONE
@@ -139,6 +140,23 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     }
     fun addOnUserClickListener(listener: UserClickListener?){
         this.userClickListener = listener
+    }
+
+    private fun setReactionCount(viewData: NoteViewData, note: Note){
+        if(linearLayoutManager == null ){
+            reactionView.visibility = View.GONE
+        }else{
+            val adapter = ReactionRecyclerAdapter(viewData.reactionCountPairList , viewData.note.myReaction)
+            adapter.reactionItemClickListener = object : ItemClickListener<String>{
+                override fun onClick(e: String) {
+
+                }
+            }
+            reactionView.adapter = adapter
+            reactionView.layoutManager = linearLayoutManager
+            reactionView.visibility = View.VISIBLE
+        }
+
     }
 
     private fun invisibleSubContents(){
@@ -226,6 +244,7 @@ open class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
             contentClickListener?.onReNoteButtonClicked(note.id, note)
         }
         reactionButton.setOnClickListener {
+            //TODO nullableなStringなreaction仮引数を追加する
             contentClickListener?.onReactionButtonClicked(note.id, note)
         }
         descriptionButton.setOnClickListener {

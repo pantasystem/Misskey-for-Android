@@ -30,7 +30,7 @@ class NotificationAdapter(private val notificationList: List<NotificationViewDat
         }else{
             //Log.d("NotificationAdapter", "onCreateViewHolder params:$notificationType")
             val view = LayoutInflater.from(p0.context).inflate(R.layout.item_note, p0, false)
-            NoteViewHolder(view)
+            NoteViewHolder(view, null)
         }
 
 

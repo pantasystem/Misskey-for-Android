@@ -25,7 +25,8 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): NoteViewHolder {
         val inflater = LayoutInflater.from(p0.context).inflate(R.layout.item_note, p0, false)
-        return NoteViewHolder(inflater)
+        val lm = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        return NoteViewHolder(inflater, lm)
 
     }
 
@@ -36,10 +37,10 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
         if(viewData.reactionCountPairList.isNotEmpty()){
             //viewHolder.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, viewData.reactionCountPairList))
 
-            val adapter = ReactionRecyclerAdapter(viewData.reactionCountPairList, viewData.note.myReaction)
-            //val adapter = ReactionRecyclerAdapter(testReactionData, viewData.note.myReaction)
-            val lm = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            viewHolder.setReactionCount(adapter, lm)
+            //val adapter = ReactionRecyclerAdapter(viewData.reactionCountPairList, viewData.note.myReaction)
+
+            //val lm = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            //viewHolder.setReactionCount(adapter, lm)
         }else{
             viewHolder.invisibleReactionCount()
         }
