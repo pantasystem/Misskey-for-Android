@@ -146,7 +146,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         if(linearLayoutManager == null ){
             reactionView.visibility = View.GONE
         }else{
-            val adapter = ReactionRecyclerAdapter(viewData.reactionCountPairList , viewData.note.myReaction)
+            val adapter = ReactionRecyclerAdapter(viewData.reactionCountPairList , note.myReaction)
             adapter.reactionItemClickListener = object : ItemClickListener<String>{
                 override fun onClick(e: String) {
                     Log.d("NoteViewHolder", "setReactionCountがクリックされた")
