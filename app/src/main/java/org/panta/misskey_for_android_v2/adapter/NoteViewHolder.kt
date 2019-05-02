@@ -245,7 +245,6 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
             contentClickListener?.onReNoteButtonClicked(note.id, note)
         }
         reactionButton.setOnClickListener {
-            //TODO nullableなStringなreaction仮引数を追加する
             contentClickListener?.onReactionClicked(note.id, note, null)
         }
         descriptionButton.setOnClickListener {
