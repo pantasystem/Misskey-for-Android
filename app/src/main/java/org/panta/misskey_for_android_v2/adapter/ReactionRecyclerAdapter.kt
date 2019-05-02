@@ -17,18 +17,9 @@ class ReactionRecyclerAdapter(private val reactionList: List<ReactionCountPair>,
         it.key to it.value
     }*/
 
-    private var reactionItemClickListener: ItemClickListener<String>? = null
+    var reactionItemClickListener: ItemClickListener<String>? = null
 
-    /*private val reactionImageMapping = hashMapOf("like" to R.drawable.reaction_icon_like ,
-        "love" to R.drawable.reaction_icon_love ,
-        "laugh" to R.drawable.reaction_icon_laugh,
-        "hmm" to R.drawable.reaction_icon_hmm,
-        "surprise" to R.drawable.reaction_icon_surprise ,
-        "congrats" to R.drawable.reaction_icon_congrats,
-        "angry" to R.drawable.reaction_icon_angry,
-        "confused" to R.drawable.reaction_icon_confused,
-        "rip" to R.drawable.reaction_icon_rip,
-        "pudding" to R.drawable.reaction_icon_pudding)*/
+
 
     override fun getItemCount(): Int {
         return reactionList.size
@@ -36,7 +27,7 @@ class ReactionRecyclerAdapter(private val reactionList: List<ReactionCountPair>,
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ReactionHolder {
         val inflater = LayoutInflater.from(p0.context).inflate(R.layout.item_reaction_counter, p0, false)
 
-        return ReactionHolder(inflater, alwaysColorId = Color.parseColor("#00FFFFFF"), hasMyReactionColorId = Color.parseColor("#ff6100"))
+        return ReactionHolder(inflater)
     }
 
     override fun onBindViewHolder(p0: ReactionHolder, position: Int) {
@@ -44,6 +35,8 @@ class ReactionRecyclerAdapter(private val reactionList: List<ReactionCountPair>,
         val isMyReaction = reaction.reactionType == myReactionType
         //val drawable = Drawable.createFromPath("reaction_icon_${reaction.reactionType}.png")
         p0.showReaction(reaction.reactionCount, reaction.reactionType, isMyReaction)
+
+        p0.itemClickListener = reactionItemClickListener
 
     }
 }
