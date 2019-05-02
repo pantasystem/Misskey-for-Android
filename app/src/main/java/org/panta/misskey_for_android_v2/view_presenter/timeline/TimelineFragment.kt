@@ -171,8 +171,12 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         EditNoteActivity.startActivity(context!!, targetId, NoteType.REPLY)
     }
 
-    override fun onReactionButtonClicked(targetId: String?, note: Note?) {
+    override fun onReactionClicked(targetId: String?, note: Note?, reactionType: String?) {
         if(targetId != null && note != null){
+            if(reactionType != null){
+                mPresenter.sendReaction(noteId = note.id, reactionType = reactionType)
+                return
+            }
             Log.d("TimelineFragment", "targetId: $targetId")
             val reactionDialog = ReactionDialog.getInstance(targetId, object : ReactionDialog.CallBackListener{
                 override fun callBack(noteId: String?, reactionParameter: String) {
@@ -227,10 +231,6 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     }
 
     override fun onImageClicked(clickedIndex: Int, clickedImageUrlCollection: Array<String>) {
-        /*val intent = Intent(context, ImageViewerActivity::class.java)
-        intent.putExtra(ImageViewerActivity.IMAGE_URL_LIST, clickedImageUrlCollection)
-        intent.putExtra(ImageViewerActivity.CLICKED_IMAGE_URL, clickedIndex)
-        startActivity(intent)*/
         ImageViewerActivity.startActivity(context, clickedImageUrlCollection, clickedIndex)
     }
 

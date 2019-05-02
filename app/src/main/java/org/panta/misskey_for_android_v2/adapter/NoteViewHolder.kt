@@ -3,6 +3,7 @@ package org.panta.misskey_for_android_v2.adapter
 import android.graphics.Color
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.widget.*
 import com.squareup.picasso.Picasso
@@ -10,7 +11,6 @@ import kotlinx.android.synthetic.main.item_note.view.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.entity.FileProperty
 import org.panta.misskey_for_android_v2.entity.Note
-import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ItemClickListener
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
@@ -149,7 +149,8 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
             val adapter = ReactionRecyclerAdapter(viewData.reactionCountPairList , viewData.note.myReaction)
             adapter.reactionItemClickListener = object : ItemClickListener<String>{
                 override fun onClick(e: String) {
-
+                    Log.d("NoteViewHolder", "setReactionCountがクリックされた")
+                    contentClickListener?.onReactionClicked(note.id, note, e)
                 }
             }
             reactionView.adapter = adapter
@@ -245,7 +246,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         }
         reactionButton.setOnClickListener {
             //TODO nullableなStringなreaction仮引数を追加する
-            contentClickListener?.onReactionButtonClicked(note.id, note)
+            contentClickListener?.onReactionClicked(note.id, note, null)
         }
         descriptionButton.setOnClickListener {
             contentClickListener?.onDescriptionButtonClicked(viewData.note.id, viewData.note)

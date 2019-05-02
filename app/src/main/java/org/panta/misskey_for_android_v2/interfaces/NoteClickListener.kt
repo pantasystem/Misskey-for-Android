@@ -7,7 +7,7 @@ interface NoteClickListener {
     fun onNoteClicked(targetId: String?, note: Note?)
     fun onReplyButtonClicked(targetId: String?, note: Note?)
     fun onReNoteButtonClicked(targetId: String?, note: Note?)
-    fun onReactionButtonClicked(targetId: String?, note: Note?)
+    fun onReactionClicked(targetId: String?, note: Note?, reactionType: String?)
     fun onDescriptionButtonClicked(targetId: String?, note: Note?)
     fun onImageClicked(clickedIndex: Int, clickedImageUrlCollection: Array<String>)
 
