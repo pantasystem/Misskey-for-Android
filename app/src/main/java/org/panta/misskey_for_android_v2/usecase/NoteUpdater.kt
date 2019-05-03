@@ -11,9 +11,9 @@ class NoteUpdater{
         val updatedReactionCounts = updateUpdateReactionCounts(reaction, note.reactionCounts)
 
         val updatedNote = if(hasMyReaction){
-            note.copy(myReaction = reaction, reactionCounts = updatedReactionCounts, text = "更新したった")
+            note.copy(myReaction = reaction, reactionCounts = updatedReactionCounts)
         }else{
-            note.copy(reactionCounts = updatedReactionCounts, text = "更新してみたｗｗ")
+            note.copy(reactionCounts = updatedReactionCounts)
         }
 
 

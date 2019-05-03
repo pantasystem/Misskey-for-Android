@@ -109,7 +109,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         mPresenter.initTimeline()
         mLayoutManager = LinearLayoutManager(context)
 
-        timelineView.itemAnimator = animater
+        //timelineView.itemAnimator = animater
 
         refresh?.setOnRefreshListener(this)
 
