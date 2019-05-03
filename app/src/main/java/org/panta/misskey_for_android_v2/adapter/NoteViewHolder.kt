@@ -61,9 +61,9 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         setNoteContent(toShowNote)
         setRelationNoteListener(toShowNote.id, toShowNote, timelineItem, noteText)
 
-        setReplyCount(content.note.replyCount)
-        setReNoteCount(content.note.reNoteCount)
-        setFourControlButtonListener(content.note, content)
+        setReplyCount(toShowNote.replyCount)
+        setReNoteCount(toShowNote.reNoteCount)
+        setFourControlButtonListener(toShowNote, content)
         showThreadButton.visibility = View.GONE
         subNote.visibility = View.GONE
         setReactionCount(content)
@@ -73,7 +73,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         val toShowNote = content.toShowNote
         backgroundColor(0)
         invisibleSubContents()
-        setWhoReactionUserLink(content.note.user, "リノート")
+        setWhoReactionUserLink(toShowNote.user, "リノート")
         setNoteContent(content.toShowNote)
         setRelationNoteListener(content.toShowNote.id, toShowNote, timelineItem, noteText)
 
@@ -91,7 +91,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         setWhoReactionUserLink(toShowNote.user, "引用リノート")
         setNoteContent(toShowNote)
         setSubContent(toShowNote.renote!!)
-        setRelationNoteListener(toShowNote.id, content.note, timelineItem)
+        setRelationNoteListener(toShowNote.id, toShowNote, timelineItem)
         setRelationNoteListener(toShowNote.renote.id, toShowNote.renote, subNoteText)
 
         setReplyCount(toShowNote.replyCount)
