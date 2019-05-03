@@ -101,7 +101,6 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
                 }
             }
 
-            val beforeData = mArrayList[index]
             mArrayList[index] = noteViewData
 
         }
@@ -133,18 +132,3 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
 
 
 }
-
-//Test
-/*val testReactionData = arrayListOf(
-    ReactionCountPair(ReactionConstData.CONGRATS, "10"),
-    ReactionCountPair(ReactionConstData.CONFUSED, "10"),
-    ReactionCountPair(ReactionConstData.ANGRY, "10"),
-    ReactionCountPair(ReactionConstData.HMM, "10"),
-    ReactionCountPair(ReactionConstData.LAUGH, "10"),
-    ReactionCountPair(ReactionConstData.LIKE, "10"),
-    ReactionCountPair(ReactionConstData.LOVE, "10"),
-    ReactionCountPair(ReactionConstData.PUDDING, "10"),
-    ReactionCountPair(ReactionConstData.RIP, "10"),
-    ReactionCountPair(ReactionConstData.SURPRISE, "10")
-    )
-p0.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, testReactionData))*/

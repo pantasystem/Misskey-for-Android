@@ -69,11 +69,6 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     private var isMediaOnly: Boolean? = null
     private var userId: String? = null
 
-    private val animater = object : DefaultItemAnimator(){
-        override fun canReuseUpdatedViewHolder(viewHolder: RecyclerView.ViewHolder): Boolean {
-            return true
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -108,8 +103,6 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         timelineView.addOnScrollListener(listener)
         mPresenter.initTimeline()
         mLayoutManager = LinearLayoutManager(context)
-
-        //timelineView.itemAnimator = animater
 
         refresh?.setOnRefreshListener(this)
 

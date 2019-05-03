@@ -1,5 +1,6 @@
 package org.panta.misskey_for_android_v2.usecase
 
+import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
 class NoteUpdater{
@@ -17,7 +18,7 @@ class NoteUpdater{
         }
 
 
-        val reactionCountPair = noteAdjustment.createReactionCountPair(updatedReactionCounts)
+        val reactionCountPair = updateUpdateReactionCountPair(reaction,viewData.reactionCountPairList)
         return viewData.copy(toShowNote = updatedNote, reactionCountPairList = reactionCountPair)
 
     }
@@ -36,6 +37,26 @@ class NoteUpdater{
             hashMapOf(reaction to 1)
         }
     }
+
+    private fun updateUpdateReactionCountPair(reaction: String, pairList: List<ReactionCountPair>): List<ReactionCountPair>{
+        val arrayList = ArrayList<ReactionCountPair>(pairList)
+        val count = pairList.filter{
+            it.reactionType == reaction
+        }.count()
+        if(count > 0){
+            for(n in 0 until arrayList.size){
+                if(arrayList[n].reactionType == reaction){
+                    val reactionCount = Integer.parseInt(arrayList[n].reactionCount) + 1
+                    arrayList[n] = arrayList[n].copy(reactionCount = reactionCount.toString())
+                }
+            }
+        }else{
+            arrayList.add(ReactionCountPair(reaction, 1.toString()))
+        }
+        return arrayList
+
+    }
+
 
 
 }
