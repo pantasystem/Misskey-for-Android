@@ -4,6 +4,7 @@ import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.repository.*
+import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.usecase.PagingController
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
@@ -39,10 +40,11 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val mT
         mView.stopRefreshing()
     }
 
-    override fun sendReaction(noteId: String, reactionType: String) {
-        mReaction.sendReaction(noteId, reactionType)
-    }
+    override fun sendReaction(noteId: String, viewData: NoteViewData, reactionType: String) {
+        mReaction.sendReaction(noteId, reactionType){
 
+        }
+    }
     override fun captureNote(noteId: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

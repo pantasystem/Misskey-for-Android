@@ -79,7 +79,7 @@ class NotificationRepository(private val domain: String, private val authKey: St
             if(it.note == null){
                 NotificationViewData(it.id,false, it, null)
             }else{
-                val viewData = NoteViewData(it.note.id, false,it.note, noteAd.checkUpNoteType(it.note), noteAd.createReactionCountPair(it.note.reactionCounts))
+                val viewData = NoteViewData(it.note.id, false,it.note, it.note,noteAd.checkUpNoteType(it.note), noteAd.createReactionCountPair(it.note.reactionCounts))
                 NotificationViewData(it.id, false, it, viewData)
             }
         }

@@ -54,68 +54,72 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
     private val showThreadButton: Button = itemView.show_thread_button
 
     fun setNote(content: NoteViewData){
+        val toShowNote = content.toShowNote
         whoReactionUserLink.visibility = View.GONE
         backgroundColor(0)
         invisibleSubContents()
-        setNoteContent(content.note)
-        setRelationNoteListener(content.note.id, content.note, timelineItem, noteText)
+        setNoteContent(toShowNote)
+        setRelationNoteListener(toShowNote.id, toShowNote, timelineItem, noteText)
 
         setReplyCount(content.note.replyCount)
         setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
         showThreadButton.visibility = View.GONE
         subNote.visibility = View.GONE
-        setReactionCount(content, content.note)
+        setReactionCount(content, toShowNote)
     }
 
     fun setReNote(content: NoteViewData){
+        val toShowNote = content.toShowNote
         backgroundColor(0)
         invisibleSubContents()
         setWhoReactionUserLink(content.note.user, "リノート")
-        setNoteContent(content.note.renote!!)
-        setRelationNoteListener(content.note.renote.id, content.note.renote, timelineItem, noteText)
+        setNoteContent(content.toShowNote)
+        setRelationNoteListener(content.toShowNote.id, toShowNote, timelineItem, noteText)
 
-        setReplyCount(content.note.renote.replyCount)
-        setReNoteCount(content.note.renote.reNoteCount)
-        setFourControlButtonListener(content.note.renote, content)
+        setReplyCount(content.toShowNote.replyCount)
+        setReNoteCount(toShowNote.reNoteCount)
+        setFourControlButtonListener(toShowNote, content)
         showThreadButton.visibility = View.GONE
         subNote.visibility = View.GONE
-        setReactionCount(content, content.note.renote)
+        setReactionCount(content, toShowNote)
 
     }
     fun setQuoteReNote(content: NoteViewData){
+        val toShowNote = content.toShowNote
         backgroundColor(0)
-        setWhoReactionUserLink(content.note.user, "引用リノート")
-        setNoteContent(content.note)
-        setSubContent(content.note.renote!!)
-        setRelationNoteListener(content.note.id, content.note, timelineItem)
-        setRelationNoteListener(content.note.renote.id, content.note.renote, subNoteText)
+        setWhoReactionUserLink(toShowNote.user, "引用リノート")
+        setNoteContent(toShowNote)
+        setSubContent(toShowNote.renote!!)
+        setRelationNoteListener(toShowNote.id, content.note, timelineItem)
+        setRelationNoteListener(toShowNote.renote.id, toShowNote.renote, subNoteText)
 
-        setReplyCount(content.note.replyCount)
-        setReNoteCount(content.note.reNoteCount)
-        setFourControlButtonListener(content.note, content)
+        setReplyCount(toShowNote.replyCount)
+        setReNoteCount(toShowNote.reNoteCount)
+        setFourControlButtonListener(toShowNote, content)
         showThreadButton.visibility = View.GONE
         subNote.visibility = View.VISIBLE
-        setReactionCount(content, content.note)
+        setReactionCount(content, toShowNote)
     }
 
     fun setReply(content: NoteViewData){
+        val toShowNote = content.toShowNote
         backgroundColor(0)
         invisibleSubContents()
-        setNoteContent(content.note)
-        setWhoReactionUserLink(content.note.user, "クソリプ")
-        setRelationNoteListener(content.note.id, content.note, timelineItem, noteText, showThreadButton)
+        setNoteContent(toShowNote)
+        setWhoReactionUserLink(toShowNote.user, "クソリプ")
+        setRelationNoteListener(toShowNote.id, toShowNote, timelineItem, noteText, showThreadButton)
 
-        setReplyCount(content.note.replyCount)
-        setReNoteCount(content.note.reNoteCount)
-        setFourControlButtonListener(content.note, content)
+        setReplyCount(toShowNote.replyCount)
+        setReNoteCount(toShowNote.reNoteCount)
+        setFourControlButtonListener(toShowNote, content)
         showThreadButton.visibility = View.VISIBLE
         subNote.visibility = View.GONE
-        setReactionCount(content, content.note)
+        setReactionCount(content, toShowNote)
 
     }
 
-    fun setReplyTo(content: NoteViewData){
+    @Deprecated("返信先は表示しない予定なので廃止する") fun setReplyTo(content: NoteViewData){
         whoReactionUserLink.visibility = View.GONE
         invisibleSubContents()
         backgroundColor(1)
@@ -150,7 +154,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
             adapter.reactionItemClickListener = object : ItemClickListener<String>{
                 override fun onClick(e: String) {
                     Log.d("NoteViewHolder", "setReactionCountがクリックされた")
-                    contentClickListener?.onReactionClicked(note.id, note, e)
+                    contentClickListener?.onReactionClicked(note.id, note, viewData, e)
                 }
             }
             reactionView.adapter = adapter
@@ -245,7 +249,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
             contentClickListener?.onReNoteButtonClicked(note.id, note)
         }
         reactionButton.setOnClickListener {
-            contentClickListener?.onReactionClicked(note.id, note, null)
+            contentClickListener?.onReactionClicked(note.id, note, viewData,null)
         }
         descriptionButton.setOnClickListener {
             contentClickListener?.onDescriptionButtonClicked(viewData.note.id, viewData.note)

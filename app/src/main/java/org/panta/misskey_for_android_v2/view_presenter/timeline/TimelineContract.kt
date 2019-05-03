@@ -19,6 +19,6 @@ interface TimelineContract{
         fun getOldTimeline()
         fun initTimeline()
         fun captureNote(noteId: String)
-        fun sendReaction(noteId: String, reactionType: String)
+        fun sendReaction(noteId: String, viewData: NoteViewData, reactionType: String)
     }
 }

@@ -171,10 +171,10 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         EditNoteActivity.startActivity(context!!, targetId, NoteType.REPLY)
     }
 
-    override fun onReactionClicked(targetId: String?, note: Note?, reactionType: String?) {
+    override fun onReactionClicked(targetId: String?, note: Note?, viewData: NoteViewData,reactionType: String?) {
         if(targetId != null && note != null){
             if(reactionType != null){
-                mPresenter.sendReaction(noteId = note.id, reactionType = reactionType)
+                mPresenter.sendReaction(noteId = note.id, reactionType = reactionType, viewData = viewData)
                 return
             }
             Log.d("TimelineFragment", "targetId: $targetId")
@@ -182,7 +182,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
                 override fun callBack(noteId: String?, reactionParameter: String) {
                     if(noteId != null){
                         Log.d("TimelineFragment", "成功した")
-                        mPresenter.sendReaction(noteId = noteId, reactionType = reactionParameter)
+                        mPresenter.sendReaction(noteId = noteId, reactionType = reactionParameter, viewData = viewData)
                     }
                 }
             })

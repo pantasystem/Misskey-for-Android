@@ -11,4 +11,4 @@ import java.io.Serializable
 //isReplyが最新となるがViewにはisOriginReplayが先に挿入される
 //通常のNote,RNの場合は両方ともがFalseとなる
 data class NoteViewData(override val id: String,
-                        override val isIgnore: Boolean, val note: Note, val type: NoteAdjustment.NoteType, val reactionCountPairList: List<ReactionCountPair>):Serializable, ID
+                        override val isIgnore: Boolean, val note: Note, val toShowNote: Note ,val type: NoteAdjustment.NoteType, val reactionCountPairList: List<ReactionCountPair>):Serializable, ID

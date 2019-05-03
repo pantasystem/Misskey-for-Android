@@ -11,14 +11,16 @@ import java.net.URL
 class Reaction(private val domain: String, private val authKey: String){
 
     private val connection =  HttpsConnection()
-    fun sendReaction(targetNoteId: String, type: String){
+    fun sendReaction(targetNoteId: String, type: String, callBack:(Boolean)->Unit){
         GlobalScope.launch{
             try{
                 val data = ReactionCreateXorDeleteProperty( i = authKey, noteId = targetNoteId, reaction = type)
                 val json = jacksonObjectMapper().writeValueAsString(data)
                 connection.post(URL("$domain/api/notes/reactions/create"), json)
+                callBack(true)
             }catch(e: Exception){
                 Log.w("Reaction", "リアクション送信中にエラーが発生しました", e)
+                callBack(false)
             }
 
         }

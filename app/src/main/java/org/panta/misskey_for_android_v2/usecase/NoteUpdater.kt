@@ -7,7 +7,7 @@ class NoteUpdater{
     private val noteAdjustment = NoteAdjustment(false)
 
     fun addReaction(reaction: String, viewData: NoteViewData, hasMyReaction: Boolean): NoteViewData{
-        val note = viewData.note
+        val note = viewData.toShowNote
         val updatedReactionCounts = updateUpdateReactionCounts(reaction, note.reactionCounts)
 
         val updatedNote = if(hasMyReaction){

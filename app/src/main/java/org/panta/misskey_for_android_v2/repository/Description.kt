@@ -20,12 +20,12 @@ class Description(){
 
     }
 
-    //ListをReverseする必要がある
+    //FIXME 色々いい加減なので修正する
     fun getOriginNotes(note: Note, callBack: (timeline: List<NoteViewData>?) -> Unit) = GlobalScope.launch{
         try{
             var reply: Note? = note.reply
             val replyList = ArrayList<NoteViewData>()
-            replyList.add(NoteViewData(id = note.id, isIgnore = false ,note = note, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = ReactionCountPair.createList(note.reactionCounts!!)))
+            replyList.add(NoteViewData(id = note.id, isIgnore = false ,note = note, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = ReactionCountPair.createList(note.reactionCounts!!), toShowNote = note))
             while(reply != null){
                 val reactionPair = if(reply.reactionCounts == null){
                     emptyList()
@@ -35,7 +35,7 @@ class Description(){
                         ReactionCountPair(it.key, it.value.toString())
                     }
                 }
-                replyList.add(NoteViewData(id = reply.id, isIgnore = false ,note = reply, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = reactionPair))
+                replyList.add(NoteViewData(id = reply.id, isIgnore = false ,note = reply, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = reactionPair, toShowNote = reply))
                 reply = reply.reply
             }
             callBack(reverseTimeline(replyList))
