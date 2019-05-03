@@ -165,8 +165,12 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     }
 
     override fun showUpdatedNote(noteViewData: NoteViewData) {
-        mAdapter.updateNote(noteViewData)
-        Log.d("TimelineFragment", "更新後のデータ ${noteViewData.toShowNote}, ${noteViewData.reactionCountPairList}")
+        activity?.runOnUiThread {
+            mAdapter.updateNote(noteViewData)
+            Log.d("TimelineFragment", "更新後のデータ ${noteViewData.toShowNote}, ${noteViewData.reactionCountPairList}")
+
+        }
+
     }
 
     override fun onNoteClicked(targetId: String?, note: Note?) {

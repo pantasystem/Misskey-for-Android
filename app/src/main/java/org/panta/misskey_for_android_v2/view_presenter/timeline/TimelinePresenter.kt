@@ -1,5 +1,9 @@
 package org.panta.misskey_for_android_v2.view_presenter.timeline
 
+import android.util.Log
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
@@ -42,17 +46,19 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val mT
     }
 
     override fun sendReaction(noteId: String, viewData: NoteViewData, reactionType: String) {
-        /*mReaction.sendReaction(noteId, reactionType){
+        mReaction.sendReaction(noteId, reactionType){
             if(true){
+                Log.d("TimelinePresenter", "sendReaction成功したようだ")
                 val updatedNote = NoteUpdater().addReaction(reactionType, viewData, hasMyReaction = true)
                 mView.showUpdatedNote(updatedNote)
             }else{
                 mView.onError("リアクションの送信に失敗した")
+                Log.d("TimelinePresenter", "sendReaction失敗しちゃった・・")
             }
-        }*/
+        }
         //mView.showUpdatedNote(viewData)
-        val updatedNote = NoteUpdater().addReaction(reactionType, viewData, hasMyReaction = true)
-        mView.showUpdatedNote(updatedNote)
+
+
     }
     override fun captureNote(noteId: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
