@@ -2,6 +2,7 @@ package org.panta.misskey_for_android_v2.adapter
 
 import android.content.Context
 import android.os.Handler
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -21,7 +22,8 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
     private var userClickListener: UserClickListener? = null
     private val noteIdMap = HashMap<Int, String>()
 
-    override fun getItemCount(): Int {
+
+        override fun getItemCount(): Int {
         return mArrayList.size
     }
 
@@ -39,12 +41,7 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
 
        //リアクションをセットしている
         if(viewData.reactionCountPairList.isNotEmpty()){
-            //viewHolder.setReactionCount(ReactionCountAdapter(context, R.layout.item_reaction_counter, viewData.reactionCountPairList))
 
-            //val adapter = ReactionRecyclerAdapter(viewData.reactionCountPairList, viewData.note.myReaction)
-
-            //val lm = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            //viewHolder.setReactionCount(adapter, lm)
         }else{
             viewHolder.invisibleReactionCount()
         }
@@ -70,7 +67,13 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
 
         viewHolder.addOnItemClickListener(noteClickListener)
         viewHolder.addOnUserClickListener(userClickListener)
+        Log.d("TimelineAdapter", "onViewCreated")
        
+    }
+
+    override fun onBindViewHolder(holder: NoteViewHolder, position: Int, payloads: MutableList<Any>) {
+        this.onBindViewHolder(holder, position)
+        Log.d("TimelineFragment", "もう一つのonBindViewHolderが呼び出された")
     }
 
     override fun addAllFirst(list: List<NoteViewData>){
@@ -88,7 +91,6 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
             mArrayList.addAll(list)
         }
         Handler().post{
-            //実験段階不具合の可能性有り
             notifyItemRangeInserted(lastIndex, list.size)
         }
     }
@@ -115,8 +117,6 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
             Log.d("TimelineAdapter", "Noteの更新を試みたindex: $count")
             Handler().post{
                 notifyItemChanged(count)
-
-
             }
 
         }
