@@ -66,7 +66,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         setFourControlButtonListener(content.note, content)
         showThreadButton.visibility = View.GONE
         subNote.visibility = View.GONE
-        setReactionCount(content, toShowNote)
+        setReactionCount(content)
     }
 
     fun setReNote(content: NoteViewData){
@@ -82,7 +82,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         setFourControlButtonListener(toShowNote, content)
         showThreadButton.visibility = View.GONE
         subNote.visibility = View.GONE
-        setReactionCount(content, toShowNote)
+        setReactionCount(content)
 
     }
     fun setQuoteReNote(content: NoteViewData){
@@ -99,7 +99,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         setFourControlButtonListener(toShowNote, content)
         showThreadButton.visibility = View.GONE
         subNote.visibility = View.VISIBLE
-        setReactionCount(content, toShowNote)
+        setReactionCount(content)
     }
 
     fun setReply(content: NoteViewData){
@@ -115,7 +115,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         setFourControlButtonListener(toShowNote, content)
         showThreadButton.visibility = View.VISIBLE
         subNote.visibility = View.GONE
-        setReactionCount(content, toShowNote)
+        setReactionCount(content)
 
     }
 
@@ -130,7 +130,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         setReNoteCount(content.note.reNoteCount)
         setFourControlButtonListener(content.note, content)
         showThreadButton.visibility = View.GONE
-        setReactionCount(content, content.note)
+        setReactionCount(content)
     }
 
 
@@ -146,15 +146,15 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         this.userClickListener = listener
     }
 
-    private fun setReactionCount(viewData: NoteViewData, note: Note){
+    private fun setReactionCount(viewData: NoteViewData){
         if(linearLayoutManager == null ){
             reactionView.visibility = View.GONE
         }else{
-            val adapter = ReactionRecyclerAdapter(viewData.reactionCountPairList , note.myReaction)
+            val adapter = ReactionRecyclerAdapter(viewData.reactionCountPairList , viewData.toShowNote.myReaction)
             adapter.reactionItemClickListener = object : ItemClickListener<String>{
                 override fun onClick(e: String) {
                     Log.d("NoteViewHolder", "setReactionCountがクリックされた")
-                    contentClickListener?.onReactionClicked(note.id, note, viewData, e)
+                    contentClickListener?.onReactionClicked(viewData.toShowNote.id, viewData.toShowNote, viewData, e)
                 }
             }
             reactionView.adapter = adapter

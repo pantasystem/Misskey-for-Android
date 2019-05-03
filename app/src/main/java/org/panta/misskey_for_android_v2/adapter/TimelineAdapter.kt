@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
@@ -18,6 +19,7 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
     private val mArrayList = ArrayList<NoteViewData>(notesList)
     private var noteClickListener: NoteClickListener? = null
     private var userClickListener: UserClickListener? = null
+    private val noteIdMap = HashMap<Int, String>()
 
     override fun getItemCount(): Int {
         return mArrayList.size
@@ -32,6 +34,8 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
 
     override fun onBindViewHolder(viewHolder: NoteViewHolder, p1: Int) {
         val viewData = mArrayList[p1]
+
+
 
        //リアクションをセットしている
         if(viewData.reactionCountPairList.isNotEmpty()){
@@ -95,12 +99,26 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
 
     override fun updateNote(noteViewData: NoteViewData){
         synchronized(mArrayList){
-            val index = mArrayList.indexOf(noteViewData)
-            mArrayList[index] = noteViewData
-
-            Handler().post{
-                notifyItemChanged(index)
+            Log.d("TimelineAdapter", "Noteの更新を試みた")
+            var count = -1
+            for(n in 0.until(mArrayList.size)){
+                if(mArrayList[n].id == noteViewData.id){
+                    count = n
+                    break
+                }
             }
+
+            val beforeData = mArrayList[count]
+            Log.d("TimelineAdapter", "更新をする前のデータ ${beforeData.toShowNote}")
+            mArrayList[count] = noteViewData
+
+            Log.d("TimelineAdapter", "Noteの更新を試みたindex: $count")
+            Handler().post{
+                notifyItemChanged(count)
+
+
+            }
+
         }
     }
 

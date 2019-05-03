@@ -12,6 +12,7 @@ interface TimelineContract{
         fun showInitTimeline(list: List<NoteViewData>)
         fun stopRefreshing()
         fun onError(errorMsg: String)
+        fun showUpdatedNote(noteViewData: NoteViewData)
     }
 
     interface Presenter : BasePresenter {

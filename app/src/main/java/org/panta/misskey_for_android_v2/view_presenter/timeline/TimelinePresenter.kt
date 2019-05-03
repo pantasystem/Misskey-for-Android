@@ -5,6 +5,7 @@ import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.repository.*
 import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
+import org.panta.misskey_for_android_v2.usecase.NoteUpdater
 import org.panta.misskey_for_android_v2.usecase.PagingController
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
@@ -42,7 +43,12 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val mT
 
     override fun sendReaction(noteId: String, viewData: NoteViewData, reactionType: String) {
         mReaction.sendReaction(noteId, reactionType){
-
+            if(true){
+                val updatedNote = NoteUpdater().addReaction(reactionType, viewData, hasMyReaction = true)
+                mView.showUpdatedNote(updatedNote)
+            }else{
+                mView.onError("リアクションの送信に失敗した")
+            }
         }
     }
     override fun captureNote(noteId: String) {
