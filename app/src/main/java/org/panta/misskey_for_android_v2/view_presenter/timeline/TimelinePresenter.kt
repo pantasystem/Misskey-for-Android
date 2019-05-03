@@ -47,7 +47,7 @@ class TimelinePresenter(private val mView: TimelineContract.View, private val mT
 
     override fun sendReaction(noteId: String, viewData: NoteViewData, reactionType: String) {
         mReaction.sendReaction(noteId, reactionType){
-            if(true){
+            if(it){
                 Log.d("TimelinePresenter", "sendReaction成功したようだ")
                 val updatedNote = NoteUpdater().addReaction(reactionType, viewData, hasMyReaction = true)
                 mView.showUpdatedNote(updatedNote)

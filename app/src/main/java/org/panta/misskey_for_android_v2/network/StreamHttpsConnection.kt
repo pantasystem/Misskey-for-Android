@@ -3,30 +3,24 @@ package org.panta.misskey_for_android_v2.network
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.io.PrintStream
-import java.net.HttpURLConnection
+import java.lang.Exception
 import java.net.URL
-import java.net.URLConnection
 import javax.net.ssl.HttpsURLConnection
 
-@Deprecated("エラー内容がわかりにくい") class HttpsConnection  {
+class StreamHttpsConnection{
     fun get(url: URL): InputStream {
 
-        return try{
-            val con = (url.openConnection() as HttpsURLConnection).apply{
-                requestMethod = "GET"
+        val con = (url.openConnection() as HttpsURLConnection).apply{
+            requestMethod = "GET"
 
-                connect()
+            connect()
 
-            }
-            BufferedInputStream(con.inputStream)
-
-        }catch (e: Exception){
-            throw e
         }
+        return BufferedInputStream(con.inputStream)
     }
 
-    fun post(url: URL, value: String): InputStream {
-        return try{
+    fun post(url: URL, value: String): InputStream? {
+        try{
             val con = (url.openConnection() as HttpsURLConnection).apply{
                 requestMethod = "POST"
                 instanceFollowRedirects = true
@@ -41,10 +35,10 @@ import javax.net.ssl.HttpsURLConnection
 
 
             }
-            BufferedInputStream(con.inputStream)
-
-        }catch(e : Exception){
-            throw e
+            return BufferedInputStream(con.inputStream)
+        }catch(e: Exception){
+            return null
         }
+
     }
 }

@@ -35,8 +35,6 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
     override fun onBindViewHolder(viewHolder: NoteViewHolder, p1: Int) {
         val viewData = mArrayList[p1]
 
-
-
        //リアクションをセットしている
         if(viewData.reactionCountPairList.isNotEmpty()){
 
@@ -65,14 +63,9 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
 
         viewHolder.addOnItemClickListener(noteClickListener)
         viewHolder.addOnUserClickListener(userClickListener)
-        Log.d("TimelineAdapter", "onViewCreated")
-       
+
     }
 
-    override fun onBindViewHolder(holder: NoteViewHolder, position: Int, payloads: MutableList<Any>) {
-        this.onBindViewHolder(holder, position)
-        Log.d("TimelineFragment", "もう一つのonBindViewHolderが呼び出された")
-    }
 
     override fun addAllFirst(list: List<NoteViewData>){
         synchronized(mArrayList){
@@ -100,7 +93,6 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
     override fun updateNote(noteViewData: NoteViewData){
         var index = -1
         synchronized(mArrayList){
-            Log.d("TimelineAdapter", "Noteの更新を試みた")
 
             for(n in 0.until(mArrayList.size)){
                 if(mArrayList[n].id == noteViewData.id){
@@ -110,11 +102,9 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
             }
 
             val beforeData = mArrayList[index]
-            Log.d("TimelineAdapter", "更新をする前のデータ ${beforeData.toShowNote}")
             mArrayList[index] = noteViewData
 
         }
-        Log.d("TimelineAdapter", "更新試みた${mArrayList[index].toShowNote}")
         Handler().post{
             notifyItemChanged(index)
         }
