@@ -17,8 +17,7 @@ import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.IOperationAdapter
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 
-class NotificationFragment : Fragment(), NotificationContract.View,
-    SwipeRefreshLayout.OnRefreshListener{
+class NotificationFragment : Fragment(), NotificationContract.View{
 
     override lateinit var mPresenter: NotificationContract.Presenter
 
@@ -52,6 +51,9 @@ class NotificationFragment : Fragment(), NotificationContract.View,
 
         mLayoutManager = LinearLayoutManager(context)
         mPresenter.initNotification()
+        refresh.setOnRefreshListener{
+            mPresenter.getNewNotification()
+        }
 
     }
 
@@ -59,10 +61,6 @@ class NotificationFragment : Fragment(), NotificationContract.View,
         activity?.runOnUiThread{
             refresh?.isRefreshing = false
         }
-    }
-
-    override fun onRefresh() {
-        mPresenter.getNewNotification()
     }
 
     override fun showOldNotification(list: List<NotificationViewData>) {
