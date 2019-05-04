@@ -10,13 +10,14 @@ import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.FollowProperty
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.network.HttpsConnection
+import org.panta.misskey_for_android_v2.network.OkHttpConnection
 import org.panta.misskey_for_android_v2.network.StreamConverter
 import org.panta.misskey_for_android_v2.view_data.FollowViewData
 import java.net.URL
 
 class FollowFollowerRepository(private val userId: String, private val type: FollowFollowerType, private val connectionInfo: ConnectionProperty) : IItemRepository<FollowViewData>{
 
-    private val httpsConnection = HttpsConnection()
+    private val httpsConnection = OkHttpConnection()
     private val url =if(type == FollowFollowerType.FOLLOWING){
         URL("${connectionInfo.domain}/api/users/followers")
     }else{
@@ -56,14 +57,18 @@ class FollowFollowerRepository(private val userId: String, private val type: Fol
 
     }
 
-    private suspend fun getFollowFollowerInfo(map: Map<String, String>, url: URL): List<FollowViewData>{
+    private suspend fun getFollowFollowerInfo(map: Map<String, String>, url: URL): List<FollowViewData>?{
         val json = jacksonObjectMapper().writeValueAsString(map)
-        val inputStream = httpsConnection.post(url, json)
-        val text = StreamConverter().getString(inputStream)
-        Log.d("FollowFollowerRepository", "getFollowFollowerInfo: $text")
-        val propertyList: List<FollowProperty> =  jacksonObjectMapper().readValue(text)
-        return propertyList.map{
-            FollowViewData(it.id, false, it)
+        val result = httpsConnection.postString(url, json)
+
+        return if(result == null){
+            null
+        }else{
+            val propertyList: List<FollowProperty> =  jacksonObjectMapper().readValue(result)
+            propertyList.map{
+                FollowViewData(it.id, false, it)
+            }
         }
+
     }
 }

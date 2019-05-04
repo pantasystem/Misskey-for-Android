@@ -19,7 +19,7 @@ class StreamHttpsConnection{
         return BufferedInputStream(con.inputStream)
     }
 
-    fun post(url: URL, value: String): InputStream? {
+    @Deprecated("OkHttpConnection#postStringに移行予定") fun post(url: URL, value: String): InputStream? {
         try{
             val con = (url.openConnection() as HttpsURLConnection).apply{
                 requestMethod = "POST"

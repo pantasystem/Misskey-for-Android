@@ -6,18 +6,19 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.entity.ReactionCreateXorDeleteProperty
 import org.panta.misskey_for_android_v2.network.HttpsConnection
+import org.panta.misskey_for_android_v2.network.OkHttpConnection
 import org.panta.misskey_for_android_v2.network.StreamHttpsConnection
 import java.net.URL
 
 class Reaction(private val domain: String, private val authKey: String){
 
-    private val connection =  StreamHttpsConnection()
+    private val connection =  OkHttpConnection()
     fun sendReaction(targetNoteId: String, type: String, callBack:(Boolean)->Unit){
         GlobalScope.launch{
             try{
                 val data = ReactionCreateXorDeleteProperty( i = authKey, noteId = targetNoteId, reaction = type)
                 val json = jacksonObjectMapper().writeValueAsString(data)
-                val stream = connection.post(URL("$domain/api/notes/reactions/create"), json)
+                val stream = connection.postString(URL("$domain/api/notes/reactions/create"), json)
                 if(stream == null){
                     callBack(false)
                 }else{

@@ -54,6 +54,7 @@ class UserActivity : AppCompatActivity() {
         }
 
         UserRepository(info.domain, info.i).getUserInfo(tmpUser.id){
+            if(it == null) return@getUserInfo
             runOnUiThread{
                 Picasso.get().load(it.avatarUrl).into(profile_icon)
 

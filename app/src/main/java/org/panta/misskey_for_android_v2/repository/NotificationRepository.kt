@@ -9,6 +9,7 @@ import org.panta.misskey_for_android_v2.entity.NotificationProperty
 import org.panta.misskey_for_android_v2.entity.RequestNotificationProperty
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.network.HttpsConnection
+import org.panta.misskey_for_android_v2.network.OkHttpConnection
 import org.panta.misskey_for_android_v2.network.StreamConverter
 import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
@@ -17,7 +18,7 @@ import java.net.URL
 
 class NotificationRepository(private val domain: String, private val authKey: String): IItemRepository<NotificationViewData>{
 
-    private val connection = HttpsConnection()
+    private val connection = OkHttpConnection()
     private val mapper = jacksonObjectMapper()
     private val noteAd = NoteAdjustment()
 
@@ -28,7 +29,11 @@ class NotificationRepository(private val domain: String, private val authKey: St
             val reqJson = mapper.writeValueAsString(reqObj)
 
             val data = getNotificationData(reqJson)
-            callBack(reverseList(data))
+            if(data == null){
+                callBack(null)
+            }else{
+                callBack(reverseList(data))
+            }
         }catch(e: Exception){
             Log.w("Notification", "getItemsでエラー発生", e)
         }
@@ -59,18 +64,20 @@ class NotificationRepository(private val domain: String, private val authKey: St
     fun markAllAsRead() = GlobalScope.launch{
         try{
             val map = mapOf("i" to authKey)
-            connection.post(URL("$domain/api/notifications/mark-all-as-read"), mapper.writeValueAsString(map))
+            connection.postString(URL("$domain/api/notifications/mark-all-as-read"), mapper.writeValueAsString(map))
         }catch(e: Exception){
             Log.w("Notification", "markAllAsReadでエラー発生", e)
         }
     }
 
-    private suspend fun getNotificationData(json: String): List<NotificationViewData>{
-        val responseStream = connection.post(URL("$domain/api/i/notifications"), json)
-        val resJson = StreamConverter().getString(responseStream)
-        val resObj: List<NotificationProperty> = mapper.readValue(resJson)
-
-        return makeViewData(resObj)
+    private suspend fun getNotificationData(json: String): List<NotificationViewData>?{
+        val resJson = connection.postString(URL("$domain/api/i/notifications"), json)
+        return if(resJson == null){
+            null
+        }else{
+            val resObj: List<NotificationProperty> = mapper.readValue(resJson)
+            makeViewData(resObj)
+        }
 
     }
 

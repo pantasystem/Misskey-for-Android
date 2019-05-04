@@ -26,8 +26,13 @@ class MainPresenter(private val mView: MainContract.View, sharedOperator: IShare
             return
         }
         MyInfo(domain = info.domain, authKey = info.i).getMyInfo {
-            mView.showPersonalMiniProfile(it)
-            mUser = it
+            if(it == null){
+
+            }else{
+                mView.showPersonalMiniProfile(it)
+                mUser = it
+            }
+
         }
     }
 
@@ -63,7 +68,11 @@ class MainPresenter(private val mView: MainContract.View, sharedOperator: IShare
             return
         }
         MyInfo(domain = info.domain, authKey = info.i).getMyInfo {
-            mView.showPersonalProfilePage(it, info)
+            if(it == null){
+
+            }else{
+                mView.showPersonalProfilePage(it, info)
+            }
         }
     }
 

@@ -20,6 +20,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -36,7 +40,7 @@ dependencies {
 
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.6"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
-
+    implementation 'com.squareup.okhttp3:okhttp:3.14.1'
 
     implementation "org.java-websocket:Java-WebSocket:1.4.0"
     //noinspection UseOfBundledGooglePlayServices

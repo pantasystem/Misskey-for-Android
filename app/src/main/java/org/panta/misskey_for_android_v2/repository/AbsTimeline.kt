@@ -9,6 +9,7 @@ import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.network.HttpsConnection
+import org.panta.misskey_for_android_v2.network.OkHttpConnection
 import org.panta.misskey_for_android_v2.network.StreamConverter
 import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
@@ -18,7 +19,7 @@ import java.util.*
 abstract class AbsTimeline(private val timelineURL: URL, private val isDeployReplyTo: Boolean = false): IItemRepository<NoteViewData>{
 
 
-    private val mConnection = HttpsConnection()
+    private val mConnection = OkHttpConnection()
     private val mapper = jacksonObjectMapper()
     private val converter = StreamConverter()
 
@@ -31,8 +32,14 @@ abstract class AbsTimeline(private val timelineURL: URL, private val isDeployRep
     override fun getItemsUseSinceId(sinceId: String, callBack: (timeline: List<NoteViewData>?)->Unit) = GlobalScope.launch{
         try{
             val jsonToRequest = createRequestTimelineJson(sinceId = sinceId)
-            val list:List<Note> = reverseTimeline(requestTimeline(jsonToRequest))
-            callBack(noteAd.insertReplyAndCreateInfo(list))
+            val noteList = requestTimeline(jsonToRequest)
+            if(noteList == null){
+                callBack(null)
+            }else{
+                val list:List<Note> = reverseTimeline(noteList)
+                callBack(noteAd.insertReplyAndCreateInfo(list))
+            }
+
         }catch(e: Exception){
             e.printStackTrace()
 
@@ -45,8 +52,12 @@ abstract class AbsTimeline(private val timelineURL: URL, private val isDeployRep
         try{
             val jsonToRequest = createRequestTimelineJson(untilId = untilId)
 
-            val list:List<Note> = requestTimeline(jsonToRequest)
-            callBack(noteAd.insertReplyAndCreateInfo(list))
+            val list:List<Note>? = requestTimeline(jsonToRequest)
+            if(list == null){
+                callBack(null)
+            }else{
+                callBack(noteAd.insertReplyAndCreateInfo(list))
+            }
         }catch(e: Exception){
             e.printStackTrace()
 
@@ -65,7 +76,11 @@ abstract class AbsTimeline(private val timelineURL: URL, private val isDeployRep
                 cacheTimeline
             }
 
-            callBack(noteAd.insertReplyAndCreateInfo(timeline))
+            if(timeline == null){
+                callBack(null)
+            }else{
+                callBack(noteAd.insertReplyAndCreateInfo(timeline))
+            }
         }catch(e: Exception){
             e.printStackTrace()
         }
@@ -74,10 +89,14 @@ abstract class AbsTimeline(private val timelineURL: URL, private val isDeployRep
 
 
 
-    private fun requestTimeline(json: String): List<Note>{
+    private fun requestTimeline(json: String): List<Note>?{
         Log.d("AbsTimeline", "json $json")
-        val receivedResult = converter.getString(mConnection.post(timelineURL, json))
-        return mapper.readValue(receivedResult)
+        val receivedResult =mConnection.postString(timelineURL, json)
+        return if(receivedResult == null){
+            null
+        }else{
+            mapper.readValue(receivedResult)
+        }
     }
 
     //FIXME　他のクラスでもよく使用するので分離予定
