@@ -23,7 +23,7 @@
             app:srcCompat="@drawable/human_icon"
             android:layout_below="@+id/who_reaction_user_link" android:contentDescription="@string/humanicon"/>
 
-    <TextView
+    <com.vanniktech.emoji.EmojiTextView
             android:id="@+id/user_name"
             android:text="name"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:singleLine="true" android:ellipsize="end"
     />
 
-    <TextView
+    <com.vanniktech.emoji.EmojiTextView
             android:id="@+id/note_text"
             android:text="@string/testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"
             android:layout_width="match_parent"
@@ -139,7 +139,7 @@
 
                 android:visibility="visible"/>
 
-        <TextView
+        <com.vanniktech.emoji.EmojiTextView
                 android:id="@+id/sub_user_name"
                 android:text="@string/name"
                 android:textSize="14sp" android:layout_marginTop="8dp"
@@ -162,7 +162,7 @@
                 android:singleLine="true" android:ellipsize="end"
                 android:layout_toEndOf="@+id/sub_user_name"
                 android:visibility="gone"/>
-        <TextView
+        <com.vanniktech.emoji.EmojiTextView
                 android:id="@+id/sub_text"
                 android:text="@string/testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"
                 android:layout_width="match_parent"

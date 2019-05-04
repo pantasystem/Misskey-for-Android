@@ -83,11 +83,11 @@ class NotificationFragment : Fragment(), NotificationContract.View,
     override fun showInitNotification(list: List<NotificationViewData>) {
         activity?.runOnUiThread{
 
-            notification_view.layoutManager = mLayoutManager
+            notification_view?.layoutManager = mLayoutManager
             val adapter = NotificationAdapter(list)
-            notification_view.adapter = adapter
+            notification_view?.adapter = adapter
             notificationAdapter = adapter
-            notification_view.addOnScrollListener(listener)
+            notification_view?.addOnScrollListener(listener)
             mPresenter.markAllAsRead()
             stopRefreshing()
         }

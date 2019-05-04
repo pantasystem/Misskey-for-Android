@@ -20,6 +20,8 @@ import android.widget.Switch
 import android.widget.Toast
 import android.widget.ToggleButton
 import com.squareup.picasso.Picasso
+import com.vanniktech.emoji.EmojiManager
+import com.vanniktech.emoji.twitter.TwitterEmojiProvider
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
@@ -82,6 +84,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         /*~~basic init*/
+        EmojiManager.install(TwitterEmojiProvider())
+
         showFirstFragment = intent.getIntExtra(SHOW_FRAGMENT_TAG, 0)
 
         sharedOperator = SharedPreferenceOperator(this)
