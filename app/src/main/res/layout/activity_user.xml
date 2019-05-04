@@ -62,7 +62,7 @@
                 <ImageView
                         android:id="@+id/header_image"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp" app:srcCompat="@drawable/sample_3"
+                        android:layout_height="150dp"
                         android:scaleType="centerCrop"/>
                 <ImageView
                         android:id="@+id/profile_icon"
