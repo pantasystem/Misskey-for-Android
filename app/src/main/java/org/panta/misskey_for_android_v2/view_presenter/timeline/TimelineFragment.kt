@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_timeline.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.TimelineAdapter
@@ -25,6 +26,7 @@ import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
 import org.panta.misskey_for_android_v2.repository.*
+import org.panta.misskey_for_android_v2.util.copyToClipboad
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import org.panta.misskey_for_android_v2.view_presenter.image_viewer.ImageViewerActivity
 import org.panta.misskey_for_android_v2.view_presenter.note_description.NoteDescriptionActivity
@@ -207,21 +209,15 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     }
 
     override fun onDescriptionButtonClicked(targetId: String?, note: Note?) {
-        /*if(targetId != null && note != null){
-            Log.d("TimelineFragment", "onDescriptionButtonが押された")
-            val descriptionDialog = DescriptionDialog()
-            val args = Bundle()
-            args.putSerializable(DescriptionDialog.NOTE, note)
-            descriptionDialog.arguments = args
-            descriptionDialog.setTargetFragment(this, 5345)
-            descriptionDialog.show(activity?.supportFragmentManager, "description_dialog")
-        }*/
         val item = arrayOf<CharSequence>("内容をコピー", "リンクをコピー", "お気に入り", "ウォッチ", "デバッグ（開発者向け）")
 
         AlertDialog.Builder(activity).apply{
             setTitle("詳細")
             setItems(item){ dialog, which->
                 when(which){
+                    0 -> copyToClipboad(context, note?.text.toString())
+                    1 -> copyToClipboad(context, note?.url.toString())
+                    2,3 -> Toast.makeText(context, "未実装ですごめんなさい", Toast.LENGTH_SHORT)
                     4 ->{
                         AlertDialog.Builder(activity).apply{
                             if(note is Note){
