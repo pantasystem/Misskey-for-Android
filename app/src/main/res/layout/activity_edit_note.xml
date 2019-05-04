@@ -8,7 +8,7 @@
         android:fitsSystemWindows="true"
         tools:context=".view_presenter.note_editor.EditNoteActivity">
 
-    <EditText
+    <com.vanniktech.emoji.EmojiEditText
             android:id="@+id/editText"
             android:layout_width="0dp"
             android:layout_height="0dp"

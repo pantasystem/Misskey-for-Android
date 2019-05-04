@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import com.vanniktech.emoji.EmojiManager
+import com.vanniktech.emoji.twitter.TwitterEmojiProvider
 import kotlinx.android.synthetic.main.activity_edit_note.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.NoteType
@@ -45,6 +47,8 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EmojiManager.install(TwitterEmojiProvider())
+
         setContentView(R.layout.activity_edit_note)
         title = "投稿"
 

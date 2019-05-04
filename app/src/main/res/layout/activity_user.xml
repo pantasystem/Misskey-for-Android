@@ -81,21 +81,21 @@
                         android:layout_marginEnd="20dp"
                         android:layout_marginTop="15dp"
                 />
-                <TextView
+                <com.vanniktech.emoji.EmojiTextView
                         android:id="@+id/profile_user_name"
                         android:text="UserName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp" android:layout_marginTop="10dp"
                         android:layout_below="@+id/profile_icon" android:textSize="18sp"/>
-                <TextView
+                <com.vanniktech.emoji.EmojiTextView
                         android:id="@+id/profile_user_id"
                         android:text="UserId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/profile_user_name"
                         android:layout_marginStart="15dp" android:layout_marginTop="5dp"/>
-                <TextView
+                <com.vanniktech.emoji.EmojiTextView
                         android:id="@+id/profile_description"
                         android:text="@string/testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"
                         android:layout_width="wrap_content"

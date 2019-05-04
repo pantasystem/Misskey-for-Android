@@ -19,7 +19,7 @@
                 android:id="@+id/reaction_image_button" android:scaleType="centerCrop"
                 android:padding="1dp"
                 style="?android:attr/borderlessButtonStyle"/>
-        <TextView
+        <com.vanniktech.emoji.EmojiTextView
                 android:text="@string/text_r"
                 android:layout_width="wrap_content"
 

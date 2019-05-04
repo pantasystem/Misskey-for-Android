@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.vanniktech.emoji.EmojiManager
+import com.vanniktech.emoji.twitter.TwitterEmojiProvider
 import kotlinx.android.synthetic.main.activity_follow_follower.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
@@ -30,6 +32,8 @@ class FollowFollowerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EmojiManager.install(TwitterEmojiProvider())
+
         setContentView(R.layout.activity_follow_follower)
 
         val userId = intent.getStringExtra(USER_ID_TAG)!!

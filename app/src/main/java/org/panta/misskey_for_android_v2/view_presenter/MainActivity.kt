@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EmojiManager.install(TwitterEmojiProvider())
+        
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
@@ -84,7 +86,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         /*~~basic init*/
-        EmojiManager.install(TwitterEmojiProvider())
 
         showFirstFragment = intent.getIntExtra(SHOW_FRAGMENT_TAG, 0)
 
