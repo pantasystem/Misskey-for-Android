@@ -128,30 +128,4 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
     }
 
 
-    private fun updateNoteByType(beforeDataIndex: Int, newData: NoteViewData){
-        val beforeData = mArrayList[beforeDataIndex]
-        //toShowNoteのみUpdateする
-        when(newData.type){
-            NoteAdjustment.NoteType.NOTE ->{
-                if(beforeData.toShowNote.id == newData.toShowNote.id){
-                    mArrayList[beforeDataIndex] = beforeData.copy(toShowNote = newData.toShowNote, reactionCountPairList = newData.reactionCountPairList)
-                }
-            }
-            NoteAdjustment.NoteType.REPLY ->{
-
-            }
-            NoteAdjustment.NoteType.RE_NOTE ->{
-
-            }
-            NoteAdjustment.NoteType.QUOTE_RE_NOTE ->{
-
-            }
-            else ->{
-
-            }
-        }
-    }
-
-
-
 }
