@@ -9,7 +9,7 @@ interface IOperationAdapter<E> {
     fun addAllLast(list: List<E>)
 
     fun getNote(index: Int): E
-    fun updateNote(noteViewData: E)
+    fun updateNote(item: E)
 
-    fun removeNote(noteViewData: E)
+    fun removeNote(item: E)
 }

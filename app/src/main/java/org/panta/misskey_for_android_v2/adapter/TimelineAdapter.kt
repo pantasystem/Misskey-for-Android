@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
@@ -90,30 +89,29 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
         return mArrayList[index]
     }
 
-    override fun updateNote(noteViewData: NoteViewData){
-        var index = -1
+    override fun updateNote(item: NoteViewData){
+       // var index = -1
         synchronized(mArrayList){
 
             for(n in 0.until(mArrayList.size)){
-                if(mArrayList[n].id == noteViewData.id){
-                    index = n
-                    break
+                val beforeData = mArrayList[n]
+                if(beforeData.toShowNote.id == item.toShowNote.id){
+                    mArrayList[n] = beforeData.copy(toShowNote = item.toShowNote, reactionCountPairList = item.reactionCountPairList)
+                    Handler().post{
+                        notifyItemChanged(n)
+                    }
                 }
             }
 
-            mArrayList[index] = noteViewData
-
-        }
-        Handler().post{
-            notifyItemChanged(index)
         }
 
     }
 
-    override fun removeNote(noteViewData: NoteViewData){
+
+    override fun removeNote(item: NoteViewData){
         synchronized(mArrayList){
-            val index = mArrayList.indexOf(noteViewData)
-            mArrayList.remove(noteViewData)
+            val index = mArrayList.indexOf(item)
+            mArrayList.remove(item)
 
             Handler().post{
                 notifyItemRemoved(index)
@@ -127,6 +125,31 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
 
     fun addUserClickListener(listener: UserClickListener){
         this.userClickListener = listener
+    }
+
+
+    private fun updateNoteByType(beforeDataIndex: Int, newData: NoteViewData){
+        val beforeData = mArrayList[beforeDataIndex]
+        //toShowNoteのみUpdateする
+        when(newData.type){
+            NoteAdjustment.NoteType.NOTE ->{
+                if(beforeData.toShowNote.id == newData.toShowNote.id){
+                    mArrayList[beforeDataIndex] = beforeData.copy(toShowNote = newData.toShowNote, reactionCountPairList = newData.reactionCountPairList)
+                }
+            }
+            NoteAdjustment.NoteType.REPLY ->{
+
+            }
+            NoteAdjustment.NoteType.RE_NOTE ->{
+
+            }
+            NoteAdjustment.NoteType.QUOTE_RE_NOTE ->{
+
+            }
+            else ->{
+
+            }
+        }
     }
 
 

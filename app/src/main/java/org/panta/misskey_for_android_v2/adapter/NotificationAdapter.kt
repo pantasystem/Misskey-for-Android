@@ -96,11 +96,11 @@ class NotificationAdapter(private val notificationList: List<NotificationViewDat
         }
     }
 
-    override fun removeNote(noteViewData: NotificationViewData) {
+    override fun removeNote(item: NotificationViewData) {
         synchronized(notificationList){
-            val index = notificationList.indexOf(noteViewData)
+            val index = notificationList.indexOf(item)
             if(notificationList is ArrayList){
-                notificationList[index] = noteViewData
+                notificationList[index] = item
 
                 Handler().post{
                     notifyItemChanged(index)
@@ -109,11 +109,11 @@ class NotificationAdapter(private val notificationList: List<NotificationViewDat
         }
     }
 
-    override fun updateNote(noteViewData: NotificationViewData) {
+    override fun updateNote(item: NotificationViewData) {
         synchronized(notificationList){
-            val index = notificationList.indexOf(noteViewData)
+            val index = notificationList.indexOf(item)
             if(notificationList is ArrayList){
-                notificationList.remove(noteViewData)
+                notificationList.remove(item)
 
                 Handler().post{
                     notifyItemRemoved(index)

@@ -73,7 +73,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         val toShowNote = content.toShowNote
         backgroundColor(0)
         invisibleSubContents()
-        setWhoReactionUserLink(toShowNote.renote?.user, "リノート")
+        setWhoReactionUserLink(content.note.user, "リノート")
         setNoteContent(content.toShowNote)
         setRelationNoteListener(content.toShowNote.id, toShowNote, timelineItem, noteText)
 

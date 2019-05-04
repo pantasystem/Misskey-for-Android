@@ -57,10 +57,10 @@ class FollowsAdapter(list: List<FollowViewData>) : RecyclerView.Adapter<FollowVi
         return mArrayList[index]
     }
 
-    override fun removeNote(noteViewData: FollowViewData) {
+    override fun removeNote(item: FollowViewData) {
         synchronized(mArrayList){
-            val index = mArrayList.indexOf(noteViewData)
-            mArrayList.remove(noteViewData)
+            val index = mArrayList.indexOf(item)
+            mArrayList.remove(item)
 
             Handler().post{
                 notifyItemRemoved(index)
@@ -68,10 +68,10 @@ class FollowsAdapter(list: List<FollowViewData>) : RecyclerView.Adapter<FollowVi
         }
     }
 
-    override fun updateNote(noteViewData: FollowViewData) {
+    override fun updateNote(item: FollowViewData) {
         synchronized(mArrayList){
-            val index = mArrayList.indexOf(noteViewData)
-            mArrayList[index] = noteViewData
+            val index = mArrayList.indexOf(item)
+            mArrayList[index] = item
 
             Handler().post{
                 notifyItemChanged(index)
