@@ -81,9 +81,14 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         setReNoteCount(toShowNote.reNoteCount)
         setFourControlButtonListener(toShowNote, content)
         showThreadButton.visibility = View.GONE
-        subNote.visibility = View.GONE
-        setReactionCount(content)
 
+        setReactionCount(content)
+        if(content.toShowNote.renote != null){
+            setSubContent(content.toShowNote.renote)
+            subNote.visibility = View.VISIBLE
+        }else{
+            subNote.visibility = View.GONE
+        }
     }
     fun setQuoteReNote(content: NoteViewData){
         val toShowNote = content.toShowNote
@@ -186,7 +191,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
     private fun setNoteContent(note: Note){
         injectionName(note.user?.name, note.user?.userName, userName)
         injectionId(note.user?.userName, note.user?.host, userId)
-        roundInjectionImage(note.user?.avatarUrl?:"non", userIcon)
+        roundInjectionImage(note.user?.avatarUrl?:"non", userIcon, 180)
         injectionTextGoneWhenNull(note.text, noteText)
         setRelationUserListener(note.user!!, userName, userId, userIcon)
         setImage(filterImageData(note))
@@ -196,7 +201,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
     private fun setSubContent(note: Note){
         injectionName(note.user?.name, note.user?.userName, subUserName)
         injectionId(note.user?.userName, note.user?.host, subUserId)
-        roundInjectionImage(note.user?.avatarUrl?:"non", subUserIcon)
+        roundInjectionImage(note.user?.avatarUrl?:"non", subUserIcon, 180)
         injectionTextGoneWhenNull(note.text, subNoteText)
         setRelationUserListener(note.user!!, subUserName, subUserId, subUserIcon)
 
@@ -338,8 +343,9 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
 
     }
 
-    private fun roundInjectionImage(imageUrl: String, imageView: ImageView){
-        val trfm = RoundedTransformation(30, 0)
+    private fun roundInjectionImage(imageUrl: String, imageView: ImageView, radius:Int = 30){
+        imageView.visibility = View.VISIBLE
+        val trfm = RoundedTransformation(radius, 0)
         Picasso
             .get()
             .load(imageUrl)
