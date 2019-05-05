@@ -20,7 +20,7 @@ import java.io.Serializable
     @JsonProperty("renoteId") val renoteId: String? = null,
     @JsonProperty("poll") val poll: String? = null
 ): Serializable{
-    class Builder(val i: String){
+    class Builder(val i: String): Serializable{
         var visibility: String = "public"
         var visibleUserIds: List<String>? = null
         var text: String? = null
