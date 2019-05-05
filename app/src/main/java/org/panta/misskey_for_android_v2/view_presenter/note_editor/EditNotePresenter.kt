@@ -5,6 +5,7 @@ import org.panta.misskey_for_android_v2.constant.NoteType
 import org.panta.misskey_for_android_v2.entity.CreateNoteProperty
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.repository.NoteRepository
+import java.io.File
 
 class EditNotePresenter(private val mView: EditNoteContract.View, private val connectionInfo: ConnectionProperty) : EditNoteContract.Presenter{
 
@@ -12,6 +13,8 @@ class EditNotePresenter(private val mView: EditNoteContract.View, private val co
     private val noteRepository = NoteRepository(connectionInfo.domain)
 
     private var noteType: NoteType = NoteType.CREATE
+
+    private var fileList = ArrayList<File>()
 
     override fun setText(text: String) {
         noteBuilder.text = if(text.isBlank()){
@@ -31,22 +34,21 @@ class EditNotePresenter(private val mView: EditNoteContract.View, private val co
     }
 
     override fun postNote() {
-        val property = noteBuilder.create()
+        val fileNameList = fileList.map{ it.path }.toTypedArray()
         when(noteType){
             NoteType.CREATE ->{
-                val check = ! property.text.isNullOrBlank() && property.text.length < 1500
-                if(check) noteRepository.send(property)
-                mView.onPosted()
+                val check = ! noteBuilder.text.isNullOrBlank() && noteBuilder.text!!.length < 1500
+                if(check) mView.startPost(noteBuilder, fileNameList)
+
             }
             NoteType.REPLY ->{
-                val check = ! property.text.isNullOrBlank() && property.text.length < 1500
-                if(check && property.replyId != null) noteRepository.send(property)
-                mView.onPosted()
+                val check = ! noteBuilder.text.isNullOrBlank() && noteBuilder.text!!.length < 1500
+                if(check && noteBuilder.replyId != null)mView.startPost(noteBuilder, fileNameList)
+
             }
             NoteType.RE_NOTE ->{
-                if(property.renoteId != null){
-                    noteRepository.send(property)
-                    mView.onPosted()
+                if(noteBuilder.renoteId != null){
+                    mView.startPost(noteBuilder, fileNameList)
                 }
             }
         }
@@ -56,6 +58,9 @@ class EditNotePresenter(private val mView: EditNoteContract.View, private val co
         noteBuilder.visibility = visibility
     }
 
+    override fun setFile(file: File) {
+        fileList.add(file)
+    }
     override fun start() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

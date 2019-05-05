@@ -2,7 +2,9 @@ package org.panta.misskey_for_android_v2.service
 
 import android.app.Service
 import android.content.Intent
+import android.os.Handler
 import android.os.IBinder
+import android.util.Log
 import android.widget.Toast
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -49,24 +51,31 @@ class NotePostService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+        Log.d("NotePostService", "onStartCommand")
 
         val noteBuilder = intent?.getSerializableExtra(NOTE_BUILDER_CODE) as CreateNoteProperty.Builder
 
         val fileNameArray = intent.getStringArrayExtra(FILE_NAME_ARRAY_CODE)
         GlobalScope.launch{
-            val file = fileNameArray?.map { File(it) }?.map{
-                jacksonObjectMapper().readValue<FileProperty>(uploadFile(it)!!).id!!
+            try{
+                val file = fileNameArray?.map { File(it) }?.map{
+                    jacksonObjectMapper().readValue<FileProperty>(uploadFile(it)!!).id!!
+                }
+
+                noteBuilder.fileIds = file
+                val noteProperty = noteBuilder.create()
+                val result = OkHttpConnection().postString(URL("$domain/api/notes/create"), jacksonObjectMapper().writeValueAsString(noteProperty))
+                if(result == null){
+                    Log.d("NotePostService", "投稿に失敗")
+                }else{
+                    Log.d("NotePostService", "投稿に失敗")
+
+                }
+                stopSelf()
+            }catch(e: Exception){
+                Log.w("NotePostService", "error", e)
             }
 
-            noteBuilder.fileIds = file
-            val noteProperty = noteBuilder.create()
-            val result = OkHttpConnection().postString(URL("$domain/api/notes/create"), jacksonObjectMapper().writeValueAsString(noteProperty))
-            if(result == null){
-                Toast.makeText(applicationContext, "投稿に失敗しました", Toast.LENGTH_LONG).show()
-            }else{
-                Toast.makeText(applicationContext, "投稿に成功しました", Toast.LENGTH_LONG).show()
-            }
-            stopSelf()
 
         }
 

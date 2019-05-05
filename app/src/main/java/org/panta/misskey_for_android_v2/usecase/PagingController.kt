@@ -1,5 +1,6 @@
 package org.panta.misskey_for_android_v2.usecase
 
+import android.util.Log
 import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.interfaces.ID
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
@@ -8,6 +9,8 @@ import java.lang.Exception
 class PagingController<E: ID>(private val mRepository: IItemRepository<E>, private val errorCallBackListener: ErrorCallBackListener){
     private var latestId: String? = null
     private var oldestId: String? = null
+
+    private var requestOldestFlag: String? = null
 
     fun getNewItems(callBack:(List<E>)->Unit){
         if(latestId == null){
@@ -31,6 +34,14 @@ class PagingController<E: ID>(private val mRepository: IItemRepository<E>, priva
             getInit(callBack)
             return
         }
+
+        if(requestOldestFlag == oldestId){
+            Log.d("PagingController", "重複を防いだ")
+            callBack(emptyList())
+            return
+        }else{
+            requestOldestFlag = oldestId
+        }
         mRepository.getItemsUseUntilId(oldestId!!){
             if(it == null){
                 errorCallBackListener.callBack(Exception("NULL返ってきちゃった・・"))
@@ -41,6 +52,7 @@ class PagingController<E: ID>(private val mRepository: IItemRepository<E>, priva
             val o = searchOldestId(it)
             if(o != null){
                 oldestId = o
+                requestOldestFlag = null
             }
         }
     }

@@ -1,10 +1,20 @@
 package org.panta.misskey_for_android_v2.view_presenter.note_editor
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
+import android.support.annotation.RequiresApi
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.vanniktech.emoji.EmojiManager
@@ -13,9 +23,13 @@ import kotlinx.android.synthetic.main.activity_edit_note.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.NoteType
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
+import org.panta.misskey_for_android_v2.entity.CreateNoteProperty
 import org.panta.misskey_for_android_v2.repository.SecretRepository
+import org.panta.misskey_for_android_v2.service.NotePostService
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
+import java.io.File
+import java.net.URLDecoder
 
 class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
@@ -27,6 +41,9 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
         //const val CONNECTION_INFO = "EditNoteActivityConnectionInfo"
 
         const val CREATE_NOTE_TARGET_ID = "EDIT_NOTE_ACTIVITY_CREATE_NOTE_ID"
+
+        private const val REQUEST_PERMISSION_CODE = 238
+        private const val FILE_MANAGER_RESULT_CODE = 852
 
         fun startActivity(context:Context, targetId: String?, type: NoteType?){
             val intent = Intent(context, EditNoteActivity::class.java)
@@ -84,13 +101,24 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
                 .show()
         }
 
-    }
+        select_image_button.setOnClickListener{
+            val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            val writePermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-    override fun onPosted() {
-        runOnUiThread{
-            finish()
+
+            if(permissionCheck == PackageManager.PERMISSION_GRANTED && writePermissionCheck == PackageManager.PERMISSION_GRANTED){
+                showFileManager()
+            }else{
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    , REQUEST_PERMISSION_CODE)
+            }
+
+
         }
     }
+
+
 
     override fun onError(msg: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -101,7 +129,19 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
     }
 
     override fun showFileManager() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        startActivityForResult(intent, FILE_MANAGER_RESULT_CODE)
+    }
+
+    override fun startPost(builder: CreateNoteProperty.Builder, files: Array<String>) {
+        val intent = Intent(applicationContext, NotePostService::class.java)
+        if(files.isNotEmpty()){
+            intent.putExtra(NotePostService.FILE_NAME_ARRAY_CODE, files)
+        }
+        intent.putExtra(NotePostService.NOTE_BUILDER_CODE, builder)
+        startService(intent)
+        finish()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -126,6 +166,21 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
         menuInflater.inflate(R.menu.activity_edit_note_drawer, menu)
         return true
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(resultCode == RESULT_OK){
+            if(requestCode == FILE_MANAGER_RESULT_CODE){
+                val uri = data?.data
+                Log.d("EditNoteActivity", "選択された $uri")
+
+            }
+        }
+
+    }
+
+
 
 
 }
