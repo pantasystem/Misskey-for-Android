@@ -28,10 +28,28 @@ class OkHttpConnection{
 
     }
 
-    fun postFile(url: URL, file: File){
-        val mime = "image/jpg"
-        val mediaType = MediaType.parse(mime)
-        val requestBody = MultipartBody.Builder()
+    fun postFile(url: URL,i: String, file: File, force: Boolean, isSensitive: Boolean? = null): String?{
+        return try{
+            val mime = "image/jpg"
+            val client = OkHttpClient()
+            val requestBody = MultipartBody.Builder()
+                .addFormDataPart("i", i)
+                .addFormDataPart("force", force.toString())
+                .addFormDataPart("file", file.name, RequestBody.create(MediaType.parse(mime), file)).build()
+
+            val request = Request.Builder().url(url).post(requestBody).build()
+            val response = client.newCall(request).execute()
+            val code =response.code()
+            if(code < 300){
+                response.body()?.string()
+            }else{
+                null
+            }
+        }catch(e: Exception){
+            Log.w("OkHttpConnection", "post file error", e)
+            null
+        }
+
     }
 
 }

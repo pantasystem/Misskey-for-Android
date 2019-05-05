@@ -19,16 +19,32 @@
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="top" android:hint="@string/what_are_you_doing"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"/>
-    <android.support.design.widget.BottomNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/linearLayout"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@color/colorPrimary"
-            app:labelVisibilityMode="unlabeled"
-            app:itemIconTint="@android:color/background_light"
-            app:menu="@menu/menu_edit_note_bottom_navigation" app:itemTextColor="@android:color/background_light"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/style_edit_note_bottom_navigation"
+            app:layout_constraintStart_toStartOf="parent" android:id="@+id/linearLayout">
+        <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp" app:srcCompat="@drawable/ic_menu_gallery"
+                style="?android:attr/borderlessButtonStyle"
+                android:id="@+id/select_image_button" android:layout_weight="1"/>
+        <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp" app:srcCompat="@drawable/cloud_icon" android:id="@+id/online_strage_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_weight="1" android:scaleType="centerInside"/>
+        <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp" app:srcCompat="@drawable/global_icon"
+                style="?android:attr/borderlessButtonStyle"
+                app:backgroundTint="@color/cast_expanded_controller_progress_text_color"
+                android:id="@+id/visibility_button" android:layout_weight="1" android:scaleType="centerInside"/>
+    </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>

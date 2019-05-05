@@ -52,6 +52,10 @@ class EditNotePresenter(private val mView: EditNoteContract.View, private val co
         }
     }
 
+    override fun setVisibility(visibility: String) {
+        noteBuilder.visibility = visibility
+    }
+
     override fun start() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

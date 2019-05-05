@@ -18,5 +18,6 @@ interface EditNoteContract{
         fun setText(text: String)
         fun postNote()
         fun setNoteType(type: Int, targetId: String?)
+        fun setVisibility(visibility: String)
     }
 }

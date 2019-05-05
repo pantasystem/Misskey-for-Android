@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
 import com.vanniktech.emoji.EmojiManager
@@ -70,11 +71,17 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
         mPresenter.setNoteType(editType, targetId)
 
-        bottom_navigation.setOnNavigationItemSelectedListener {
-            when(it.itemId){
+        val visibilitySelection = arrayOf<CharSequence>("public", "home", "followers", "specified")
+        visibility_button.setOnClickListener{
+            AlertDialog.Builder(this)
+                .setTitle("公開範囲")
+                .setSingleChoiceItems(visibilitySelection, 0){ _, which ->
+                    mPresenter.setVisibility(visibilitySelection[which].toString())
+                }
+                .setPositiveButton(android.R.string.ok){ _, _->
 
-            }
-            return@setOnNavigationItemSelectedListener false
+                }
+                .show()
         }
 
     }
