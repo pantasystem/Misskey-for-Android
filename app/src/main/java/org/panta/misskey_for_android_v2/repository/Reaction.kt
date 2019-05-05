@@ -19,6 +19,7 @@ class Reaction(private val domain: String, private val authKey: String){
                 val data = ReactionCreateXorDeleteProperty( i = authKey, noteId = targetNoteId, reaction = type)
                 val json = jacksonObjectMapper().writeValueAsString(data)
                 val stream = connection.postString(URL("$domain/api/notes/reactions/create"), json)
+                Log.d("Reaction","受け取った内容 $stream")
                 if(stream == null){
                     callBack(false)
                 }else{

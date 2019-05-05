@@ -6,7 +6,7 @@ import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
-class StreamConverter{
+@Deprecated("okhHtp3に置き換え") class StreamConverter{
 
     fun getString(inputStream: InputStream): String{
         val br = BufferedReader(InputStreamReader(inputStream))
