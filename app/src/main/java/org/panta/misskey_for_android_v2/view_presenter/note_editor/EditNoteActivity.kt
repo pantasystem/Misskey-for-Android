@@ -1,16 +1,13 @@
 package org.panta.misskey_for_android_v2.view_presenter.note_editor
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
@@ -29,7 +26,6 @@ import org.panta.misskey_for_android_v2.service.NotePostService
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
 import java.io.File
-import java.net.URLDecoder
 
 class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
@@ -172,12 +168,36 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
         if(resultCode == RESULT_OK){
             if(requestCode == FILE_MANAGER_RESULT_CODE){
-                val uri = data?.data
-                Log.d("EditNoteActivity", "選択された $uri")
+                Log.d("EditNoteActivity", "contentPath ${intent.data}")
 
+                //FIXME ギャラリーから選択した場合NULLが返ってくる
+                val file = getFilePath(data!!)
+                Log.d("EditNoteActivity", "getExtras ${intent?.extras}")
+
+                mPresenter.setFile(file)
             }
         }
 
+    }
+
+    private fun getFilePath(data: Intent): File{
+        val strDocId = DocumentsContract.getDocumentId(data.data)
+
+        val strSplittedDocId = strDocId.split(":")
+        val strId = strSplittedDocId[strSplittedDocId.size - 1]
+
+        val crsCursor = contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            arrayOf(MediaStore.MediaColumns.DATA),
+            "_id=?",
+            arrayOf(strId),
+            null
+        )
+        crsCursor?.moveToFirst()
+        val filePath = crsCursor?.getString(0)
+        crsCursor?.close()
+        Log.d("EditNoteActivity", "filePath $filePath")
+        return File(filePath)
     }
 
 

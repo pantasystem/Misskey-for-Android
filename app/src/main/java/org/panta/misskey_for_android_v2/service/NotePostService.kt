@@ -58,17 +58,37 @@ class NotePostService : Service() {
         val fileNameArray = intent.getStringArrayExtra(FILE_NAME_ARRAY_CODE)
         GlobalScope.launch{
             try{
-                val file = fileNameArray?.map { File(it) }?.map{
+                /*val file = fileNameArray?.map { File(it) }?.map{
                     jacksonObjectMapper().readValue<FileProperty>(uploadFile(it)!!).id!!
+                }*/
+                val files = fileNameArray?.map{
+                    File(it)
                 }
 
-                noteBuilder.fileIds = file
+                val fileIdList = ArrayList<String>()
+                files?.forEach{
+                    val response = uploadFile(it)
+                    if(response == null){
+                        Log.d("NotePostService", "fileのアップロードに失敗")
+                    }else{
+                        try{
+                            Log.d("NotePostService", "fileのアップロードに成功")
+                            val value = jacksonObjectMapper().readValue<FileProperty>(response)
+
+                            fileIdList.add(value.id!!)
+                        }catch(e: Exception){
+                            Log.d("NotePostService", "fileのアップロードに失敗", e)
+                        }
+                    }
+                }
+
+                noteBuilder.fileIds = fileIdList
                 val noteProperty = noteBuilder.create()
                 val result = OkHttpConnection().postString(URL("$domain/api/notes/create"), jacksonObjectMapper().writeValueAsString(noteProperty))
                 if(result == null){
                     Log.d("NotePostService", "投稿に失敗")
                 }else{
-                    Log.d("NotePostService", "投稿に失敗")
+                    Log.d("NotePostService", "投稿に成功")
 
                 }
                 stopSelf()

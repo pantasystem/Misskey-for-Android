@@ -18,8 +18,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".view_presenter.file_manager.FileManagerActivity">
-        </activity>
+
 
         <service
                 android:name=".service.NotePostService"
