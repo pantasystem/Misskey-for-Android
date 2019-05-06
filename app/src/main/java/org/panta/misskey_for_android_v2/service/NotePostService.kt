@@ -82,7 +82,12 @@ class NotePostService : Service() {
                     }
                 }
 
-                noteBuilder.fileIds = fileIdList
+                noteBuilder.fileIds = if(fileIdList.isEmpty()){
+                    null
+                }else{
+                    fileIdList
+                }
+
                 val noteProperty = noteBuilder.create()
                 val result = OkHttpConnection().postString(URL("$domain/api/notes/create"), jacksonObjectMapper().writeValueAsString(noteProperty))
                 if(result == null){
