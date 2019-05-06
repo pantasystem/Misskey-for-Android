@@ -127,6 +127,7 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
     override fun showFileManager() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
         startActivityForResult(intent, FILE_MANAGER_RESULT_CODE)
     }
 
@@ -165,25 +166,37 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if(resultCode == RESULT_OK){
-            if(requestCode == FILE_MANAGER_RESULT_CODE){
-                Log.d("EditNoteActivity", "contentPath ${intent.data}")
-
+        if(requestCode == FILE_MANAGER_RESULT_CODE){
+            if(resultCode == RESULT_OK && data != null){
                 //FIXME ギャラリーから選択した場合NULLが返ってくる
-                val file = getFilePath(data!!)
-                Log.d("EditNoteActivity", "getExtras ${intent?.extras}")
 
-                mPresenter.setFile(file)
+                Log.d("EditNoteActivity", "contentPath ${data.data}")
+
+                val uri = data.data
+                if(uri != null){
+                    val file = if(uri.toString().startsWith("content://media")){
+                        getMediaFile(data)
+                    }else{
+                        getDocumentFile(data)
+                    }
+                    if(file != null){
+                        mPresenter.setFile(file)
+                    }
+                }
+
             }
+
+
         }
+
 
     }
 
-    private fun getFilePath(data: Intent): File{
+    private fun getDocumentFile(data: Intent): File{
         val strDocId = DocumentsContract.getDocumentId(data.data)
 
         val strSplittedDocId = strDocId.split(":")
+        Log.d("EditNoteActivity", "strSplittedDocId $strSplittedDocId")
         val strId = strSplittedDocId[strSplittedDocId.size - 1]
 
         val crsCursor = contentResolver.query(
@@ -200,6 +213,25 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
         return File(filePath)
     }
 
+
+    private fun getMediaFile(data: Intent): File?{
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(data.data!!, projection, null, null, null, null)
+
+        val path: String?
+        if(cursor != null){
+            if(cursor.moveToFirst()){
+                path = cursor.getString(0)
+            }else{
+                path = null
+            }
+            cursor.close()
+
+        }else{
+            path = null
+        }
+        return if(path == null) null else File(path)
+    }
 
 
 
