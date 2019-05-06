@@ -53,6 +53,8 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
 
     private val showThreadButton: Button = itemView.show_thread_button
 
+    private val mediaPlayButton: Button = itemView.media_play_button
+
     fun setNote(content: NoteViewData){
         val toShowNote = content.toShowNote
         whoReactionUserLink.visibility = View.GONE
@@ -195,6 +197,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
         injectionTextGoneWhenNull(note.text, noteText)
         setRelationUserListener(note.user!!, userName, userId, userIcon)
         setImage(filterImageData(note))
+        injectionMediaPlayButton(note.files?.firstOrNull(), mediaPlayButton)
 
     }
 
@@ -341,6 +344,31 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
                 .into(imageView)
         }
 
+    }
+
+    private fun injectionMediaPlayButton(fileProperty: FileProperty?, view: Button){
+        val type = fileProperty?.type
+        when {
+            type == null -> {
+                view.visibility = View.GONE
+                return
+            }
+            type.startsWith("video") -> {
+                view.visibility = View.VISIBLE
+                view.text = "動画を再生"
+            }
+            type.startsWith("audio") -> {
+                view.visibility = View.VISIBLE
+                view.text = "音楽を再生"
+            }
+            else -> {
+                view.visibility = View.GONE
+                return
+            }
+        }
+        view.setOnClickListener {
+            contentClickListener?.onMediaPlayClicked(fileProperty)
+        }
     }
 
     private fun roundInjectionImage(imageUrl: String, imageView: ImageView, radius:Int = 30){

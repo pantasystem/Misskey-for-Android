@@ -2,6 +2,7 @@ package org.panta.misskey_for_android_v2.view_presenter.timeline
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
@@ -19,6 +20,7 @@ import org.panta.misskey_for_android_v2.constant.NoteType
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.dialog.ReactionDialog
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
+import org.panta.misskey_for_android_v2.entity.FileProperty
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
@@ -31,6 +33,7 @@ import org.panta.misskey_for_android_v2.view_presenter.image_viewer.ImageViewerA
 import org.panta.misskey_for_android_v2.view_presenter.note_description.NoteDescriptionActivity
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
 import org.panta.misskey_for_android_v2.view_presenter.user.UserActivity
+import java.net.URL
 
 class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, TimelineContract.View,
     NoteClickListener, UserClickListener{
@@ -237,6 +240,10 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
     override fun onImageClicked(clickedIndex: Int, clickedImageUrlCollection: Array<String>) {
         ImageViewerActivity.startActivity(context, clickedImageUrlCollection, clickedIndex)
+    }
+
+    override fun onMediaPlayClicked(fileProperty: FileProperty) {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(fileProperty.url)))
     }
 
     override fun onClickedUser(user: User) {
