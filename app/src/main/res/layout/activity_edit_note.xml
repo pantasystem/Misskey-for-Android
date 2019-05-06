@@ -8,18 +8,6 @@
         android:fitsSystemWindows="true"
         tools:context=".view_presenter.note_editor.EditNoteActivity">
 
-    <com.vanniktech.emoji.EmojiEditText
-            android:id="@+id/editText"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:gravity="top" android:hint="@string/what_are_you_doing"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/linearLayout"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="0dp"
@@ -45,6 +33,33 @@
                 app:backgroundTint="@color/cast_expanded_controller_progress_text_color"
                 android:id="@+id/visibility_button" android:layout_weight="1" android:scaleType="centerInside"/>
     </LinearLayout>
+    <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/images_preview">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="vertical">
+            <com.vanniktech.emoji.EmojiEditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:ems="10"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="top" android:hint="@string/what_are_you_doing"
+            />
+        </LinearLayout>
+    </ScrollView>
+    <android.support.v7.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="120dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout" app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/images_preview"/>
 
 
 </android.support.constraint.ConstraintLayout>

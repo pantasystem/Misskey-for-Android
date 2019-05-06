@@ -13,6 +13,8 @@ interface EditNoteContract{
         fun showFileManager()
         fun showCloudFileManager()
         fun startPost(builder: CreateNoteProperty.Builder, files: Array<String>)
+        fun showImagePreview()
+        fun addImagePreviewItem(file: File)
     }
 
     interface Presenter : BasePresenter {
@@ -22,5 +24,7 @@ interface EditNoteContract{
         fun setNoteType(type: Int, targetId: String?)
         fun setVisibility(visibility: String)
         fun setFile(file: File)
+        fun removeFile(index: Int)
+
     }
 }

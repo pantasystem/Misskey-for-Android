@@ -4,10 +4,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_image_preview.view.*
 import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.interfaces.ItemClickListener
 import java.io.File
 
 class ImagePreviewAdapter(fileList: List<File>) : RecyclerView.Adapter<ImagePreviewAdapter.ImagePreviewHolder>(){
@@ -16,6 +18,9 @@ class ImagePreviewAdapter(fileList: List<File>) : RecyclerView.Adapter<ImagePrev
     }
 
     private val fileArrayList = ArrayList<File>(fileList)
+
+    private var onItemClickListener: ItemClickListener<Int>? = null
+    private var onItemLongClickListener: ItemClickListener<Int>? = null
 
     override fun getItemCount(): Int {
         return fileArrayList.size
@@ -31,10 +36,17 @@ class ImagePreviewAdapter(fileList: List<File>) : RecyclerView.Adapter<ImagePrev
         Picasso
             .get()
             .load(file)
+            .fit()
             .into(p0.imagePreview)
 
         p0.imagePreview?.setOnClickListener{
+            onItemClickListener?.onClick(p1)
+        }
 
+        p0.imagePreview?.setOnLongClickListener {
+
+            onItemLongClickListener?.onClick(p1)
+            return@setOnLongClickListener true
         }
 
     }
@@ -55,6 +67,21 @@ class ImagePreviewAdapter(fileList: List<File>) : RecyclerView.Adapter<ImagePrev
         notifyItemRemoved(index)
     }
 
+    fun getItem(index: Int): File{
+        synchronized(fileArrayList){
+            return fileArrayList[index]
+        }
+    }
 
+    fun getAllItem(): List<File>{
+        return fileArrayList
+    }
 
+    fun addOnItemClickListener(listener: ItemClickListener<Int>){
+        onItemClickListener = listener
+    }
+
+    fun addOnItemLongClickListener(listener: ItemClickListener<Int>){
+        onItemLongClickListener = listener
+    }
 }

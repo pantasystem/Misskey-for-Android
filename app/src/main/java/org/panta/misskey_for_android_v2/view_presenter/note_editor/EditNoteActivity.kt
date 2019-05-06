@@ -11,19 +11,26 @@ import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import com.vanniktech.emoji.EmojiManager
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider
 import kotlinx.android.synthetic.main.activity_edit_note.*
 import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.adapter.ImagePreviewAdapter
 import org.panta.misskey_for_android_v2.constant.NoteType
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.CreateNoteProperty
+import org.panta.misskey_for_android_v2.interfaces.ItemClickListener
 import org.panta.misskey_for_android_v2.repository.SecretRepository
 import org.panta.misskey_for_android_v2.service.NotePostService
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
+import org.panta.misskey_for_android_v2.view_presenter.image_viewer.ImagePageAdapter
+import org.panta.misskey_for_android_v2.view_presenter.image_viewer.ImageViewerActivity
 import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
 import java.io.File
 
@@ -56,6 +63,8 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
     private lateinit var connectionInfo: ConnectionProperty
 
+    private lateinit var imagePreviewAdapter: ImagePreviewAdapter
+
     //private var mEditType = 0
     //private var mTargetId: String? = null
 
@@ -67,6 +76,10 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
         title = "投稿"
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        imagePreviewAdapter = ImagePreviewAdapter(emptyList())
+        imagePreviewAdapter.addOnItemLongClickListener(onItemLongClickListener)
+        imagePreviewAdapter.addOnItemClickListener(onItemClickListenr)
 
         val intent = intent
         val editType = intent.getIntExtra(EDIT_TYPE, 0)
@@ -116,8 +129,22 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
 
 
 
+    override fun showImagePreview() {
+        runOnUiThread {
+            images_preview.visibility = View.VISIBLE
+            images_preview.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
+            images_preview.adapter = imagePreviewAdapter
+        }
+    }
+
+    override fun addImagePreviewItem(file: File) {
+        runOnUiThread{
+            imagePreviewAdapter.addFile(file)
+        }
+    }
+
     override fun onError(msg: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.d("EditNoteActivity", msg)
     }
 
     override fun showCloudFileManager() {
@@ -231,6 +258,45 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
             path = null
         }
         return if(path == null) null else File(path)
+    }
+
+
+    //remove image
+    private val onItemLongClickListener = object : ItemClickListener<Int>{
+        override fun onClick(e: Int) {
+            showRemoveDialog(e)
+        }
+
+    }
+
+    //show imageViewer
+    private val onItemClickListenr = object  : ItemClickListener<Int>{
+        override fun onClick(e: Int) {
+            showImageViewr(e)
+        }
+    }
+
+    private fun showImageViewr(index: Int){
+        runOnUiThread {
+            val path = imagePreviewAdapter.getItem(index).path
+            val list = arrayOf(path)
+            ImageViewerActivity.startActivity(this, list, 0)
+        }
+    }
+
+    private fun showRemoveDialog(index: Int){
+        AlertDialog.Builder(this)
+            .setTitle("添付をやめますか？")
+            .setPositiveButton(android.R.string.ok){ _, _ ->
+                runOnUiThread{
+                    imagePreviewAdapter.removeFile(index)
+                    mPresenter.removeFile(index)
+                }
+            }
+            .setNegativeButton(android.R.string.cancel){ _, _ ->
+
+            }.show()
+
     }
 
 

@@ -59,7 +59,15 @@ class EditNotePresenter(private val mView: EditNoteContract.View, private val co
     }
 
     override fun setFile(file: File) {
+        if(fileList.isEmpty()){
+            mView.showImagePreview()
+        }
+        mView.addImagePreviewItem(file)
         fileList.add(file)
+    }
+
+    override fun removeFile(index: Int) {
+        fileList.removeAt(index)
     }
     override fun start() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

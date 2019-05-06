@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_image_view.*
 import org.panta.misskey_for_android_v2.R
+import java.io.File
 import java.net.URL
 
 class ImageViewFragment : Fragment(){
@@ -40,11 +41,21 @@ class ImageViewFragment : Fragment(){
         if(mImageUrl == null){
 
         }else{
+            if(mImageUrl!!.startsWith("http")){
+                val url = mImageUrl
+                Picasso
+                    .get()
+                    .load(url)
+                    .into(imageView)
+            }else{
+                val file = File(mImageUrl)
+                Picasso
+                    .get()
+                    .load(file)
+                    .into(imageView)
+            }
             image_url_view.text = mImageUrl
-            Picasso
-                .get()
-                .load(mImageUrl)
-                .into(imageView)
+
         }
     }
 }
