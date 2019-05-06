@@ -1,36 +1,48 @@
-# Misskey for Android v2
+# Misskey for Android
 MisskeyのためのAndroidクライアント（作りかけ）
 ## Description
 これはMisskeyのためのAndroidクライアントです。これは公式のような名前をしていますが非公式クライアントです。
 ## Demo
-Timeline（Home Timeline)しか動かない
+簡単な投稿と、タイムラインの取得ができる。
+
 ## Usage
 TimelineとReply Renote　Reactionと投稿はできる
-使えたもんじゃない
+使えたもんじ
 
 ## Requirement
-直接自分のAPI KEYをソースコードに記述して利用する方法しか確立していない
-のでソースコードを加える必要がある
-package org.panta.misskey_for_android_v2.constant;
-にApplicationConstantというJavaのabstractなクラスを作り
-以下のように入力しauthKeyに自分のAPI KEYを入力するくれぐれもGitHubなどに公開しないように！！
-gitignoreにApplicationConstant.javaを記述しましょう。
-これはどう考えても危険で汎用性を下げているのでアプリの進捗次第で変更する。
+###普通に使う場合
+野良APKを公開しているので、ダウンロードする。
+https://drive.google.com/drive/folders/1_VJjwzp5VDf09O7gZENhLVpoWalDVHWE
+アプリを起動して、接続するインスタンスをタップして認証ボタンを押す。
+権限の許可をすると勝手にリダイレクトしてタイムラインが表示される。
+
+###自分でビルドする場合
+まず
+https://misskey.io/dev/apps　で自分のappSecretを作成する
+※権限は全て選択すること。
+次にpackage org.panta.misskey_for_android_v2.constant;パッケージに
+abstractなApplicationConstantクラスを作成しそこにstaticなgetAppSecretKey()メソッドを作成する。
+getAppSecretKey()の中に取得したappSecretをreturnするようにすればOK
+※他人に配布する場合は必ずデコンパイルされたときにこのappSecretが盗まれないように難読化すること。
+あとはビルドしてインストール
+
 ```
 public abstract class ApplicationConstant {
-    final static int timelineGetLimit = 1; //これは機能していない
-    public final static String authKey = "XXXXXXXX;
-    public final static String domain="https://misskey.xyz";
+    static String getAppSecretKey(){
+        return "appSecret" //自分のAppSecret
+    }
 }
 ```
 
 採用したアーキテクチャはMVP風の何かであるがMVPではない
 ライセンス表記、著作権的に問題のあるファイルがあればすぐに報告してくださいよろしくお願いします。
 
+usecaseパッケージやrepositoryパッケージがあるが正しい意味ではなく独自のものとしてとらえてほしい。
+
 
 ## install
-https://android.gcreate.jp/212 ※私のサイトではない
+https://drive.google.com/drive/folders/1_VJjwzp5VDf09O7gZENhLVpoWalDVHWE
 
 ## Licence
-This application is open source software licensed under the GNU AGPLv3.
+This application is open source software licensed under the Apache 2.0.
 
