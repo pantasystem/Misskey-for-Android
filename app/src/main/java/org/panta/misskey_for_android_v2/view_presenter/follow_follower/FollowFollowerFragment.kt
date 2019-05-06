@@ -41,6 +41,7 @@ class FollowFollowerFragment : Fragment(), FollowFollowerContract.View{
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var mAdapter: FollowsAdapter
 
+    private lateinit var type: FollowFollowerType
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -56,7 +57,8 @@ class FollowFollowerFragment : Fragment(), FollowFollowerContract.View{
         val userId = args.getString(USER_ID)!!
         val type = args.getInt(FOLLOW_FOLLOWER_TYPE, 0 )
 
-        val repository = FollowFollowerRepository(userId, FollowFollowerType.getTypeFromOrdinal(type), info)
+        this.type = FollowFollowerType.getTypeFromOrdinal(type)
+        val repository = FollowFollowerRepository(userId, this.type, info)
         mPresenter = FollowFollowerPresenter(this, repository, info)
 
         mLayoutManager = LinearLayoutManager(context)
@@ -71,7 +73,7 @@ class FollowFollowerFragment : Fragment(), FollowFollowerContract.View{
 
     override fun showItems(list: List<FollowViewData>) {
         activity?.runOnUiThread{
-            val adapter = FollowsAdapter(list)
+            val adapter = FollowsAdapter(list, this.type)
             mAdapter = adapter
             follow_follower_recycler_view.layoutManager = mLayoutManager
             follow_follower_recycler_view.adapter = adapter

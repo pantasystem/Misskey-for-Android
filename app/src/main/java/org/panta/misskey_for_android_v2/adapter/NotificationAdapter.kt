@@ -90,13 +90,13 @@ class NotificationAdapter(private val notificationList: List<NotificationViewDat
         }
     }
 
-    override fun getNote(index: Int): NotificationViewData {
+    override fun getItem(index: Int): NotificationViewData {
         synchronized(notificationList){
             return notificationList[index]
         }
     }
 
-    override fun removeNote(item: NotificationViewData) {
+    override fun removeItem(item: NotificationViewData) {
         synchronized(notificationList){
             val index = notificationList.indexOf(item)
             if(notificationList is ArrayList){
@@ -109,7 +109,7 @@ class NotificationAdapter(private val notificationList: List<NotificationViewDat
         }
     }
 
-    override fun updateNote(item: NotificationViewData) {
+    override fun updateItem(item: NotificationViewData) {
         synchronized(notificationList){
             val index = notificationList.indexOf(item)
             if(notificationList is ArrayList){

@@ -85,11 +85,11 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
         }
     }
 
-    override fun getNote(index: Int): NoteViewData{
+    override fun getItem(index: Int): NoteViewData{
         return mArrayList[index]
     }
 
-    override fun updateNote(item: NoteViewData){
+    override fun updateItem(item: NoteViewData){
        // var index = -1
         synchronized(mArrayList){
 
@@ -108,7 +108,7 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
     }
 
 
-    override fun removeNote(item: NoteViewData){
+    override fun removeItem(item: NoteViewData){
         synchronized(mArrayList){
             val index = mArrayList.indexOf(item)
             mArrayList.remove(item)

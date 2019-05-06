@@ -5,11 +5,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
+import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.interfaces.IOperationAdapter
 import org.panta.misskey_for_android_v2.view_data.FollowViewData
 import java.util.*
 
-class FollowsAdapter(list: List<FollowViewData>) : RecyclerView.Adapter<FollowViewHolder>(), IOperationAdapter<FollowViewData>{
+class FollowsAdapter(list: List<FollowViewData>, private val type: FollowFollowerType) : RecyclerView.Adapter<FollowViewHolder>(), IOperationAdapter<FollowViewData>{
 
     //listをキャストして扱うこともできるが元がLinkedListかもしれないのでArrayListとして作成する
     private val mArrayList = ArrayList<FollowViewData>(list)
@@ -25,12 +26,8 @@ class FollowsAdapter(list: List<FollowViewData>) : RecyclerView.Adapter<FollowVi
     }
 
     override fun onBindViewHolder(p0: FollowViewHolder, p1: Int) {
-        val followProperty = mArrayList[p1].follow
-        if(followProperty.follower != null){
-            p0.setFollower(followProperty.follower)
-        }else if(followProperty.followee != null){
-            p0.setFollowing(followProperty.followee)
-        }
+        val followProperty = mArrayList[p1]
+        p0.bindItem(followProperty, type)
     }
 
     override fun addAllFirst(list: List<FollowViewData>) {
@@ -53,11 +50,11 @@ class FollowsAdapter(list: List<FollowViewData>) : RecyclerView.Adapter<FollowVi
         }
     }
 
-    override fun getNote(index: Int): FollowViewData {
+    override fun getItem(index: Int): FollowViewData {
         return mArrayList[index]
     }
 
-    override fun removeNote(item: FollowViewData) {
+    override fun removeItem(item: FollowViewData) {
         synchronized(mArrayList){
             val index = mArrayList.indexOf(item)
             mArrayList.remove(item)
@@ -68,7 +65,7 @@ class FollowsAdapter(list: List<FollowViewData>) : RecyclerView.Adapter<FollowVi
         }
     }
 
-    override fun updateNote(item: FollowViewData) {
+    override fun updateItem(item: FollowViewData) {
         synchronized(mArrayList){
             val index = mArrayList.indexOf(item)
             mArrayList[index] = item
