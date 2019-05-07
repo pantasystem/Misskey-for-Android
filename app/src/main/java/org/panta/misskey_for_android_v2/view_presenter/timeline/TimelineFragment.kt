@@ -68,8 +68,8 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     private var connectionInfo: ConnectionProperty? = null
 
     private var mTimelineType: TimelineTypeEnum = TimelineTypeEnum.HOME
-    lateinit var mLayoutManager: LinearLayoutManager
-    private lateinit var mAdapter: TimelineAdapter
+    private var mLayoutManager: LinearLayoutManager? = null
+    private var mAdapter: TimelineAdapter? = null
 
     private var isMediaOnly: Boolean? = null
     private var userId: String? = null
@@ -132,8 +132,8 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
             timelineView?.visibility = View.VISIBLE
             Log.d("TimelineFragment", "データの取得が完了した")
             mAdapter = TimelineAdapter(context!!, list)
-            mAdapter.addNoteClickListener(this)
-            mAdapter.addUserClickListener(this)
+            mAdapter?.addNoteClickListener(this)
+            mAdapter?.addUserClickListener(this)
 
 
             timelineView?.layoutManager = mLayoutManager
@@ -149,7 +149,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     override fun showNewTimeline(list: List<NoteViewData>) {
         activity?.runOnUiThread {
             stopRefreshing()
-            mAdapter.addAllFirst(list)
+            mAdapter?.addAllFirst(list)
         }
 
     }
@@ -157,14 +157,14 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     override fun showOldTimeline(list: List<NoteViewData>) {
         activity?.runOnUiThread{
             refresh?.isRefreshing = false
-            mAdapter.addAllLast(list)
+            mAdapter?.addAllLast(list)
         }
 
     }
 
     override fun showUpdatedNote(noteViewData: NoteViewData) {
         activity?.runOnUiThread {
-            mAdapter.updateItem(noteViewData)
+            mAdapter?.updateItem(noteViewData)
             Log.d("TimelineFragment", "更新後のデータ ${noteViewData.toShowNote}, ${noteViewData.reactionCountPairList}")
 
         }
@@ -251,20 +251,20 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         UserActivity.startActivity(context!!, user)
     }
 
-    override fun bindFindItemCount(): Int {
-        return timelineView.childCount
+    override fun bindFindItemCount(): Int? {
+        return timelineView?.childCount
     }
 
-    override fun bindFirstVisibleItemPosition(): Int {
-        return mLayoutManager.findFirstVisibleItemPosition()
+    override fun bindFirstVisibleItemPosition(): Int? {
+        return mLayoutManager?.findFirstVisibleItemPosition()
     }
 
-    override fun bindTotalItemCount(): Int {
-        return mLayoutManager.itemCount
+    override fun bindTotalItemCount(): Int? {
+        return mLayoutManager?.itemCount
     }
 
-    override fun pickViewData(index: Int): NoteViewData {
-        return mAdapter.getItem(index)
+    override fun pickViewData(index: Int): NoteViewData? {
+        return mAdapter?.getItem(index)
     }
 
 

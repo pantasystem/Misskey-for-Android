@@ -12,6 +12,7 @@ import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.repository.*
 import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.usecase.NoteUpdater
+import org.panta.misskey_for_android_v2.usecase.ObservationStreaming
 import org.panta.misskey_for_android_v2.usecase.PagingController
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
@@ -25,6 +26,8 @@ class TimelinePresenter(private val mView: TimelineContract.View,
 
 
     private val mReaction = Reaction(domain = info.domain, authKey = info.i)
+
+    private val observationStreaming = ObservationStreaming(this, bindScrollPosition)
 
 
     override fun getNewTimeline() {
@@ -74,15 +77,15 @@ class TimelinePresenter(private val mView: TimelineContract.View,
 
 
     override fun addFirstNote(data: NoteViewData) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onRemoveNote(data: NoteViewData) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onUpdateNote(data: NoteViewData) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
 

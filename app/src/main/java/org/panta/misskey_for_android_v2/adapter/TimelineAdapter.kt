@@ -86,7 +86,9 @@ class TimelineAdapter(private val context: Context, notesList: List<NoteViewData
     }
 
     override fun getItem(index: Int): NoteViewData{
-        return mArrayList[index]
+        synchronized(mArrayList){
+            return mArrayList[index]
+        }
     }
 
     override fun updateItem(item: NoteViewData){
