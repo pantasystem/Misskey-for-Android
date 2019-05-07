@@ -15,6 +15,8 @@ import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 import java.net.URL
+import java.util.*
+import kotlin.collections.ArrayList
 
 class NotificationRepository(private val domain: String, private val authKey: String): IItemRepository<NotificationViewData>{
 
@@ -86,7 +88,7 @@ class NotificationRepository(private val domain: String, private val authKey: St
             if(it.note == null){
                 NotificationViewData(it.id,false, it, null)
             }else{
-                val viewData = NoteViewData(it.note.id, false,it.note, it.note,noteAd.checkUpNoteType(it.note), noteAd.createReactionCountPair(it.note.reactionCounts))
+                val viewData = NoteViewData(it.note.id, false,it.note, it.note,noteAd.checkUpNoteType(it.note), noteAd.createReactionCountPair(it.note.reactionCounts), Date())
                 NotificationViewData(it.id, false, it, viewData)
             }
         }

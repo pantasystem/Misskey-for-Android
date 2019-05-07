@@ -10,7 +10,7 @@ import java.io.File
 class EditNotePresenter(private val mView: EditNoteContract.View, private val connectionInfo: ConnectionProperty) : EditNoteContract.Presenter{
 
     private val noteBuilder = CreateNoteProperty.Builder(connectionInfo.i)
-    private val noteRepository = NoteRepository(connectionInfo.domain)
+    private val noteRepository = NoteRepository(connectionInfo)
 
     private var noteType: NoteType = NoteType.CREATE
 

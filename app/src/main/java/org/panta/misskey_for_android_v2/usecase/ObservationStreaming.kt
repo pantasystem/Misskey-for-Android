@@ -5,11 +5,15 @@ import android.util.Log
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.IBindScrollPosition
 import org.panta.misskey_for_android_v2.interfaces.IBindStreamingAPI
+import org.panta.misskey_for_android_v2.repository.NoteRepository
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
+import java.util.*
+import kotlin.collections.HashMap
 
-class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, private val bindScrollPosition: IBindScrollPosition) {
+class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, private val bindScrollPosition: IBindScrollPosition, private val info: ConnectionProperty) {
 
 
     var isObserve: Boolean = true
@@ -23,6 +27,14 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
                 val nowPosition = bindScrollPosition.bindFirstVisibleItemPosition()?:0
                 scrollSpeed = Math.abs(nowPosition - beforePosition) / 0.5
                 beforePosition = nowPosition
+
+                if(scrollSpeed < 1.0){
+                    try{
+                        reacquireNote()
+                    }catch(e: Exception){
+                        Log.w("Observation", "error", e)
+                    }
+                }
 
                 if(scrollSpeed < 3.0){
                     try{
@@ -44,9 +56,9 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
 
     private fun captureNote(){
         val firstVisiblePosition = bindScrollPosition.bindFirstVisibleItemPosition()?: 0
-        val visibleTotal = bindScrollPosition.bindFindItemCount()?: 0
+        //val visibleTotal = bindScrollPosition.bindFindItemCount()?: 0
 
-        val end = firstVisiblePosition + visibleTotal
+        val end = getEnd()
 
         if(beforeFirst == firstVisiblePosition && beforeEnd == end){
             return
@@ -61,8 +73,8 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
             }
         }
 
-        val isUp = beforeFirst - firstVisiblePosition > 0
-        if(isUp){
+        //val isUp = beforeFirst - firstVisiblePosition > 0
+        if(isUp()){
             //endを消す
             for(n in (end + 1)..beforeEnd){
                 cancelCapture(n)
@@ -100,6 +112,44 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
             val removeItem = captureNoteMap[index]
             captureNoteMap.remove(index)
         }
+    }
+
+    private fun isUp(): Boolean{
+        val firstVisiblePosition = bindScrollPosition.bindFirstVisibleItemPosition()?: 0
+        return beforeFirst - firstVisiblePosition > 0
+    }
+
+    private fun getEnd(): Int{
+        val firstVisiblePosition = bindScrollPosition.bindFirstVisibleItemPosition()?: 0
+        val visibleTotal = bindScrollPosition.bindFindItemCount()?: 0
+
+        return firstVisiblePosition + visibleTotal
+    }
+
+    private fun reacquireNote(){
+        if(beforeFirst == bindScrollPosition.bindFirstVisibleItemPosition() && beforeEnd == getEnd()){
+            return
+        }
+        val position = (if(isUp()){
+            bindScrollPosition.bindFirstVisibleItemPosition()
+        }else{
+            getEnd() - 1
+        }) ?: return
+
+        val data = bindScrollPosition.pickViewData(position) ?: return
+        val time = Date().time - data.updatedAt.time
+        val isShouldUpdate = time > (1000 * 60 * 60)
+
+        if(isShouldUpdate){
+            NoteRepository(info).getNote(data.id){
+                if(it != null){
+                    bindStreamingAPI.onUpdateNote(it)
+                }
+            }
+        }
+
+
+
     }
 
 }

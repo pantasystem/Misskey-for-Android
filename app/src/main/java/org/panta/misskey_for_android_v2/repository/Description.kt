@@ -7,6 +7,8 @@ import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
+import java.util.*
+import kotlin.collections.ArrayList
 
 //FIXME そもそもDESCRIPTIONは別のActivity、別のFragmentで定義する可能性があるのでITimelineという型に
 // こだわる必要性がない可能性
@@ -25,7 +27,7 @@ class Description(){
         try{
             var reply: Note? = note.reply
             val replyList = ArrayList<NoteViewData>()
-            replyList.add(NoteViewData(id = note.id, isIgnore = false ,note = note, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = ReactionCountPair.createList(note.reactionCounts!!), toShowNote = note))
+            replyList.add(NoteViewData(id = note.id, isIgnore = false ,note = note, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = ReactionCountPair.createList(note.reactionCounts!!), toShowNote = note, updatedAt = Date()))
             while(reply != null){
                 val reactionPair = if(reply.reactionCounts == null){
                     emptyList()
@@ -35,7 +37,7 @@ class Description(){
                         ReactionCountPair(it.key, it.value.toString())
                     }
                 }
-                replyList.add(NoteViewData(id = reply.id, isIgnore = false ,note = reply, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = reactionPair, toShowNote = reply))
+                replyList.add(NoteViewData(id = reply.id, isIgnore = false ,note = reply, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = reactionPair, toShowNote = reply, updatedAt =Date()))
                 reply = reply.reply
             }
             callBack(reverseTimeline(replyList))

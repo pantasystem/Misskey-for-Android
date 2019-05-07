@@ -4,7 +4,7 @@ import android.util.Log
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.ReactionCountPair
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
-import java.util.ArrayList
+import java.util.*
 
 class NoteAdjustment(private val isDeployReplyTo: Boolean = true){
     enum class NoteType{
@@ -20,16 +20,17 @@ class NoteAdjustment(private val isDeployReplyTo: Boolean = true){
         for(n in list){
             val noteType = checkUpNoteType(n)
             val reply = n.reply
+            val date = Date()
             when(noteType){
-                NoteType.NOTE, NoteType.QUOTE_RE_NOTE -> replyList.add(NoteViewData(n.id,false,n, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts), toShowNote = n))
-                NoteType.RE_NOTE -> replyList.add(NoteViewData(n.id, false, n, type = noteType, reactionCountPairList = createReactionCountPair(n.renote?.reactionCounts), toShowNote = n.renote!!))
+                NoteType.NOTE, NoteType.QUOTE_RE_NOTE -> replyList.add(NoteViewData(n.id,false,n, type = noteType, reactionCountPairList = createReactionCountPair(n.reactionCounts), toShowNote = n, updatedAt = date))
+                NoteType.RE_NOTE -> replyList.add(NoteViewData(n.id, false, n, type = noteType, reactionCountPairList = createReactionCountPair(n.renote?.reactionCounts), toShowNote = n.renote!!, updatedAt = date))
 
                 NoteType.REPLY ->{
 
                     /*if(isDeployReplyTo){
                         replyList.add(NoteViewData(reply!!.id, true,reply, type = NoteType.REPLY_TO, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
                     }*/
-                    replyList.add(NoteViewData(n.id,false, n, type = NoteType.REPLY, reactionCountPairList = createReactionCountPair(n.reactionCounts), toShowNote = n))
+                    replyList.add(NoteViewData(n.id,false, n, type = NoteType.REPLY, reactionCountPairList = createReactionCountPair(n.reactionCounts), toShowNote = n, updatedAt = date))
                 }
                 else-> {
                     Log.w("AbsTimeline", "わからないタイプのノートが来てしまった:$n")
@@ -38,6 +39,28 @@ class NoteAdjustment(private val isDeployReplyTo: Boolean = true){
 
         }
         return replyList
+    }
+
+    fun createViewData(note: Note): NoteViewData?{
+        val noteType = checkUpNoteType(note)
+        val reply = note.reply
+        val date = Date()
+        return when(noteType){
+            NoteType.NOTE, NoteType.QUOTE_RE_NOTE -> NoteViewData(note.id,false,note, type = noteType, reactionCountPairList = createReactionCountPair(note.reactionCounts), toShowNote = note, updatedAt = date)
+            NoteType.RE_NOTE -> NoteViewData(note.id, false, note, type = noteType, reactionCountPairList = createReactionCountPair(note.renote?.reactionCounts), toShowNote = note.renote!!, updatedAt = date)
+
+            NoteType.REPLY ->{
+
+                /*if(isDeployReplyTo){
+                    replyList.add(NoteViewData(reply!!.id, true,reply, type = NoteType.REPLY_TO, reactionCountPairList = createReactionCountPair(reply.reactionCounts)))
+                }*/
+                NoteViewData(note.id,false, note, type = NoteType.REPLY, reactionCountPairList = createReactionCountPair(note.reactionCounts), toShowNote = note, updatedAt = date)
+            }
+            else-> {
+                Log.w("AbsTimeline", "わからないタイプのノートが来てしまった:$note")
+                return null
+            }
+        }
     }
 
 

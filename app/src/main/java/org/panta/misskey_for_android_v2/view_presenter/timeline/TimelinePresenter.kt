@@ -27,7 +27,7 @@ class TimelinePresenter(private val mView: TimelineContract.View,
 
     private val mReaction = Reaction(domain = info.domain, authKey = info.i)
 
-    private val observationStreaming = ObservationStreaming(this, bindScrollPosition)
+    private val observationStreaming = ObservationStreaming(this, bindScrollPosition, info)
 
 
     override fun getNewTimeline() {
@@ -85,7 +85,7 @@ class TimelinePresenter(private val mView: TimelineContract.View,
     }
 
     override fun onUpdateNote(data: NoteViewData) {
-
+        mView.showUpdatedNote(data)
     }
 
 
