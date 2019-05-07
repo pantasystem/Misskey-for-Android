@@ -2,7 +2,6 @@ package org.panta.misskey_for_android_v2.usecase
 
 import android.annotation.SuppressLint
 import android.util.Log
-import android.util.SparseArray
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -25,18 +24,15 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
                 scrollSpeed = Math.abs(nowPosition - beforePosition) / 0.5
                 beforePosition = nowPosition
 
-                if(scrollSpeed < 4.0){
+                if(scrollSpeed < 3.0){
                     try{
                         captureNote()
                     }catch(e: Exception){
                         Log.w("Observation", "error", e)
                     }
                 }
-                //Log.d("Observation", "speed $scrollSpeed")
 
             }
-
-
 
         }
     }
@@ -44,16 +40,13 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
     private var beforeFirst = 0
     private var beforeEnd = 0
     @SuppressLint("UseSparseArrays")
-    private val sparseArray = HashMap<Int, NoteViewData>()
+    private val captureNoteMap = HashMap<Int, NoteViewData>()
 
     private fun captureNote(){
         val firstVisiblePosition = bindScrollPosition.bindFirstVisibleItemPosition()?: 0
         val visibleTotal = bindScrollPosition.bindFindItemCount()?: 0
 
-        //0番目と 2番目が表示されていれば firstVisiblePositionが0番目 endVisiblePositionが2番目になる
-
         val end = firstVisiblePosition + visibleTotal
-
 
         if(beforeFirst == firstVisiblePosition && beforeEnd == end){
             return
@@ -62,7 +55,6 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
         //登録
         for(n in firstVisiblePosition.until(end)){
             val note = bindScrollPosition.pickViewData(n)
-            //Log.d("Observation", "pickしたノート $note")
 
             if(note != null){
                 registerNote(n,note)
@@ -90,20 +82,23 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
     }
 
     private fun registerNote(index: Int,viewData: NoteViewData){
-        synchronized(sparseArray){
+        synchronized(captureNoteMap){
 
-            val hasNote = sparseArray.containsValue(viewData)
+            val hasNote = captureNoteMap.containsValue(viewData)
             if(hasNote){
                 return
             }else{
-                sparseArray.put(index, viewData)
+                Log.d("Observation", "登録した")
+                captureNoteMap.put(index, viewData)
             }
         }
     }
 
     private fun cancelCapture(index: Int){
-        synchronized(sparseArray){
-            sparseArray.remove(index)
+        synchronized(captureNoteMap){
+            Log.d("Observation", "解除した")
+            val removeItem = captureNoteMap[index]
+            captureNoteMap.remove(index)
         }
     }
 

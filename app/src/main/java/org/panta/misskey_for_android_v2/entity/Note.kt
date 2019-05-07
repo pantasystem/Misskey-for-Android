@@ -1,13 +1,15 @@
 package org.panta.misskey_for_android_v2.entity
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.Serializable
+import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown=true) data class Note(
     @JsonProperty("id") val id: String,
-    @JsonProperty("createdAt") val createdAt: String,
+    @JsonProperty("createdAt") @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") val createdAt: Date,
     @JsonProperty("text") val text: String?,
     @JsonProperty("cw") val cw: String?,
     @JsonProperty("userId") val userId: String?,
