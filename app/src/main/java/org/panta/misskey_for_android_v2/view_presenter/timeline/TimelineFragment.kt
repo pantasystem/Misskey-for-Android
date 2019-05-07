@@ -23,6 +23,7 @@ import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.FileProperty
 import org.panta.misskey_for_android_v2.entity.Note
 import org.panta.misskey_for_android_v2.entity.User
+import org.panta.misskey_for_android_v2.interfaces.IBindScrollPosition
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
@@ -36,7 +37,7 @@ import org.panta.misskey_for_android_v2.view_presenter.user.UserActivity
 import java.net.URL
 
 class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, TimelineContract.View,
-    NoteClickListener, UserClickListener{
+    NoteClickListener, UserClickListener, IBindScrollPosition{
 
 
     companion object{
@@ -96,7 +97,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
             TimelineTypeEnum.USER -> UserTimeline(domain = connectionInfo!!.domain , userId = userId!!, isMediaOnly = isMediaOnly)
             else -> TODO("DESCRIPTIONを実装する")
         }
-        mPresenter = TimelinePresenter(this, mTimeline, connectionInfo!!)
+        mPresenter = TimelinePresenter(this, this, mTimeline, connectionInfo!!)
 
 
         return inflater.inflate(R.layout.fragment_timeline, container, false)
@@ -250,13 +251,27 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         UserActivity.startActivity(context!!, user)
     }
 
+    override fun bindFindItemCount(): Int {
+        return timelineView.childCount
+    }
+
+    override fun bindFirstVisibleItemPosition(): Int {
+        return mLayoutManager.findFirstVisibleItemPosition()
+    }
+
+    override fun bindTotalItemCount(): Int {
+        return mLayoutManager.itemCount
+    }
+
+    override fun pickViewData(index: Int): NoteViewData {
+        return mAdapter.getItem(index)
+    }
+
+
     private val listener = object : RecyclerView.OnScrollListener(){
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            val visibleItemCount = recyclerView.childCount
-            val totalItemCount = mLayoutManager.itemCount
-            val firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition()
             if( ! recyclerView.canScrollVertically(-1)){
                 //先頭に来た場合
                 refresh.isEnabled = true
