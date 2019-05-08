@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.IBindScrollPosition
 import org.panta.misskey_for_android_v2.interfaces.IBindStreamingAPI
+import org.panta.misskey_for_android_v2.repository.NoteCapture
 import org.panta.misskey_for_android_v2.repository.NoteRepository
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import java.util.*
@@ -15,6 +16,7 @@ import kotlin.collections.HashMap
 
 class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, private val bindScrollPosition: IBindScrollPosition, private val info: ConnectionProperty) {
 
+    private val capture = NoteCapture(info)
 
     var isObserve: Boolean = true
     //このスピードでノートのキャプチャを登録するかを判定する
@@ -27,14 +29,6 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
                 val nowPosition = bindScrollPosition.bindFirstVisibleItemPosition()?:0
                 scrollSpeed = Math.abs(nowPosition - beforePosition) / 0.5
                 beforePosition = nowPosition
-
-                if(scrollSpeed < 1.0){
-                    try{
-                        reacquireNote()
-                    }catch(e: Exception){
-                        Log.w("Observation", "error", e)
-                    }
-                }
 
                 if(scrollSpeed < 3.0){
                     try{
@@ -102,6 +96,7 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
             }else{
                 Log.d("Observation", "登録した")
                 captureNoteMap.put(index, viewData)
+                capture.captureNote(viewData.id)
             }
         }
     }
@@ -111,6 +106,9 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
             Log.d("Observation", "解除した")
             val removeItem = captureNoteMap[index]
             captureNoteMap.remove(index)
+            if(removeItem != null){
+                capture.unCaptureNote(removeItem.id)
+            }
         }
     }
 
@@ -126,7 +124,7 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
         return firstVisiblePosition + visibleTotal
     }
 
-    private fun reacquireNote(){
+    /*private fun reacquireNote(){
         if(beforeFirst == bindScrollPosition.bindFirstVisibleItemPosition() && beforeEnd == getEnd()){
             return
         }
@@ -141,6 +139,7 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
         val isShouldUpdate = time > (1000 * 60 * 60)
 
         if(isShouldUpdate){
+            Log.d("Observation", "更新を開始")
             NoteRepository(info).getNote(data.id){
                 if(it != null){
                     bindStreamingAPI.onUpdateNote(it)
@@ -150,6 +149,6 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
 
 
 
-    }
+    }*/
 
 }
