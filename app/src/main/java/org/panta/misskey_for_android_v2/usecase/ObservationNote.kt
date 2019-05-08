@@ -16,7 +16,7 @@ import kotlin.collections.HashMap
 
 class ObservationNote(private val bindStreamingAPI: IBindStreamingAPI, private val bindScrollPosition: IBindScrollPosition, private val info: ConnectionProperty) {
 
-    private val capture = NoteCapture(info,bindStreamingAPI)
+    private val capture = NoteCapture(info,bindStreamingAPI, bindScrollPosition)
 
     var isObserve: Boolean = true
     //このスピードでノートのキャプチャを登録するかを判定する

@@ -8,4 +8,5 @@ interface IBindScrollPosition {
     fun bindTotalItemCount(): Int?
     fun bindFindItemCount(): Int?
     fun pickViewData(index: Int): NoteViewData?
+    fun pickViewData(viewData: NoteViewData): NoteViewData?
 }

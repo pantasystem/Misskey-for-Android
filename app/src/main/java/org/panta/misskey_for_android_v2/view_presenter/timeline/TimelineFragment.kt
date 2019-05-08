@@ -267,6 +267,10 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
         return mAdapter?.getItem(index)
     }
 
+    override fun pickViewData(viewData: NoteViewData): NoteViewData? {
+        return mAdapter?.getItem(viewData)
+    }
+
 
     private val listener = object : RecyclerView.OnScrollListener(){
 

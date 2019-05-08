@@ -54,6 +54,12 @@ class FollowsAdapter(list: List<FollowViewData>, private val type: FollowFollowe
         return mArrayList[index]
     }
 
+    override fun getItem(item: FollowViewData): FollowViewData {
+        synchronized(mArrayList){
+            return mArrayList.first{ it.id == item.id }
+        }
+    }
+
     override fun removeItem(item: FollowViewData) {
         synchronized(mArrayList){
             val index = mArrayList.indexOf(item)

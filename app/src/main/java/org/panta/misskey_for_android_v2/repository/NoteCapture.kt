@@ -9,6 +9,7 @@ import org.java_websocket.handshake.ServerHandshake
 import org.panta.misskey_for_android_v2.entity.BodyProperty
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.StreamingProperty
+import org.panta.misskey_for_android_v2.interfaces.IBindScrollPosition
 import org.panta.misskey_for_android_v2.interfaces.IBindStreamingAPI
 import org.panta.misskey_for_android_v2.usecase.NoteUpdater
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
@@ -16,7 +17,7 @@ import java.lang.Exception
 import java.net.URI
 import java.net.URL
 
-class NoteCapture(private val connectionInfo: ConnectionProperty,  private val bindStreamingProperty: IBindStreamingAPI){
+class NoteCapture(private val connectionInfo: ConnectionProperty,  private val bindStreamingProperty: IBindStreamingAPI, private val bindScrollPosition: IBindScrollPosition){
 
 
     private var socket = Socket()
@@ -25,6 +26,7 @@ class NoteCapture(private val connectionInfo: ConnectionProperty,  private val b
     }
     val tag = "StreamingChannel"
 
+    //TODO キャッシュとViewのデータが別のデータのため同期がとれていないので取れるようにする
     private val captureViewData = ArrayList<NoteViewData>()
     private val noteUpdater = NoteUpdater()
     
@@ -65,20 +67,33 @@ class NoteCapture(private val connectionInfo: ConnectionProperty,  private val b
                 val obj = jacksonObjectMapper().readValue<StreamingProperty>(message)
                 if(obj.type == "noteUpdated" && obj.body.type == "reacted"){
 
-                    //TODO 自分のリアクションか判定するようにする
                     val id = obj.body.id
                     val userId = obj.body.body?.userId!!
                     val isMyReaction = connectionInfo.userPrimaryId == userId
                     val reaction = obj.body.body.reaction!!
+
+                    //TODO キャッシュとViewのデータが別のデータのため同期がとれていないので取れるようにする
                     captureViewData.filter{
                         it.toShowNote.id == id
                     }.forEach{
+                        val viesViewData = bindScrollPosition.pickViewData(it)
 
-                        val updatedViewData = noteUpdater.addReaction(reaction, it, isMyReaction)
-                        bindStreamingProperty.onUpdateNote(updatedViewData)
+                        if(viesViewData != null){
+                            val updatedViewData = noteUpdater.addReaction(reaction, viesViewData, isMyReaction)
+                            bindStreamingProperty.onUpdateNote(updatedViewData)
+                        }
+
                     }
 
                 }
+
+                if(obj.type == "noteUpdated" && obj.body.type == "unreacted"){
+                    //リアクションが解除されたときの実行をする
+                }
+                /*
+
+                {"type":"noteUpdated","body":{"id":"7sitga5i4g","type":"unreacted","body":{"reaction":"love","userId":"7roinhytrr"}}}
+                 */
             }catch(e: Exception){
 
             }
