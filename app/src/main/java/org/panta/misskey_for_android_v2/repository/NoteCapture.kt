@@ -75,39 +75,24 @@ class NoteCapture(private val connectionInfo: ConnectionProperty,  private val b
                     //TODO キャッシュとViewのデータが別のデータのため同期がとれていないので取れるようにする
 
 
-                    if(obj.body.type == "reacted"){
-                        captureViewData.filter{
-                            it.toShowNote.id == id
-                        }.forEach{
-                            val viesViewData = bindScrollPosition.pickViewData(it)
+                    captureViewData.filter{
+                        it.toShowNote.id == id
+                    }.forEach {
+                        val viewsData = bindScrollPosition.pickViewData(it)
 
-                            if(viesViewData != null){
-                                val updatedViewData = noteUpdater.addReaction(reaction, viesViewData, isMyReaction)
-                                bindStreamingProperty.onUpdateNote(updatedViewData)
+                        if(viewsData != null){
+                            val updatedViewData = if(obj.body.type == "reacted"){
+                                noteUpdater.addReaction(reaction, viewsData, isMyReaction)
+                            }else{
+                                noteUpdater.removeReaction(reaction, viewsData, isMyReaction)
                             }
-
-                        }
-                    }else if(obj.body.type == "unreacted"){
-                        Log.d(tag, "アップデートを試みた")
-                        captureViewData.filter{
-                            it.toShowNote.id == id
-                        }.forEach {
-                            val viewsData = bindScrollPosition.pickViewData(it)
-
-                            if(viewsData != null){
-                                val updatedViewData = noteUpdater.removeReaction(reaction, viewsData, isMyReaction)
-                                bindStreamingProperty.onUpdateNote(updatedViewData)
-                            }
+                            bindStreamingProperty.onUpdateNote(updatedViewData)
                         }
                     }
 
                 }
 
 
-                /*
-
-                {"type":"noteUpdated","body":{"id":"7sitga5i4g","type":"unreacted","body":{"reaction":"love","userId":"7roinhytrr"}}}
-                 */
             }catch(e: Exception){
 
             }
