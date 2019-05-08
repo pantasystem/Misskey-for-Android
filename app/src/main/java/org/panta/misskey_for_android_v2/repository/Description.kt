@@ -34,7 +34,7 @@ class Description(){
                 }else{
                     //ReactionCountPair.createList(reply.reactionCounts!!)
                     reply.reactionCounts!!.map{
-                        ReactionCountPair(it.key, it.value.toString())
+                        ReactionCountPair(it.key, it.value)
                     }
                 }
                 replyList.add(NoteViewData(id = reply.id, isIgnore = false ,note = reply, type = NoteAdjustment.NoteType.NOTE, reactionCountPairList = reactionPair, toShowNote = reply, updatedAt =Date()))

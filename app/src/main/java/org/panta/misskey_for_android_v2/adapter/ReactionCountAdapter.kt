@@ -61,7 +61,7 @@ import org.panta.misskey_for_android_v2.entity.ReactionCountPair
         }else{
             holder.reactionIconView.setImageResource(R.drawable.human_icon)
         }
-        holder.reactionCount.text = reactionCountPairList[position].reactionCount
+        holder.reactionCount.text = reactionCountPairList[position].reactionCount.toString()
 
         return convertView
 

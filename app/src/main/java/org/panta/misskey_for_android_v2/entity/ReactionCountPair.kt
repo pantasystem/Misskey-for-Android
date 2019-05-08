@@ -3,7 +3,7 @@ package org.panta.misskey_for_android_v2.entity
 import org.panta.misskey_for_android_v2.constant.ReactionConstData
 
 
-data class ReactionCountPair(val reactionType: String, val reactionCount: String){
+data class ReactionCountPair(val reactionType: String, val reactionCount: Int){
 
     companion object{
         fun createList(reactionCount: Map<String, Int>): List<ReactionCountPair>{
@@ -51,9 +51,9 @@ data class ReactionCountPair(val reactionType: String, val reactionCount: String
                 Integer.parseInt(it.reactionCount) > 0
             }*/
             return reactionCount.map{
-                ReactionCountPair(it.key, it.value.toString())
+                ReactionCountPair(it.key, it.value)
             }.filter{
-                Integer.parseInt(it.reactionCount) > 0
+                it.reactionCount > 0
             }
         }
     }

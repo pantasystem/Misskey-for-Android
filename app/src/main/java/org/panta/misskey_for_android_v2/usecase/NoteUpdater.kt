@@ -81,12 +81,12 @@ class NoteUpdater{
         if(count > 0){
             for(n in 0 until arrayList.size){
                 if(arrayList[n].reactionType == reaction){
-                    val reactionCount = Integer.parseInt(arrayList[n].reactionCount) + 1
-                    arrayList[n] = arrayList[n].copy(reactionCount = reactionCount.toString())
+                    val reactionCount = arrayList[n].reactionCount + 1
+                    arrayList[n] = arrayList[n].copy(reactionCount = reactionCount)
                 }
             }
         }else{
-            arrayList.add(ReactionCountPair(reaction, 1.toString()))
+            arrayList.add(ReactionCountPair(reaction, 1))
         }
         return arrayList
 
@@ -99,13 +99,13 @@ class NoteUpdater{
         return if(count > 0 ){
             list.map{
                 if(it.reactionType == reaction){
-                    val reactionCount = Integer.parseInt(it.reactionCount) - 1
-                    it.copy(reactionCount = reactionCount.toString())
+                    val reactionCount = it.reactionCount - 1
+                    it.copy(reactionCount = reactionCount)
                 }else{
                     it
                 }
             }.filter{
-                Integer.parseInt(it.reactionCount) > 0
+                it.reactionCount > 0
             }
         }else{
             list
