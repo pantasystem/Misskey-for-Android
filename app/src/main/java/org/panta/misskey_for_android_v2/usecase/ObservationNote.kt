@@ -14,9 +14,9 @@ import org.panta.misskey_for_android_v2.view_data.NoteViewData
 import java.util.*
 import kotlin.collections.HashMap
 
-class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, private val bindScrollPosition: IBindScrollPosition, private val info: ConnectionProperty) {
+class ObservationNote(private val bindStreamingAPI: IBindStreamingAPI, private val bindScrollPosition: IBindScrollPosition, private val info: ConnectionProperty) {
 
-    private val capture = NoteCapture(info)
+    private val capture = NoteCapture(info,bindStreamingAPI)
 
     var isObserve: Boolean = true
     //このスピードでノートのキャプチャを登録するかを判定する
@@ -96,7 +96,7 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
             }else{
                 Log.d("Observation", "登録した")
                 captureNoteMap.put(index, viewData)
-                capture.captureNote(viewData.id)
+                capture.captureNote(viewData)
             }
         }
     }
@@ -107,7 +107,7 @@ class ObservationStreaming(private val bindStreamingAPI: IBindStreamingAPI, priv
             val removeItem = captureNoteMap[index]
             captureNoteMap.remove(index)
             if(removeItem != null){
-                capture.unCaptureNote(removeItem.id)
+                capture.unCaptureNote(removeItem)
             }
         }
     }

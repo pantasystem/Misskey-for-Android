@@ -1,18 +1,14 @@
 package org.panta.misskey_for_android_v2.view_presenter.timeline
 
 import android.util.Log
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.interfaces.IBindScrollPosition
 import org.panta.misskey_for_android_v2.interfaces.IBindStreamingAPI
 import org.panta.misskey_for_android_v2.interfaces.IItemRepository
 import org.panta.misskey_for_android_v2.repository.*
-import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.usecase.NoteUpdater
-import org.panta.misskey_for_android_v2.usecase.ObservationStreaming
+import org.panta.misskey_for_android_v2.usecase.ObservationNote
 import org.panta.misskey_for_android_v2.usecase.PagingController
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
@@ -27,7 +23,7 @@ class TimelinePresenter(private val mView: TimelineContract.View,
 
     private val mReaction = Reaction(domain = info.domain, authKey = info.i)
 
-    private val observationStreaming = ObservationStreaming(this, bindScrollPosition, info)
+    private val observationStreaming = ObservationNote(this, bindScrollPosition, info)
 
 
     override fun getNewTimeline() {
