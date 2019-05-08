@@ -68,13 +68,13 @@ class NoteCapture(private val connectionInfo: ConnectionProperty,  private val b
                     //TODO 自分のリアクションか判定するようにする
                     val id = obj.body.id
                     val userId = obj.body.body?.userId!!
-                    //val isMyReaction = userPrimaryId == userId
+                    val isMyReaction = connectionInfo.userPrimaryId == userId
                     val reaction = obj.body.body.reaction!!
                     captureViewData.filter{
                         it.toShowNote.id == id
                     }.forEach{
 
-                        val updatedViewData = noteUpdater.addReaction(reaction, it, false)
+                        val updatedViewData = noteUpdater.addReaction(reaction, it, isMyReaction)
                         bindStreamingProperty.onUpdateNote(updatedViewData)
                     }
 

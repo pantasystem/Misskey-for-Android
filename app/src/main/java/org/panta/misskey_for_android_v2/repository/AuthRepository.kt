@@ -37,7 +37,7 @@ class AuthRepository(private val domain: String, private val appSecret: String){
 
     }
 
-    fun getUserToken(token: String, errorCallBack: (e: Exception)->Unit, callBack: (String) -> Unit) = GlobalScope.launch{
+    fun getUserToken(token: String, errorCallBack: (e: Exception)->Unit, callBack: (UserKeyResponse) -> Unit) = GlobalScope.launch{
         try{
 
             val map = HashMap<String, String>()
@@ -49,7 +49,7 @@ class AuthRepository(private val domain: String, private val appSecret: String){
             val userKey : UserKeyResponse = mapper.readValue(stream)
             //val i = sha256("${userKey.accessToken}$appSecret")
             //Log.d("AuthRepository", "i: $i")
-            callBack(userKey.accessToken)
+            callBack(userKey)
         }catch(e: Exception){
             errorCallBack(e)
         }

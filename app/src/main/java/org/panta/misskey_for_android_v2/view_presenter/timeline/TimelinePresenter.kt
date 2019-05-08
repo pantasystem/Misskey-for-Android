@@ -52,8 +52,8 @@ class TimelinePresenter(private val mView: TimelineContract.View,
         mReaction.sendReaction(noteId, reactionType){
             if(it){
                 Log.d("TimelinePresenter", "sendReaction成功したようだ")
-                val updatedNote = NoteUpdater().addReaction(reactionType, viewData, hasMyReaction = true)
-                mView.showUpdatedNote(updatedNote)
+                //val updatedNote = NoteUpdater().addReaction(reactionType, viewData, hasMyReaction = true)
+                //mView.showUpdatedNote(updatedNote)
             }else{
                 mView.onError("リアクションの送信に失敗した")
                 Log.d("TimelinePresenter", "sendReaction失敗しちゃった・・")
