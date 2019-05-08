@@ -10,8 +10,8 @@ android {
         applicationId "org.panta.misskey_for_android_v2"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 9
-        versionName "2.0"
+        versionCode 10
+        versionName "2.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
