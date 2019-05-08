@@ -168,6 +168,11 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
             reactionView.layoutManager = linearLayoutManager
             reactionView.visibility = View.VISIBLE
         }
+        if(viewData.toShowNote.myReaction == null){
+            reactionButton.setImageResource(R.drawable.reaction_icon)
+        }else{
+            reactionButton.setImageResource(R.drawable.remove_reaction_icon)
+        }
 
     }
 
