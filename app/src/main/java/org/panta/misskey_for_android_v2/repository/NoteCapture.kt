@@ -65,7 +65,7 @@ class NoteCapture(private val connectionInfo: ConnectionProperty,  private val b
             message?: return
             try{
                 val obj = jacksonObjectMapper().readValue<StreamingProperty>(message)
-                if(obj.type == "noteUpdated" && obj.body.type == "reacted"){
+                if(obj.type == "noteUpdated"){
 
                     val id = obj.body.id
                     val userId = obj.body.body?.userId!!
@@ -73,23 +73,37 @@ class NoteCapture(private val connectionInfo: ConnectionProperty,  private val b
                     val reaction = obj.body.body.reaction!!
 
                     //TODO キャッシュとViewのデータが別のデータのため同期がとれていないので取れるようにする
-                    captureViewData.filter{
-                        it.toShowNote.id == id
-                    }.forEach{
-                        val viesViewData = bindScrollPosition.pickViewData(it)
 
-                        if(viesViewData != null){
-                            val updatedViewData = noteUpdater.addReaction(reaction, viesViewData, isMyReaction)
-                            bindStreamingProperty.onUpdateNote(updatedViewData)
+
+                    if(obj.body.type == "reacted"){
+                        captureViewData.filter{
+                            it.toShowNote.id == id
+                        }.forEach{
+                            val viesViewData = bindScrollPosition.pickViewData(it)
+
+                            if(viesViewData != null){
+                                val updatedViewData = noteUpdater.addReaction(reaction, viesViewData, isMyReaction)
+                                bindStreamingProperty.onUpdateNote(updatedViewData)
+                            }
+
                         }
+                    }else if(obj.body.type == "unreacted"){
+                        Log.d(tag, "アップデートを試みた")
+                        captureViewData.filter{
+                            it.toShowNote.id == id
+                        }.forEach {
+                            val viewsData = bindScrollPosition.pickViewData(it)
 
+                            if(viewsData != null){
+                                val updatedViewData = noteUpdater.removeReaction(reaction, viewsData, isMyReaction)
+                                bindStreamingProperty.onUpdateNote(updatedViewData)
+                            }
+                        }
                     }
 
                 }
 
-                if(obj.type == "noteUpdated" && obj.body.type == "unreacted"){
-                    //リアクションが解除されたときの実行をする
-                }
+
                 /*
 
                 {"type":"noteUpdated","body":{"id":"7sitga5i4g","type":"unreacted","body":{"reaction":"love","userId":"7roinhytrr"}}}

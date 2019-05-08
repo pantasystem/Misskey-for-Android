@@ -23,6 +23,39 @@ class NoteUpdater{
 
     }
 
+    fun removeReaction(reaction: String, viewData: NoteViewData, isMyReaction: Boolean): NoteViewData{
+        val note = viewData.toShowNote
+        val removedReactionCounts = removeReactionCounts(reaction, note.reactionCounts)
+
+        val removed = if(isMyReaction){
+            note.copy(myReaction = null, reactionCounts = removedReactionCounts)
+        }else{
+            note.copy(reactionCounts = removedReactionCounts)
+        }
+
+        val reactionCountPair = removeReactionCountPair(reaction, viewData.reactionCountPairList)
+        /*val reactionCountPair = removedReactionCounts.map {
+            ReactionCountPair(it.key, it.value.toString())
+        }.filter{
+            Integer.parseInt(it.reactionCount) > 0
+        }*/
+        return viewData.copy(toShowNote = removed, reactionCountPairList = reactionCountPair)
+    }
+
+    private fun removeReactionCounts(reaction: String, map: Map<String, Int>?): Map<String, Int>{
+        return if(map != null && map.isNotEmpty()){
+            val hashMap = HashMap<String, Int>(map)
+            val hasReaction = hashMap[reaction]
+            if(hasReaction != null){
+                hashMap[reaction] = hasReaction - 1
+            }
+            hashMap.filter{
+                it.value > 0
+            }
+        }else{
+            emptyMap()
+        }
+    }
     private fun updateUpdateReactionCounts(reaction: String, map: Map<String, Int>?): Map<String, Int>{
         return if(map != null && map.isNotEmpty()){
             val hashMap = HashMap<String, Int>(map)
@@ -32,7 +65,9 @@ class NoteUpdater{
             }else{
                 hashMap[reaction] = 1
             }
-            hashMap
+            hashMap.filter {
+                it.value > 0
+            }
         }else{
             hashMapOf(reaction to 1)
         }
@@ -57,6 +92,25 @@ class NoteUpdater{
 
     }
 
+    private fun removeReactionCountPair(reaction: String, pairList: List<ReactionCountPair>): List<ReactionCountPair>{
+        val list = ArrayList<ReactionCountPair>(pairList)
+
+        val count = list.count{ it.reactionType == reaction }
+        return if(count > 0 ){
+            list.map{
+                if(it.reactionType == reaction){
+                    val reactionCount = Integer.parseInt(it.reactionCount) - 1
+                    it.copy(reactionCount = reactionCount.toString())
+                }else{
+                    it
+                }
+            }.filter{
+                Integer.parseInt(it.reactionCount) > 0
+            }
+        }else{
+            list
+        }
+    }
 
 
 }
