@@ -187,23 +187,24 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
     }
 
     override fun onReactionClicked(targetId: String?, note: Note?, viewData: NoteViewData,reactionType: String?) {
-        if(targetId != null && note != null){
-            if(reactionType != null){
-                mPresenter.sendReaction(noteId = note.id, reactionType = reactionType, viewData = viewData)
-                return
-            }
-            Log.d("TimelineFragment", "targetId: $targetId")
-            val reactionDialog = ReactionDialog.getInstance(targetId, object : ReactionDialog.CallBackListener{
-                override fun callBack(noteId: String?, reactionParameter: String) {
-                    if(noteId != null){
-                        Log.d("TimelineFragment", "成功した")
-                        mPresenter.sendReaction(noteId = noteId, reactionType = reactionParameter, viewData = viewData)
-                    }
+        mPresenter.setReactionSelectedState(targetId, note, viewData, reactionType)
+    }
+
+    override fun showReactionSelectorView(targetId: String, viewData: NoteViewData) {
+        val reactionDialog = ReactionDialog.getInstance(targetId, object : ReactionDialog.CallBackListener{
+            override fun callBack(noteId: String?, reactionParameter: String) {
+                if(noteId != null){
+                    Log.d("TimelineFragment", "成功した")
+                    mPresenter.sendReaction(noteId = noteId, reactionType = reactionParameter, viewData = viewData)
                 }
-            })
+            }
+        })
+
+        activity?.runOnUiThread{
             reactionDialog.setTargetFragment(parentFragment, reactionRequestCode)
             reactionDialog.show(activity?.supportFragmentManager, "reaction_tag")
         }
+
     }
 
 
