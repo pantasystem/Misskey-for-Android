@@ -33,6 +33,21 @@ class UserRepository(private val domain: String, private val authKey: String){
             }
         }
     }
-    
+
+    fun followUser(userId: String, callBack: (Boolean)->Unit){
+        val map = HashMap<String, String>()
+        map["i"] = authKey
+        map["userId"] = userId
+        GlobalScope.launch{
+            try{
+                val json = jacksonObjectMapper().writeValueAsString(map)
+                val response = httpsConnection.postString(URL("$domain/api/following/create"), json)
+                callBack(response != null)
+            }catch(e: Exception){
+                callBack(false)
+                Log.w("UserRepository", "error", e)
+            }
+        }
+    }
 
 }
