@@ -68,13 +68,12 @@ class TimelinePresenter(private val mView: TimelineContract.View,
 
     override fun setReactionSelectedState(targetId: String?, note: Note?, viewData: NoteViewData, reactionType: String?) {
         if(targetId != null && note != null){
-            if(reactionType != null){
-                this.sendReaction(noteId = note.id, reactionType = reactionType, viewData = viewData)
-                return
+            when {
+                viewData.toShowNote.myReaction != null -> deleteReaction(viewData.toShowNote.id)
+                reactionType != null -> this.sendReaction(noteId = note.id, reactionType = reactionType, viewData = viewData)
+                else -> mView.showReactionSelectorView(targetId, viewData)
             }
-            Log.d("TimelineFragment", "targetId: $targetId")
 
-            mView.showReactionSelectorView(targetId, viewData)
         }
     }
 
@@ -97,6 +96,10 @@ class TimelinePresenter(private val mView: TimelineContract.View,
 
     override fun onUpdateNote(data: NoteViewData) {
         mView.showUpdatedNote(data)
+    }
+
+    private fun deleteReaction(noteId: String){
+        mReaction.deleteReaction(noteId)
     }
 
 

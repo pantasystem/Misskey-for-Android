@@ -33,4 +33,15 @@ class Reaction(private val domain: String, private val authKey: String){
         }
 
     }
+
+    fun deleteReaction(targetNoteId: String) = GlobalScope.launch {
+        try{
+            val data = ReactionCreateXorDeleteProperty( i = authKey, noteId = targetNoteId)
+            val json = jacksonObjectMapper().writeValueAsString(data)
+            connection.postString(URL("$domain/api/notes/reactions/delete"), json)
+
+        }catch(e: Exception){
+            Log.w("Reaction", "error", e)
+        }
+    }
 }
