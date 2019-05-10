@@ -7,6 +7,7 @@ interface FollowFollowerContract{
         fun getOldItems()
         fun getNewItems()
         fun getItems()
+        fun onFollowUnFollowButtonClicked(item: FollowViewData)
     }
 
     interface View : BaseView<Presenter>{
@@ -15,6 +16,8 @@ interface FollowFollowerContract{
         fun showItems(list: List<FollowViewData>)
         fun showError(e: Exception)
         fun stopRefreshing()
+        fun updateItem(item: FollowViewData)
+        fun removeItem(item: FollowViewData)
 
     }
 }

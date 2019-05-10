@@ -6,15 +6,16 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
+import com.vanniktech.emoji.EmojiTextView
 import kotlinx.android.synthetic.main.item_follow_follower.view.*
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.entity.FollowProperty
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.view_data.FollowViewData
 
-class FollowViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+class FollowViewHolder(itemView: View, var clickListener: FollowsAdapter.FollowAdapterListener?) : RecyclerView.ViewHolder(itemView){
 
-    private val statusText: TextView = itemView.status_text
+    private val statusText: EmojiTextView = itemView.status_text
     private val userIcon: ImageView = itemView.user_icon
     private val userName: TextView = itemView.user_name
     private val userIdView: TextView = itemView.user_id
@@ -30,6 +31,7 @@ class FollowViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
                 followUnFollowButton.text = "解除"
                 "フォローされています"
             }
+
             data.following
         }else{
             statusText.text = if(data.following == null){
@@ -43,6 +45,10 @@ class FollowViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         }
         if(user != null){
             setUserInfo(user)
+        }
+
+        followUnFollowButton.setOnClickListener {
+            clickListener?.onFollowButtonClicked(data)
         }
     }
 

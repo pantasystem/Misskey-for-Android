@@ -6,11 +6,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
+import org.panta.misskey_for_android_v2.entity.FollowProperty
+import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.IOperationAdapter
 import org.panta.misskey_for_android_v2.view_data.FollowViewData
 import java.util.*
 
-class FollowsAdapter(list: List<FollowViewData>, private val type: FollowFollowerType) : RecyclerView.Adapter<FollowViewHolder>(), IOperationAdapter<FollowViewData>{
+class FollowsAdapter(list: List<FollowViewData>, private val type: FollowFollowerType, private var followAdapterListener: FollowAdapterListener? = null)
+    : RecyclerView.Adapter<FollowViewHolder>(), IOperationAdapter<FollowViewData>{
+
+    interface FollowAdapterListener{
+        fun onUserClicked(user: User)
+        fun onFollowButtonClicked(item: FollowViewData)
+    }
+
+
 
     //listをキャストして扱うこともできるが元がLinkedListかもしれないのでArrayListとして作成する
     private val mArrayList = ArrayList<FollowViewData>(list)
@@ -22,7 +32,7 @@ class FollowsAdapter(list: List<FollowViewData>, private val type: FollowFollowe
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): FollowViewHolder {
         val inflater = LayoutInflater.from(p0.context).inflate(R.layout.item_follow_follower, p0, false)
-        return FollowViewHolder(inflater)
+        return FollowViewHolder(inflater, followAdapterListener)
     }
 
     override fun onBindViewHolder(p0: FollowViewHolder, p1: Int) {
@@ -73,11 +83,12 @@ class FollowsAdapter(list: List<FollowViewData>, private val type: FollowFollowe
 
     override fun updateItem(item: FollowViewData) {
         synchronized(mArrayList){
-            val index = mArrayList.indexOf(item)
-            mArrayList[index] = item
+            for(n in 0.until(mArrayList.size)){
+                if(mArrayList[n].id == item.id){
+                    mArrayList[n] = item
+                    notifyItemChanged(n)
+                }
 
-            Handler().post{
-                notifyItemChanged(index)
             }
         }
     }

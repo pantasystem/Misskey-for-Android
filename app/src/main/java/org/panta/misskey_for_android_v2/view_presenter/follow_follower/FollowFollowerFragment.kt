@@ -14,12 +14,14 @@ import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.adapter.FollowsAdapter
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
+import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.FollowFollowerContract
 import org.panta.misskey_for_android_v2.repository.FollowFollowerRepository
 import org.panta.misskey_for_android_v2.view_data.FollowViewData
 import java.lang.Exception
 
-class FollowFollowerFragment : Fragment(), FollowFollowerContract.View{
+class FollowFollowerFragment : Fragment(), FollowFollowerContract.View,
+    FollowsAdapter.FollowAdapterListener{
 
     companion object{
         private const val USER_ID = "followFollowerFragment"
@@ -73,7 +75,7 @@ class FollowFollowerFragment : Fragment(), FollowFollowerContract.View{
 
     override fun showItems(list: List<FollowViewData>) {
         activity?.runOnUiThread{
-            val adapter = FollowsAdapter(list, this.type)
+            val adapter = FollowsAdapter(list, this.type, this)
             mAdapter = adapter
             follow_follower_recycler_view.layoutManager = mLayoutManager
             follow_follower_recycler_view.adapter = adapter
@@ -100,6 +102,26 @@ class FollowFollowerFragment : Fragment(), FollowFollowerContract.View{
         activity?.runOnUiThread{
             follow_follower_refresh?.isRefreshing = false
         }
+    }
+
+    override fun updateItem(item: FollowViewData) {
+        activity?.runOnUiThread{
+            mAdapter.updateItem(item)
+        }
+    }
+
+    override fun removeItem(item: FollowViewData) {
+        activity?.runOnUiThread{
+            mAdapter.removeItem(item)
+        }
+    }
+
+    override fun onFollowButtonClicked(item: FollowViewData) {
+        mPresenter.onFollowUnFollowButtonClicked(item)
+    }
+
+    override fun onUserClicked(user: User) {
+
     }
 
     private val listener = object : RecyclerView.OnScrollListener(){
