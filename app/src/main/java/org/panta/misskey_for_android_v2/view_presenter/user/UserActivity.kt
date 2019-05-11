@@ -69,6 +69,12 @@ class UserActivity : AppCompatActivity() {
                 profile_follower_count.text = "${it.followersCount} フォロワー"
                 posts_count.text = "${it.notesCount} 投稿"
                 profile_age.visibility = View.GONE
+                profile_follow_count.setOnClickListener{_ ->
+                    FollowFollowerActivity.startActivity(applicationContext, FollowFollowerType.FOLLOWING, it.id)
+                }
+                profile_follower_count.setOnClickListener{_ ->
+                    FollowFollowerActivity.startActivity(applicationContext, FollowFollowerType.FOLLOWER, it.id)
+                }
 
                 Picasso.get().load(it.bannerUrl).into(header_image)
             }
