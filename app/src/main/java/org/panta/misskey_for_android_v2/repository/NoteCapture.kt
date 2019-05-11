@@ -53,6 +53,7 @@ class NoteCapture(private val connectionInfo: ConnectionProperty,  private val b
             socket.send(jacksonObjectMapper().writeValueAsString(data))
 
         }
+        captureViewData.remove(viewData)
     }
 
     inner class Socket : WebSocketClient(URI("${connectionInfo.domain.replace("https://", "wss://")}/streaming?${connectionInfo.i}")){
