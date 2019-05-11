@@ -27,8 +27,17 @@ class NoteCapture(private val connectionInfo: ConnectionProperty,  private val b
     val tag = "StreamingChannel"
 
     //TODO キャッシュとViewのデータが別のデータのため同期がとれていないので取れるようにする
-    private val captureViewData = ArrayList<NoteViewData>()
+    private var captureViewData = ArrayList<NoteViewData>()
     private val noteUpdater = NoteUpdater()
+
+    fun clearCapture(){
+        synchronized(captureViewData){
+            captureViewData.forEach{
+                unCaptureNote(it,false)
+            }
+            captureViewData = ArrayList()
+        }
+    }
     
     fun captureNote(viewData: NoteViewData){
         if(socket.isClosed){
@@ -45,7 +54,7 @@ class NoteCapture(private val connectionInfo: ConnectionProperty,  private val b
         }
     }
     
-    fun unCaptureNote(viewData: NoteViewData){
+    fun unCaptureNote(viewData: NoteViewData, isRemove: Boolean = true){
         val data = StreamingProperty(type = "unsubNote",
             body = BodyProperty(id = viewData.toShowNote.id)
         )
@@ -53,7 +62,9 @@ class NoteCapture(private val connectionInfo: ConnectionProperty,  private val b
             socket.send(jacksonObjectMapper().writeValueAsString(data))
 
         }
-        captureViewData.remove(viewData)
+        if(isRemove){
+            captureViewData.remove(viewData)
+        }
     }
 
     inner class Socket : WebSocketClient(URI("${connectionInfo.domain.replace("https://", "wss://")}/streaming?${connectionInfo.i}")){

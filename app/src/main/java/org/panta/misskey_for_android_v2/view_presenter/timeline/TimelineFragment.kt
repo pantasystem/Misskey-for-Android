@@ -147,6 +147,7 @@ class TimelineFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Timeli
 
 
     override fun showNewTimeline(list: List<NoteViewData>) {
+        mPresenter.onRefresh()
         activity?.runOnUiThread {
             stopRefreshing()
             mAdapter?.addAllFirst(list)

@@ -102,5 +102,9 @@ class TimelinePresenter(private val mView: TimelineContract.View,
         mReaction.deleteReaction(noteId)
     }
 
+    override fun onRefresh() {
+        observationStreaming.onRefresh()
+    }
+
 
 }

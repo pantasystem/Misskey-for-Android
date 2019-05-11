@@ -48,6 +48,15 @@ class ObservationNote(private val bindStreamingAPI: IBindStreamingAPI, private v
     @SuppressLint("UseSparseArrays")
     private val captureNoteMap = HashMap<Int, NoteViewData>()
 
+    fun onRefresh(){
+        beforeFirst = 0
+        beforeEnd = 0
+        synchronized(captureNoteMap){
+            capture.clearCapture()
+            captureNoteMap.clear()
+        }
+    }
+
     private fun captureNote(){
         val firstVisiblePosition = bindScrollPosition.bindFirstVisibleItemPosition()?: 0
         //val visibleTotal = bindScrollPosition.bindFindItemCount()?: 0
