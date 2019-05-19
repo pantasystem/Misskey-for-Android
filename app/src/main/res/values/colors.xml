@@ -12,5 +12,6 @@
 
     <color name="dark_primary_text_color">#F7F7F7</color>
     <color name="dark_secondary_text_color">#C2C2C2</color>
+    <color name="dark_window_background_color">#0F0F0F</color>
 
 </resources>
