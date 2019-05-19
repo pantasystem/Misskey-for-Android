@@ -20,7 +20,7 @@
     <com.vanniktech.emoji.EmojiTextView
             android:id="@+id/notification_user_name"
             android:text="TextView"
-            android:textColor="@color/light_primary_text_color"
+            android:textColor="?android:textColorPrimary"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
     <com.vanniktech.emoji.EmojiTextView
             android:id="@+id/notification_content"
             android:text="TextView"
-            android:textColor="@color/light_primary_text_color"
+            android:textColor="?android:textColorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
