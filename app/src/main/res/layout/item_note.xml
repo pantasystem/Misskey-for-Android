@@ -277,7 +277,7 @@
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:layout_below="@id/show_thread_button"
-            android:background="@android:color/darker_gray"/>
+            android:background="?attr/colorPrimary"/>
 
 
 

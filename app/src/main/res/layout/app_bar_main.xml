@@ -42,7 +42,8 @@
             android:layout_height="45dp"
             android:layout_gravity="bottom"
             android:background="?android:colorPrimary"
-            app:itemIconTint="@android:color/background_light"
-            app:menu="@menu/menu_bottom_navigation" app:itemTextColor="@android:color/background_light"/>
+            app:itemIconTint="@color/bottom_navigation_foreground"
+            app:itemTextColor="@color/bottom_navigation_foreground"
+            app:menu="@menu/menu_bottom_navigation" />
 
 </android.support.design.widget.CoordinatorLayout>
