@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_gravity="bottom"
-            android:background="@color/colorPrimary"
+            android:background="?android:colorPrimary"
             app:itemIconTint="@android:color/background_light"
             app:menu="@menu/menu_bottom_navigation" app:itemTextColor="@android:color/background_light"/>
 

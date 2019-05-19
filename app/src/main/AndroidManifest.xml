@@ -16,7 +16,7 @@
             android:largeHeap="true"
             android:roundIcon="@drawable/misskey_icon"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppThemeDark"
             tools:ignore="GoogleAppIndexingWarning">
 
 
@@ -48,7 +48,7 @@
         <activity
                 android:name=".view_presenter.user.UserActivity"
                 android:label="@string/title_activity_user"
-                android:theme="@style/AppTheme.NoActionBar">
+                >
         </activity>
         <activity android:name=".view_presenter.image_viewer.ImageViewerActivity">
         </activity>
@@ -62,7 +62,7 @@
                 android:name=".view_presenter.MainActivity"
                 android:configChanges="orientation"
                 android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar">
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
