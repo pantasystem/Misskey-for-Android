@@ -69,6 +69,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var mNotificationEnabledSwitch: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        sharedOperator = SharedPreferenceOperator(this)
+        mPresenter = MainPresenter(this, sharedOperator)
+
+
         super.onCreate(savedInstanceState)
         EmojiManager.install(TwitterEmojiProvider())
         
@@ -89,9 +93,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         showFirstFragment = intent.getIntExtra(SHOW_FRAGMENT_TAG, 0)
 
-        sharedOperator = SharedPreferenceOperator(this)
-
-        mPresenter = MainPresenter(this, sharedOperator)
 
         fab.setOnClickListener {
             mPresenter.takeEditNote()

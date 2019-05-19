@@ -75,7 +75,11 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
         setContentView(R.layout.activity_edit_note)
         title = "投稿"
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setSupportActionBar(edit_note_tool_bar)
+        supportActionBar?.let{
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setHomeButtonEnabled(true)
+        }
 
         imagePreviewAdapter = ImagePreviewAdapter(emptyList())
         imagePreviewAdapter.addOnItemLongClickListener(onItemLongClickListener)
@@ -124,6 +128,12 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
             }
 
 
+        }
+        post_button.setOnClickListener{
+            val text = editText.text.toString()
+
+            mPresenter.setText(text)
+            mPresenter.postNote()
         }
     }
 
