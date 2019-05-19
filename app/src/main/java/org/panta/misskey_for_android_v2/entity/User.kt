@@ -24,6 +24,8 @@ import java.io.Serializable
     @JsonProperty("links") val links: String?,
     @JsonProperty("profile") val profile: Any?,
     @JsonProperty("settings") val settings: Any?,
+    @JsonProperty("pinnedNoteIds") val pinnedNoteIds: List<String>?,
+    @JsonProperty("pinnedNotes") val pinnedNotes: List<Note>?,
     @JsonProperty("twitter") val twitter: Any?,
     @JsonProperty("twoFactorEnabled") val twoFactorEnabled: Any?,
     @JsonProperty("isAdmin") val isAdmin: Boolean,
