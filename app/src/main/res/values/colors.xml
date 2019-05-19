@@ -8,7 +8,7 @@
     <color name="color_normal_reaction_color">#757575</color>
     <color name="light_primary_text_color">#000000</color>
     <color name="light_secondary_text_color">#3F3F3F</color>
-
+    <color name="light_window_background_color">#FFFFFF</color>
 
     <color name="dark_primary_text_color">#F7F7F7</color>
     <color name="dark_secondary_text_color">#C2C2C2</color>
