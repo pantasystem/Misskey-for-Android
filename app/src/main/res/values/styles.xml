@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/light_primary_text_color</item>
         <item name="android:textColorSecondary">@color/light_secondary_text_color</item>
-        <item name="android:background">@color/light_background_color</item>
+
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
