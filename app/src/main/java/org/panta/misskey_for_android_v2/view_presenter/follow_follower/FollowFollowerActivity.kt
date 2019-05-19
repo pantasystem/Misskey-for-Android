@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import com.vanniktech.emoji.EmojiManager
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider
+import kotlinx.android.synthetic.main.activity_edit_note.*
 import kotlinx.android.synthetic.main.activity_follow_follower.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
@@ -35,6 +37,8 @@ class FollowFollowerActivity : AppCompatActivity() {
         EmojiManager.install(TwitterEmojiProvider())
 
         setContentView(R.layout.activity_follow_follower)
+        setSupportActionBar(follow_follower_tool_bar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val userId = intent.getStringExtra(USER_ID_TAG)!!
         val tmpType = intent.getIntExtra(FOLLOW_FOLLOWER_TYPE, FollowFollowerType.FOLLOWING.ordinal)
@@ -51,6 +55,18 @@ class FollowFollowerActivity : AppCompatActivity() {
         follow_follower_pageer.adapter = adapter
         follow_follower_tab.setupWithViewPager(follow_follower_pageer)
         follow_follower_pageer.currentItem = if(type == FollowFollowerType.FOLLOWER) 1 else 0
+
+    }
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            android.R.id.home ->{
+                finish()
+                return true
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
+
 
     }
 }

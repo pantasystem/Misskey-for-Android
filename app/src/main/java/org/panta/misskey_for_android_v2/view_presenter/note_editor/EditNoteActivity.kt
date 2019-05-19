@@ -76,10 +76,7 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
         title = "投稿"
 
         setSupportActionBar(edit_note_tool_bar)
-        supportActionBar?.let{
-            it.setDisplayHomeAsUpEnabled(true)
-            it.setHomeButtonEnabled(true)
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         imagePreviewAdapter = ImagePreviewAdapter(emptyList())
         imagePreviewAdapter.addOnItemLongClickListener(onItemLongClickListener)
