@@ -58,7 +58,6 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
     fun setNote(content: NoteViewData){
         val toShowNote = content.toShowNote
         whoReactionUserLink.visibility = View.GONE
-        backgroundColor(0)
         invisibleSubContents()
         setNoteContent(toShowNote)
         setRelationNoteListener(toShowNote.id, toShowNote, timelineItem, noteText)
@@ -73,7 +72,6 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
 
     fun setReNote(content: NoteViewData){
         val toShowNote = content.toShowNote
-        backgroundColor(0)
         invisibleSubContents()
         setWhoReactionUserLink(content.note.user, "リノート")
         setNoteContent(content.toShowNote)
@@ -94,7 +92,6 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
     }
     fun setQuoteReNote(content: NoteViewData){
         val toShowNote = content.toShowNote
-        backgroundColor(0)
         setWhoReactionUserLink(toShowNote.user, "引用リノート")
         setNoteContent(toShowNote)
         setSubContent(toShowNote.renote!!)
@@ -111,7 +108,6 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
 
     fun setReply(content: NoteViewData){
         val toShowNote = content.toShowNote
-        backgroundColor(0)
         invisibleSubContents()
         setNoteContent(toShowNote)
         setWhoReactionUserLink(toShowNote.user, "クソリプ")
@@ -129,7 +125,6 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
     @Deprecated("返信先は表示しない予定なので廃止する") fun setReplyTo(content: NoteViewData){
         whoReactionUserLink.visibility = View.GONE
         invisibleSubContents()
-        backgroundColor(1)
         setNoteContent(content.note)
         setRelationNoteListener(content.note.id, content.note, timelineItem, noteText)
 
@@ -270,13 +265,7 @@ open class NoteViewHolder(itemView: View, private val linearLayoutManager: Linea
     }
 
 
-    private fun backgroundColor(code: Int){
-        if(code == 1){
-            timelineItem.setBackgroundColor(Color.parseColor("#d3d3d3"))
-        }else{
-            timelineItem.setBackgroundColor(Color.WHITE/*Color.parseColor("#fff3f3f3")*/)
-        }
-    }
+
 
     //nullの場合はGONE
     private fun injectionTextGoneWhenNull(text: String?, view: TextView){

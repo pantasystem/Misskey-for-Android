@@ -10,7 +10,7 @@
 
             />
             <solid
-                    android:color="?android:background"
+                    android:color="?android:windowBackground"
             />
         </shape>
     </item>
