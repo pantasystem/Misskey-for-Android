@@ -2,7 +2,7 @@
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:id="@+id/item_overview"
+        android:layout_height="wrap_content"
         android:background="?android:colorPrimary"
 
 
@@ -20,5 +20,9 @@
                 android:text="@string/nav_header_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView"/>
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/item_overview"
+                android:layout_marginTop="8dp"/>
     </LinearLayout>
 </FrameLayout>
