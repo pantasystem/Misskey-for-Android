@@ -1,16 +1,18 @@
 package org.panta.misskey_for_android_v2.repository
 
+import org.panta.misskey_for_android_v2.constant.ThemeType
 import org.panta.misskey_for_android_v2.constant.getInstanceInfoList
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
 import org.panta.misskey_for_android_v2.util.sha256
 
-class SecretRepository(private val sharedPreferenceOperator: ISharedPreferenceOperator){
+class PersonalRepository(private val sharedPreferenceOperator: ISharedPreferenceOperator){
 
     companion object{
         private const val APP_DOMAIN = "misskey_account_domain"
         private const val APP_USER_TOKEN = "misskey_account_user_token"
         private const val APP_USER_PRIMARY_ID = "misskey_account_primary_id"
+        private const val APP_THEME_KEY = "misskey_theme_id"
     }
 
     fun getDomain(): String?{
@@ -48,6 +50,17 @@ class SecretRepository(private val sharedPreferenceOperator: ISharedPreferenceOp
         }*/
     }
 
+    fun getUserTheme(): ThemeType{
+        val n = sharedPreferenceOperator.getString(APP_THEME_KEY, 0.toString())
+        if(n == null){
+            return ThemeType.STANDARD
+        }else{
+            val typeNumber = Integer.parseInt(n)
+            return ThemeType.getThemeTypeFromInt(typeNumber)
+        }
+
+    }
+
     fun putDomain(domain: String){
         sharedPreferenceOperator.putString(APP_DOMAIN, domain)
     }
@@ -59,4 +72,10 @@ class SecretRepository(private val sharedPreferenceOperator: ISharedPreferenceOp
     fun putUserPrimaryId(id: String){
         sharedPreferenceOperator.putString(APP_USER_PRIMARY_ID, id)
     }
+
+    fun putUserTheme(type: ThemeType){
+        sharedPreferenceOperator.putString(APP_THEME_KEY, type.ordinal.toString())
+    }
+
+
 }

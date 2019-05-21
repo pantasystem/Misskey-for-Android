@@ -1,22 +1,18 @@
 package org.panta.misskey_for_android_v2.view_presenter
 
 import android.net.Uri
-import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
-import org.panta.misskey_for_android_v2.constant.getInstanceInfoList
-import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
 import org.panta.misskey_for_android_v2.interfaces.MainContract
 import org.panta.misskey_for_android_v2.repository.MyInfo
-import org.panta.misskey_for_android_v2.repository.SecretRepository
+import org.panta.misskey_for_android_v2.repository.PersonalRepository
 import org.panta.misskey_for_android_v2.repository.SettingsRepository
-import org.panta.misskey_for_android_v2.util.sha256
 
 class MainPresenter(private val mView: MainContract.View, sharedOperator: ISharedPreferenceOperator) : MainContract.Presenter{
 
     private lateinit var mUser: User
-    private val secretRepository = SecretRepository(sharedOperator)
+    private val secretRepository = PersonalRepository(sharedOperator)
     private val settingRepository = SettingsRepository(sharedOperator)
 
     override fun getPersonalMiniProfile() {

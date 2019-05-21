@@ -14,7 +14,7 @@ import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.User
-import org.panta.misskey_for_android_v2.repository.SecretRepository
+import org.panta.misskey_for_android_v2.repository.PersonalRepository
 import org.panta.misskey_for_android_v2.repository.UserRepository
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.view_presenter.follow_follower.FollowFollowerActivity
@@ -42,7 +42,7 @@ class UserActivity : AppCompatActivity() {
 
         val intent = intent
         val tmpUser: User? = intent.getSerializableExtra(USER_PROPERTY_TAG) as User
-        val info = SecretRepository(SharedPreferenceOperator(this)).getConnectionInfo()
+        val info = PersonalRepository(SharedPreferenceOperator(this)).getConnectionInfo()
         if(info == null){
             startActivity(Intent(this, AuthActivity::class.java))
             finish()

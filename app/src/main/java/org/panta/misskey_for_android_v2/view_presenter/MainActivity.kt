@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.nav_header_main.view.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.ApplicationConstant
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
+import org.panta.misskey_for_android_v2.constant.ThemeType
 import org.panta.misskey_for_android_v2.constant.TimelineTypeEnum
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.User
@@ -36,6 +37,7 @@ import org.panta.misskey_for_android_v2.interfaces.ISharedPreferenceOperator
 import org.panta.misskey_for_android_v2.interfaces.MainContract
 import org.panta.misskey_for_android_v2.service.NotificationService
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
+import org.panta.misskey_for_android_v2.util.setThemeFromType
 import org.panta.misskey_for_android_v2.view_presenter.follow_follower.FollowFollowerActivity
 import org.panta.misskey_for_android_v2.view_presenter.mixed_timeline.MixedTimelineFragment
 import org.panta.misskey_for_android_v2.view_presenter.note_editor.EditNoteActivity
@@ -69,14 +71,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var mNotificationEnabledSwitch: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         sharedOperator = SharedPreferenceOperator(this)
         mPresenter = MainPresenter(this, sharedOperator)
+        setThemeFromType(this)
 
-
-        super.onCreate(savedInstanceState)
         EmojiManager.install(TwitterEmojiProvider())
         
         setContentView(R.layout.activity_main)
+
         setSupportActionBar(toolbar)
 
         val toggle = ActionBarDrawerToggle(

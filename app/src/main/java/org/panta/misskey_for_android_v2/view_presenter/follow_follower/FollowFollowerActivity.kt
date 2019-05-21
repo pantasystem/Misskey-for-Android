@@ -7,12 +7,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.vanniktech.emoji.EmojiManager
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider
-import kotlinx.android.synthetic.main.activity_edit_note.*
 import kotlinx.android.synthetic.main.activity_follow_follower.*
 import org.panta.misskey_for_android_v2.R
 import org.panta.misskey_for_android_v2.constant.FollowFollowerType
-import org.panta.misskey_for_android_v2.entity.ConnectionProperty
-import org.panta.misskey_for_android_v2.repository.SecretRepository
+import org.panta.misskey_for_android_v2.repository.PersonalRepository
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
 
@@ -42,7 +40,7 @@ class FollowFollowerActivity : AppCompatActivity() {
 
         val userId = intent.getStringExtra(USER_ID_TAG)!!
         val tmpType = intent.getIntExtra(FOLLOW_FOLLOWER_TYPE, FollowFollowerType.FOLLOWING.ordinal)
-        val connectionInfo = SecretRepository(SharedPreferenceOperator(this)).getConnectionInfo()
+        val connectionInfo = PersonalRepository(SharedPreferenceOperator(this)).getConnectionInfo()
         if(connectionInfo == null){
             startActivity(Intent(applicationContext, AuthActivity::class.java))
             finish()

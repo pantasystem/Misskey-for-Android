@@ -2,10 +2,8 @@ package org.panta.misskey_for_android_v2.service
 
 import android.app.Service
 import android.content.Intent
-import android.os.Handler
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.GlobalScope
@@ -13,7 +11,7 @@ import kotlinx.coroutines.launch
 import org.panta.misskey_for_android_v2.entity.CreateNoteProperty
 import org.panta.misskey_for_android_v2.entity.FileProperty
 import org.panta.misskey_for_android_v2.network.OkHttpConnection
-import org.panta.misskey_for_android_v2.repository.SecretRepository
+import org.panta.misskey_for_android_v2.repository.PersonalRepository
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
 import java.io.File
@@ -36,7 +34,7 @@ class NotePostService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        val sharedPref = SecretRepository(SharedPreferenceOperator(this))
+        val sharedPref = PersonalRepository(SharedPreferenceOperator(this))
         val info = sharedPref.getConnectionInfo()
         if(info == null){
             startActivity(Intent(applicationContext, AuthActivity::class.java))

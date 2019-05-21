@@ -3,13 +3,12 @@ package org.panta.misskey_for_android_v2.view_presenter.user_auth
 import org.panta.misskey_for_android_v2.constant.getInstanceInfoList
 import org.panta.misskey_for_android_v2.interfaces.AuthContract
 import org.panta.misskey_for_android_v2.repository.AuthRepository
-import org.panta.misskey_for_android_v2.repository.MyInfo
-import org.panta.misskey_for_android_v2.repository.SecretRepository
+import org.panta.misskey_for_android_v2.repository.PersonalRepository
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
 
 class AuthPresenter(private val mView: AuthContract.View, private val sharedPref: SharedPreferenceOperator, domain: String?, appSecret: String?) : AuthContract.Presenter{
 
-    private val secretRepository = SecretRepository(sharedPref)
+    private val secretRepository = PersonalRepository(sharedPref)
     private val authRepository = if(domain == null || appSecret == null){
         val tmpDomain = sharedPref.getString("tmpDomain", null)
         val appSecretKey = getInstanceInfoList().first {

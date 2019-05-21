@@ -5,26 +5,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.util.Log
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.panta.misskey_for_android_v2.R
-import org.panta.misskey_for_android_v2.adapter.NoteViewHolder
-import org.panta.misskey_for_android_v2.adapter.NotificationViewHolder
 import org.panta.misskey_for_android_v2.constant.NotificationType
 import org.panta.misskey_for_android_v2.interfaces.ErrorCallBackListener
 import org.panta.misskey_for_android_v2.repository.NotificationRepository
-import org.panta.misskey_for_android_v2.repository.SecretRepository
+import org.panta.misskey_for_android_v2.repository.PersonalRepository
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
-import org.panta.misskey_for_android_v2.usecase.NoteAdjustment
 import org.panta.misskey_for_android_v2.usecase.PagingController
 import org.panta.misskey_for_android_v2.view_data.NotificationViewData
 import org.panta.misskey_for_android_v2.view_presenter.MainActivity
 import java.lang.IllegalArgumentException
-import java.util.*
 import android.app.PendingIntent
 
 
@@ -46,7 +40,7 @@ class NotificationService : Service() {
         super.onCreate()
 
         //~init
-        val conProperty = SecretRepository(SharedPreferenceOperator(applicationContext)).getConnectionInfo()
+        val conProperty = PersonalRepository(SharedPreferenceOperator(applicationContext)).getConnectionInfo()
         if(conProperty == null){
             Log.d("NotificationService", "connectionInfo不明のため停止します")
             this.stopSelf()

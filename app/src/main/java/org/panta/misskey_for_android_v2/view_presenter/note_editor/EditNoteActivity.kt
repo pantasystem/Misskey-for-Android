@@ -16,7 +16,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
 import com.vanniktech.emoji.EmojiManager
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider
 import kotlinx.android.synthetic.main.activity_edit_note.*
@@ -26,10 +25,9 @@ import org.panta.misskey_for_android_v2.constant.NoteType
 import org.panta.misskey_for_android_v2.entity.ConnectionProperty
 import org.panta.misskey_for_android_v2.entity.CreateNoteProperty
 import org.panta.misskey_for_android_v2.interfaces.ItemClickListener
-import org.panta.misskey_for_android_v2.repository.SecretRepository
+import org.panta.misskey_for_android_v2.repository.PersonalRepository
 import org.panta.misskey_for_android_v2.service.NotePostService
 import org.panta.misskey_for_android_v2.storage.SharedPreferenceOperator
-import org.panta.misskey_for_android_v2.view_presenter.image_viewer.ImagePageAdapter
 import org.panta.misskey_for_android_v2.view_presenter.image_viewer.ImageViewerActivity
 import org.panta.misskey_for_android_v2.view_presenter.user_auth.AuthActivity
 import java.io.File
@@ -85,7 +83,7 @@ class EditNoteActivity : AppCompatActivity(), EditNoteContract.View {
         val intent = intent
         val editType = intent.getIntExtra(EDIT_TYPE, 0)
         val targetId = intent.getStringExtra(CREATE_NOTE_TARGET_ID)
-        val info = SecretRepository(SharedPreferenceOperator(this)).getConnectionInfo()
+        val info = PersonalRepository(SharedPreferenceOperator(this)).getConnectionInfo()
         connectionInfo = if(info == null){
             startActivity(Intent(this, AuthActivity::class.java))
             finish()
