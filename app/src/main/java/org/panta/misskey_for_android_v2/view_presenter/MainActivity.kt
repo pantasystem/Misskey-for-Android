@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         sharedOperator = SharedPreferenceOperator(this)
         mPresenter = MainPresenter(this, sharedOperator)
-        setThemeFromType(this)
+        //setThemeFromType(this)
 
         EmojiManager.install(TwitterEmojiProvider())
         
