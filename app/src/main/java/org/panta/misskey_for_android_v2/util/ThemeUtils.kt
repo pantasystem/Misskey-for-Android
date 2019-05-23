@@ -10,6 +10,5 @@ fun setThemeFromType(context: Context){
     val type = PersonalRepository(SharedPreferenceOperator(context)).getUserTheme()
     when(ThemeType.STANDARD){
         ThemeType.STANDARD -> context.setTheme(R.style.AppTheme)
-        ThemeType.BLACK -> context.setTheme(R.style.AppThemeDark)
     }
 }

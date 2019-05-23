@@ -10,15 +10,7 @@
         <item name="android:textColorSecondary">@color/light_secondary_text_color</item>
         <item name="android:windowBackground">@color/light_window_background_color</item>
     </style>
-    <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/darkColorPrimary</item>
-        <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
-        <item name="colorAccent">@color/darkColorAccent</item>
-        <item name="android:textColorPrimary">@color/dark_primary_text_color</item>
-        <item name="android:textColorSecondary">@color/dark_secondary_text_color</item>
-        <item name="android:windowBackground">@color/dark_window_background_color</item>
-    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

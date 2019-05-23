@@ -16,7 +16,7 @@
             android:largeHeap="true"
             android:roundIcon="@drawable/misskey_icon"
             android:supportsRtl="true"
-            android:theme="@style/AppThemeDark"
+            android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
 
 

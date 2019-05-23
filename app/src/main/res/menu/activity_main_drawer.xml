@@ -19,6 +19,9 @@
             android:id="@+id/nav_notification_toggle_switch"
             android:title="@string/jp_notification"
             app:actionLayout="@layout/switch_item" android:icon="@drawable/bell_icon"/>
+    <item
+        android:id="@+id/nav_ui_mode"
+        android:title="ナイトモード"/>
 
 
 </menu>

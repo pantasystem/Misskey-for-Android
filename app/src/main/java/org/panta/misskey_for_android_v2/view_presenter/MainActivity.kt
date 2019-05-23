@@ -1,5 +1,6 @@
 package org.panta.misskey_for_android_v2.view_presenter
 
+import android.app.UiModeManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -70,6 +71,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var mNotificationEnabledSwitch: Switch
 
+    private lateinit var mUiModeManager: UiModeManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -127,6 +130,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             mPresenter.isEnabledNotification(b)
         }
         mPresenter.isEnabledNotification()
+
+        mUiModeManager = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
 
 
     }
@@ -293,6 +298,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.nav_profile -> mPresenter.getPersonalProfilePage()
             R.id.nav_open_web_misskey -> mPresenter.openMisskeyOnBrowser()
+            R.id.nav_ui_mode -> {
+                if(mUiModeManager.nightMode == UiModeManager.MODE_NIGHT_NO){
+                    mUiModeManager.nightMode = UiModeManager.MODE_NIGHT_YES
+                }else{
+                    mUiModeManager.nightMode = UiModeManager.MODE_NIGHT_NO
+                }
+            }
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
