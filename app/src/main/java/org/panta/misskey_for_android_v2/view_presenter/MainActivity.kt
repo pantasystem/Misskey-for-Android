@@ -13,6 +13,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.SwitchCompat
 import android.util.Log
 import android.view.Menu
@@ -52,7 +53,7 @@ private const val FRAGMENT_OTHER = "FRAGMENT_OTHER"
 //const val DOMAIN_AUTH_KEY_TAG = "MainActivityUserDomainAndAuthKey"
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainContract.View {
+class MainActivity : AbsBaseActivity(), NavigationView.OnNavigationItemSelectedListener, MainContract.View {
 
     companion object {
         const val SHOW_FRAGMENT_TAG = "MainActivityShowFragmentTag"
@@ -79,6 +80,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         sharedOperator = SharedPreferenceOperator(this)
         mPresenter = MainPresenter(this, sharedOperator)
         //setThemeFromType(this)
+        if(super.isNightMode()){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
 
         EmojiManager.install(TwitterEmojiProvider())
         
@@ -132,6 +138,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mPresenter.isEnabledNotification()
 
         mUiModeManager = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
 
 
     }
@@ -299,11 +308,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_profile -> mPresenter.getPersonalProfilePage()
             R.id.nav_open_web_misskey -> mPresenter.openMisskeyOnBrowser()
             R.id.nav_ui_mode -> {
-                if(mUiModeManager.nightMode == UiModeManager.MODE_NIGHT_NO){
-                    mUiModeManager.nightMode = UiModeManager.MODE_NIGHT_YES
+                //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+                if(super.isNightMode()){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    super.putTheme(false)
+
                 }else{
-                    mUiModeManager.nightMode = UiModeManager.MODE_NIGHT_NO
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    super.putTheme(true)
+                    //mUiModeManager.nightMode = UiModeManager.MODE_NIGHT_NO
+                    //mUiModeManager.nightMode = UiModeManager.MODE_NIGHT_YES
+
                 }
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
             }
         }
 
