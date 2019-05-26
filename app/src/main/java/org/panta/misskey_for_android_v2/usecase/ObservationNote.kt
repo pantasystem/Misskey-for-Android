@@ -103,9 +103,17 @@ class ObservationNote(private val bindStreamingAPI: IBindStreamingAPI, private v
             if(hasNote){
                 return
             }else{
-                Log.d("Observation", "登録した")
-                captureNoteMap.put(index, viewData)
-                capture.captureNote(viewData)
+                val count = captureNoteMap.count{
+                    it.value.toShowNote.id == viewData.toShowNote.id
+                }
+                if(count > 0 ){
+                    Log.d("Observation", "登録回避")
+
+                }else{
+                    Log.d("Observation", "登録した")
+                    captureNoteMap.put(index, viewData)
+                    capture.captureNote(viewData)
+                }
             }
         }
     }
