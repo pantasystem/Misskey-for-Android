@@ -1,4 +1,4 @@
-package org.panta.misskey_for_android_v2.usecase
+package org.panta.misskey_for_android_v2.util
 
 import android.graphics.*
 import android.opengl.ETC1.getHeight

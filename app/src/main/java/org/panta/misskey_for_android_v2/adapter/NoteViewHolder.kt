@@ -1,6 +1,5 @@
 package org.panta.misskey_for_android_v2.adapter
 
-import android.graphics.Color
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -15,7 +14,7 @@ import org.panta.misskey_for_android_v2.entity.User
 import org.panta.misskey_for_android_v2.interfaces.ItemClickListener
 import org.panta.misskey_for_android_v2.interfaces.NoteClickListener
 import org.panta.misskey_for_android_v2.interfaces.UserClickListener
-import org.panta.misskey_for_android_v2.usecase.RoundedTransformation
+import org.panta.misskey_for_android_v2.util.RoundedTransformation
 import org.panta.misskey_for_android_v2.view_data.NoteViewData
 
 open class NoteViewHolder(itemView: View, private val linearLayoutManager: LinearLayoutManager?) : RecyclerView.ViewHolder(itemView){
