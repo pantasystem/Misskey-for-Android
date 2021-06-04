@@ -1,4 +1,6 @@
 # Misskey for Android
+現在このプロジェクトはメンテナンスされていません。
+こちら　https://github.com/Kinoshita0623/MisskeyAndroidClient　を利用してください。
 MisskeyのためのAndroidクライアント（作りかけ）
 ## Description
 これはMisskeyのためのAndroidクライアントです。これは公式のような名前をしていますが非公式クライアントです。
